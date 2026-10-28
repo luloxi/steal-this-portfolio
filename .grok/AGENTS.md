@@ -1,4 +1,4 @@
-# Lulox portfolio agent rules
+# Portfolio agent rules
 
 ## Never use em dashes
 
