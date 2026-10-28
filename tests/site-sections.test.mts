@@ -102,14 +102,15 @@ test("moveItem and visibleItems", () => {
 });
 
 test("orderRecords: order, hide, admin sees hidden", () => {
-  const recs = [{ id: "mochi" }, { id: "sami" }, { id: "punksociety" }];
+  const recs = pastProjectIds.map((id) => ({ id }));
   const order = mergeProjects([
     { key: "punksociety", position: 0, visible: 1 },
     { key: "mochi", position: 1, visible: 0 },
     { key: "sami", position: 2, visible: 1 },
   ]);
-  assert.deepEqual(orderRecords(recs, order).map((r) => r.id), ["punksociety", "sami"]);
-  assert.deepEqual(orderRecords(recs, order, true).map((r) => r.id), ["punksociety", "mochi", "sami"]);
+  // No row for djtube: merge appends missing ids, visible, in code order.
+  assert.deepEqual(orderRecords(recs, order).map((r) => r.id), ["punksociety", "sami", "djtube"]);
+  assert.deepEqual(orderRecords(recs, order, true).map((r) => r.id), ["punksociety", "mochi", "sami", "djtube"]);
   assert.deepEqual(orderRecords(recs, defaultOrder(PROJECT_KEYS)).map((r) => r.id), pastProjectIds);
 });
 

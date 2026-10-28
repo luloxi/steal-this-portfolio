@@ -142,6 +142,15 @@ export const messages = {
         },
       },
       past: {
+        djtube: {
+          title: "DJTube",
+          body: "Una app web para hacer de DJ con YouTube: dos decks, crossfader, BPM, highlights y grabación.",
+          paragraphs: [
+            "Mezclás dos videos o playlists de YouTube con un crossfader, BPM detectado, cortes (highlights) guardados y grabación de la sesión. Todo en el navegador.",
+            "Entrás con tu cuenta de Google.",
+          ],
+          awards: "",
+        },
         punksociety: {
           title: "PunkSociety",
           body: "Red social on-chain: cada post es un NFT y los likes envían valor al creador.",
@@ -376,6 +385,15 @@ export const messages = {
         },
       },
       past: {
+        djtube: {
+          title: "DJTube",
+          body: "A web app for DJing with YouTube: two decks, a crossfader, BPM, highlights, and recording.",
+          paragraphs: [
+            "You mix two YouTube videos or playlists with a crossfader, detected BPM, saved cuts (highlights), and a recording of the session. All in the browser.",
+            "You sign in with your Google account.",
+          ],
+          awards: "",
+        },
         punksociety: {
           title: "PunkSociety",
           body: "On-chain social network: every post is an NFT and likes send value to the creator.",

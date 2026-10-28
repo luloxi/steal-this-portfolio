@@ -11,7 +11,7 @@ export type FocusTopicId =
   | "x402"
   | "erc8004";
 
-export type PastProjectId = "punksociety" | "sami" | "mochi";
+export type PastProjectId = "djtube" | "punksociety" | "sami" | "mochi";
 
 export type FocusLink = {
   label: string;
@@ -145,7 +145,38 @@ export type PastProject = {
   copy: ProjectCopy;
 };
 
+/** Public DJTube URL. Swap for https://dj.lulox.com.ar when that domain is ready. */
+export const DJTUBE_URL = "https://djtube.lucianoolivabianco.workers.dev";
+
 export const pastProjects: PastProject[] = [
+  {
+    id: "djtube",
+    icon: "/projects/djtube.svg",
+    github: "https://github.com/luloxi/djtube",
+    liveUrl: DJTUBE_URL,
+    status: "live",
+    team: [{ name: "Solo" }],
+    copy: {
+      es: {
+        title: "DJTube",
+        body: "Una app web para hacer de DJ con YouTube: dos decks, crossfader, BPM, highlights y grabación.",
+        paragraphs: [
+          "Mezclás dos videos o playlists de YouTube con un crossfader, BPM detectado, cortes (highlights) guardados y grabación de la sesión. Todo en el navegador.",
+          "Entrás con tu cuenta de Google.",
+        ],
+        awards: "",
+      },
+      en: {
+        title: "DJTube",
+        body: "A web app for DJing with YouTube: two decks, a crossfader, BPM, highlights, and recording.",
+        paragraphs: [
+          "You mix two YouTube videos or playlists with a crossfader, detected BPM, saved cuts (highlights), and a recording of the session. All in the browser.",
+          "You sign in with your Google account.",
+        ],
+        awards: "",
+      },
+    },
+  },
   {
     id: "mochi",
     icon: "/projects/mochi.png",

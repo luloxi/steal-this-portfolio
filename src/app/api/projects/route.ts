@@ -12,7 +12,7 @@ import {
 
 export const dynamic = "force-dynamic";
 
-const VALID_IDS: PastProjectId[] = ["mochi", "sami", "punksociety"];
+const VALID_IDS: PastProjectId[] = ["djtube", "mochi", "sami", "punksociety"];
 const VALID_STATUSES: ProjectStatus[] = ["live", "disabled", "archive"];
 
 function parseTeam(raw: unknown): TeamMember[] {
