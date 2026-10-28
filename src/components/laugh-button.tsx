@@ -2,7 +2,7 @@
 
 import { Children, isValidElement, cloneElement, useRef, useState, type ReactNode, type ReactElement } from "react";
 
-/** Carlitox's laugh (sent by Luciano, silence trimmed). Fetched on first press. */
+/** Laugh clip (silence trimmed). Fetched on first press. */
 export const LAUGH_SRC = "/audio/carlitox-jojojo.mp3";
 export const LAUGH_SRC_OGG = "/audio/carlitox-jojojo.ogg";
 const LAUGH_RE = /(jojojo|hohoho)/i;

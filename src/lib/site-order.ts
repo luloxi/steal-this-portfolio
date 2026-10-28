@@ -6,7 +6,7 @@
 import { cache } from "react";
 import { getDb, nowIso, requireDb } from "@/lib/db";
 import {
-  KIND_KEYS,
+  SECTION_KEYS,
   mergeProjects,
   mergeSections,
   type OrderItem,
@@ -17,19 +17,15 @@ import {
 
 export type SiteOrder = { sections: SiteSection[]; projects: OrderItem[] };
 
-const TABLE: Record<OrderKind, { table: string; key: string }> = {
-  sections: { table: "site_sections", key: "key" },
-  projects: { table: "project_settings", key: "id" },
-};
-
 async function readRows(kind: OrderKind): Promise<OrderRow[]> {
   try {
     const db = await getDb();
     if (!db) return [];
-    const { table, key } = TABLE[kind];
-    const { results } = await db
-      .prepare(`SELECT ${key} AS key, position, visible FROM ${table}`)
-      .all<OrderRow>();
+    const sql =
+      kind === "sections"
+        ? "SELECT key AS key, position, visible FROM site_sections"
+        : "SELECT id AS key, position, visible FROM projects";
+    const { results } = await db.prepare(sql).all<OrderRow>();
     return results ?? [];
   } catch (err) {
     console.error(`[site-order] ${kind} fallback to defaults:`, err);
@@ -46,19 +42,32 @@ export async function loadSiteOrder(): Promise<SiteOrder> {
 /** Per-request (React cache): layout, pages and sitemap share one read. */
 export const getSiteOrder = cache(loadSiteOrder);
 
-/** Upsert the whole list (position = index). Never deletes rows. */
+/**
+ * Save the whole list (position = index). Never deletes rows.
+ * Sections upsert site_sections. Projects only UPDATE existing rows
+ * (adding a project goes through /api/projects).
+ */
 export async function saveOrder(kind: OrderKind, items: readonly OrderItem[]): Promise<void> {
-  const keys = KIND_KEYS[kind];
-  if (items.length !== keys.length) throw new Error("incomplete order");
   const db = await requireDb();
-  const { table, key } = TABLE[kind];
   const now = nowIso();
+  if (kind === "projects") {
+    if (items.length === 0) return;
+    await db.batch(
+      items.map((it, i) =>
+        db
+          .prepare("UPDATE projects SET position = ?, visible = ?, updated_at = ? WHERE id = ?")
+          .bind(i, it.visible ? 1 : 0, now, it.key),
+      ),
+    );
+    return;
+  }
+  if (items.length !== SECTION_KEYS.length) throw new Error("incomplete order");
   await db.batch(
     items.map((it, i) =>
       db
         .prepare(
-          `INSERT INTO ${table} (${key}, position, visible, updated_at) VALUES (?, ?, ?, ?)
-           ON CONFLICT (${key}) DO UPDATE SET position = excluded.position, visible = excluded.visible, updated_at = excluded.updated_at`,
+          `INSERT INTO site_sections (key, position, visible, updated_at) VALUES (?, ?, ?, ?)
+           ON CONFLICT (key) DO UPDATE SET position = excluded.position, visible = excluded.visible, updated_at = excluded.updated_at`,
         )
         .bind(it.key, i, it.visible ? 1 : 0, now),
     ),

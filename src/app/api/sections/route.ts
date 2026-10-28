@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdminSession } from "@/lib/blog";
+import { getDb } from "@/lib/db";
+import { listProjectIds } from "@/lib/projects-db";
 import { validateOrderPayload } from "@/lib/site-sections";
 import { getSiteOrder, saveOrder } from "@/lib/site-order";
 
@@ -25,7 +27,9 @@ export async function PUT(request: Request) {
   } catch {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
   }
-  const v = validateOrderPayload(body);
+  const kind = (body as { kind?: unknown } | null)?.kind;
+  const projectIds = kind === "projects" ? await listProjectIds(await getDb()) : undefined;
+  const v = validateOrderPayload(body, projectIds);
   if (!v.ok) return NextResponse.json({ error: v.error }, { status: 400 });
   try {
     await saveOrder(v.kind, v.items);

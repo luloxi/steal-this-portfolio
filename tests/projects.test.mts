@@ -1,50 +1,81 @@
-/** DJTube is the first past project and the only live one. */
+/** Projects are validated records. The repo has no personal project list. */
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
-import { DJTUBE_URL, pastProjectIds, pastProjects } from "../src/content/projects.ts";
-import { PROJECT_KEYS } from "../src/lib/site-sections.ts";
+import { DatabaseSync } from "node:sqlite";
+import { emptyProject, newProjectId, validateProject, validateProjectsPayload } from "../src/lib/projects.ts";
+import { projectFromRow, saveProjects } from "../src/lib/projects-db.ts";
+import { handleProjectsSave } from "../src/lib/projects-api.ts";
+import { d1 } from "./d1-sqlite.mts";
 
-const FORBIDDEN = [
-  "experimento",
-  "a medias",
-  "prototipo",
-  "beta",
-  "experiment",
-  "half-finished",
-  "prototype",
-];
+const item = emptyProject("demo");
+item.copy.es.title = "Demo";
+item.copy.en.title = "Demo";
+item.icon = "/projects/demo.svg";
+item.github = "https://github.com/example/demo";
+item.liveUrl = "https://example.com/demo";
+item.status = "live";
+item.visible = true;
 
-test("djtube is first, live, and the only live project", () => {
-  assert.equal(pastProjects[0]?.id, "djtube");
-  assert.deepEqual(
-    pastProjects.filter((p) => p.status === "live").map((p) => p.id),
-    ["djtube"],
-  );
-  const dj = pastProjects[0]!;
-  assert.equal(dj.github, "https://github.com/luloxi/djtube");
-  assert.equal(dj.liveUrl, "https://dj.lulox.com.ar");
-  assert.equal(dj.liveUrl, DJTUBE_URL);
-  assert.equal(dj.icon, "/projects/djtube.svg");
-  assert.equal(dj.disabledReason, undefined);
+test("a valid project round-trips, https and site paths only", () => {
+  const v = validateProject(item);
+  assert.equal(v.ok, true);
+  assert.equal(validateProject({ ...item, liveUrl: "http://example.com" }).ok, false);
+  assert.equal(validateProject({ ...item, icon: "javascript:alert(1)" }).ok, false);
+  assert.equal(validateProject({ ...item, icon: "/projects/../secret" }).ok, false);
+  assert.equal(validateProject({ ...item, id: "Bad" }).ok, false);
+  assert.equal(validateProjectsPayload({ items: [item, item] }).ok, false);
+  assert.equal(newProjectId(["demo"]).startsWith("p-"), true);
 });
 
-test("djtube copy is filled in es and en, without the forbidden words", () => {
-  const dj = pastProjects.find((p) => p.id === "djtube");
-  assert.ok(dj);
-  for (const locale of ["es", "en"] as const) {
-    const copy = dj.copy[locale];
-    assert.ok(copy.title.trim(), locale);
-    assert.ok(copy.body.trim(), locale);
-    assert.ok(copy.paragraphs.length > 0, locale);
-    assert.ok(copy.paragraphs.every((p) => p.trim().length > 0), locale);
-    const blob = [copy.title, copy.body, ...copy.paragraphs, copy.awards].join("\n").toLowerCase();
-    for (const word of FORBIDDEN) {
-      assert.equal(blob.includes(word), false, `${locale} contains "${word}"`);
-    }
-  }
+test("a stored row becomes a project, and a save never deletes", async () => {
+  const db = d1(["0012_projects.sql"]);
+  const row = projectFromRow({
+    id: "demo",
+    position: 0,
+    visible: 1,
+    status: "live",
+    icon_url: "/icon.svg",
+    github_url: "https://github.com/example/demo",
+    live_url: "https://example.com",
+    title_es: "Demo",
+    title_en: "Demo",
+    description_es: "Hola",
+    description_en: "Hi",
+    paragraphs_es: "[]",
+    paragraphs_en: "[]",
+    awards_es: "",
+    awards_en: "",
+    disabled_reason_es: "",
+    disabled_reason_en: "",
+    team_json: "[]",
+    widget: "",
+  });
+  assert.equal(row?.copy.es.title, "Demo");
+  const v = validateProject(item);
+  assert.ok(v.ok);
+  if (!v.ok) return;
+  await saveProjects(db, [v.item]);
+  await saveProjects(db, []);
+  const left = db.raw.prepare("SELECT id, visible FROM projects").all() as { id: string; visible: number }[];
+  assert.deepEqual(left.map((r) => ({ id: r.id, visible: Number(r.visible) })), [{ id: "demo", visible: 0 }]);
+  const src = readFileSync(new URL("../src/lib/projects-db.ts", import.meta.url), "utf8");
+  assert.doesNotMatch(src.replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, ""), /\bDELETE\b/i);
 });
 
-test("PROJECT_KEYS stays in lockstep with pastProjectIds", () => {
-  assert.deepEqual(PROJECT_KEYS, pastProjectIds);
-  assert.equal(pastProjectIds[0], "djtube");
+test("save api: anon 401, edit mode off 403", async () => {
+  let calls = 0;
+  const body = { items: [item] };
+  assert.equal((await handleProjectsSave({ signedIn: false, isAdmin: false, editOn: true }, body, async () => { calls++; }, async () => { calls++; })).status, 401);
+  assert.equal((await handleProjectsSave({ signedIn: true, isAdmin: true, editOn: false }, body, async () => { calls++; }, async () => { calls++; })).status, 403);
+  assert.equal((await handleProjectsSave({ signedIn: true, isAdmin: true, editOn: true }, body, async () => { calls++; }, async () => { calls++; })).status, 200);
+  assert.equal(calls, 1);
+});
+
+test("migration 0012 is additive", () => {
+  const sql = readFileSync(new URL("../migrations/0012_projects.sql", import.meta.url), "utf8").replace(/--.*$/gm, "");
+  assert.doesNotMatch(sql, /\b(DROP|DELETE|ALTER|RENAME)\b/i);
+  const db = new DatabaseSync(":memory:");
+  db.exec(sql);
+  db.exec(sql);
 });

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { site } from "@/content/site";
+import { useSiteSettings } from "@/components/site-settings-context";
 import { useLocale } from "@/i18n/locale-provider";
 
 type PageShellProps = {
@@ -31,6 +31,7 @@ export function PageShell({
   reading = false,
 }: PageShellProps) {
   const { t, href } = useLocale();
+  const settings = useSiteSettings();
   const topLabel = backLabel ?? t.ui.backHome;
   const bottomHref = footerHref ?? backHref;
   const bottomLabel = footerLabel ?? (footerHref || backHref !== "/" ? topLabel : t.ui.backHomeCta);
@@ -44,7 +45,7 @@ export function PageShell({
         <Link
           href={href(backHref)}
           className="cp-back-link group shrink-0"
-          aria-label={`${topLabel} (${site.name})`}
+          aria-label={`${topLabel} (${settings.name})`}
         >
           <span className="cp-back-chevron" aria-hidden>
             &lt;

@@ -1,14 +1,13 @@
 import { ProjectsView } from "@/components/views/projects-view";
-import { getMergedPastProjects } from "@/lib/projects";
 import { canSeeDraftsRequest } from "@/lib/admin-request";
+import { getProjects } from "@/lib/projects-db";
 import { orderRecords } from "@/lib/site-sections";
 import { getSiteOrder } from "@/lib/site-order";
 
 export const dynamic = "force-dynamic";
 
-/** Same source as /proyectos/<id>: static projects merged with D1 overrides. */
+/** Projects come from D1. Hidden rows never reach a visitor; edit mode still gets them. */
 export default async function ProjectsPage() {
-  const [all, order, admin] = await Promise.all([getMergedPastProjects(), getSiteOrder(), canSeeDraftsRequest()]);
-  // Hidden projects never reach a visitor's HTML; the admin in edit mode gets them (flagged).
+  const [all, order, admin] = await Promise.all([getProjects(), getSiteOrder(), canSeeDraftsRequest()]);
   return <ProjectsView projects={orderRecords(all, order.projects, admin)} />;
 }

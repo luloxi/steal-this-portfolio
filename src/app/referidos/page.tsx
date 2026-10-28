@@ -2,6 +2,7 @@ import { ReferralsView } from "@/components/views/referrals-view";
 import { getDb } from "@/lib/db";
 import { shareLinks } from "@/lib/referrals";
 import { getMyReferral, type MyReferral } from "@/lib/referrals-db";
+import { getSiteSettings } from "@/lib/site-settings-db";
 import { getViewer } from "@/lib/viewer";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +13,7 @@ export const dynamic = "force-dynamic";
  * (looked up by the session's user id on the server).
  */
 export default async function ReferralsPage() {
-  const viewer = await getViewer();
+  const [viewer, settings] = await Promise.all([getViewer(), getSiteSettings()]);
   let mine: MyReferral | null = null;
   if (viewer) {
     try {
@@ -26,7 +27,7 @@ export default async function ReferralsPage() {
     <ReferralsView
       viewer={viewer ? { name: viewer.name, email: viewer.email } : null}
       mine={mine}
-      links={mine ? shareLinks(mine.referrer.code) : null}
+      links={mine ? shareLinks(mine.referrer.code, settings.url) : null}
     />
   );
 }

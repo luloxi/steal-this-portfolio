@@ -2,26 +2,27 @@
  * Site admin strip: order and visibility of the main sections (landing menu,
  * footer links, sitemap, and whether their pages exist for visitors) and of
  * the projects (/proyectos list, /proyectos/<id>, sitemap).
- * Stored in D1 (site_sections + project_settings, migration 0008); an empty
- * or missing table = code defaults (everything visible, code order).
+ * Sections live in D1 site_sections (migration 0008): an empty table means
+ * every section visible, in code order. Projects live in D1 `projects`
+ * (migration 0012): an empty table means no projects. There is no code list.
  *
  * Pure helpers (no Next/D1 imports): used by proxy.ts, the layout, the
  * sitemap, the admin strip, the API route and tests.
  */
 import { sections } from "@/content/site";
-import { pastProjectIds } from "@/content/projects";
 
 export type SectionKey = (typeof sections)[number]["id"];
 /** Hideable sections, default order = the landing menu order in src/content/site.ts. */
 export const SECTION_KEYS: readonly SectionKey[] = sections.map((s) => s.id);
-/** Projects, default order = src/content/projects.ts. */
-export const PROJECT_KEYS: readonly string[] = [...pastProjectIds];
 
 export type OrderKind = "sections" | "projects";
+/** Sections have a fixed catalog. Project ids come from the database. */
 export const KIND_KEYS: Readonly<Record<OrderKind, readonly string[]>> = {
   sections: SECTION_KEYS,
-  projects: PROJECT_KEYS,
+  projects: [],
 };
+
+const PROJECT_ID = /^[a-z0-9](?:[a-z0-9-]{0,38}[a-z0-9])?$/;
 
 export type OrderItem<K extends string = string> = { key: K; visible: boolean };
 export type SiteSection = OrderItem<SectionKey>;
@@ -60,30 +61,52 @@ export function mergeOrder<K extends string>(keys: readonly K[], rows: readonly 
 }
 
 export const mergeSections = (rows: readonly OrderRow[] | null | undefined) => mergeOrder(SECTION_KEYS, rows);
-export const mergeProjects = (rows: readonly OrderRow[] | null | undefined) => mergeOrder(PROJECT_KEYS, rows);
+
+/**
+ * Project rows already are the full list (no code catalog to append).
+ * Sorted by position. Unknown duplicates dropped. No rows = no projects.
+ */
+export function mergeProjects(rows: readonly OrderRow[] | null | undefined): OrderItem[] {
+  const known = (rows ?? [])
+    .filter((r) => typeof r.key === "string" && PROJECT_ID.test(r.key) && Number.isFinite(Number(r.position)))
+    .map((r) => ({ key: r.key, position: Number(r.position), visible: !(r.visible === 0 || r.visible === false) }))
+    .sort((a, b) => a.position - b.position || a.key.localeCompare(b.key));
+  const out: OrderItem[] = [];
+  const seen = new Set<string>();
+  for (const r of known) {
+    if (seen.has(r.key)) continue;
+    seen.add(r.key);
+    out.push({ key: r.key, visible: r.visible });
+  }
+  return out;
+}
 
 export type ValidationResult =
   | { ok: true; kind: OrderKind; items: OrderItem[] }
   | { ok: false; error: string };
 
 /**
- * Admin payload: { kind: "sections" | "projects", items: [{ key, visible }, ...] }
- * with every known key of that kind exactly once, in the new order, visible
- * as a boolean. Partial lists are rejected so nothing is lost by accident.
+ * Admin payload: { kind: "sections" | "projects", items: [{ key, visible }, ...] }.
+ * Sections: every known section exactly once. Projects: pass `projectIds`
+ * (the rows in D1) and the payload must be exactly that set, so a save cannot
+ * drop one by accident. Without `projectIds`, any unique project slug is accepted.
  */
-export function validateOrderPayload(body: unknown): ValidationResult {
+export function validateOrderPayload(body: unknown, projectIds?: readonly string[]): ValidationResult {
   const kind = (body as { kind?: unknown } | null)?.kind;
   if (kind !== "sections" && kind !== "projects") return { ok: false, error: "unknown_kind" };
-  const keys = KIND_KEYS[kind];
   const list = (body as { items?: unknown }).items;
   if (!Array.isArray(list)) return { ok: false, error: "items_required" };
-  if (list.length !== keys.length) return { ok: false, error: "wrong_length" };
+  const allowed = kind === "sections" ? new Set<string>(SECTION_KEYS) : projectIds ? new Set(projectIds) : null;
+  if (allowed && list.length !== allowed.size) return { ok: false, error: "wrong_length" };
   const seen = new Set<string>();
   const out: OrderItem[] = [];
   for (const item of list) {
     const key = (item as { key?: unknown } | null)?.key;
     const visible = (item as { visible?: unknown } | null)?.visible;
-    if (typeof key !== "string" || !keys.includes(key)) return { ok: false, error: "unknown_key" };
+    if (typeof key !== "string" || (kind === "projects" ? !PROJECT_ID.test(key) : !allowed?.has(key))) {
+      return { ok: false, error: "unknown_key" };
+    }
+    if (allowed && !allowed.has(key)) return { ok: false, error: "unknown_key" };
     if (seen.has(key)) return { ok: false, error: "duplicate_key" };
     if (typeof visible !== "boolean") return { ok: false, error: "invalid_visible" };
     seen.add(key);

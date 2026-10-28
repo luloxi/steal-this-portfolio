@@ -25,24 +25,30 @@ import { d1 } from "./d1-sqlite.mts";
 
 const fx = (n: string) => readFileSync(new URL(`./fixtures/${n}`, import.meta.url), "utf8");
 const LIVE = { es: fx("about-body-live-es.md"), en: fx("about-body-live-en.md") };
-const URLS = DEFAULT_PUBLICATIONS.map((p) => p.url);
+const URLS = [
+  "https://www.linkedin.com/feed/update/urn:li:activity:7501713293321854976/",
+  "https://drive.google.com/file/d/1Malx_E4Z1flmVr5hQgCRejJEWL8HxjiQ/view?usp=drive_link",
+];
 const MIG = ["0011_publications.sql"];
-const base = (): Publication[] => DEFAULT_PUBLICATIONS.map((p) => ({ ...p }));
-const pub = (patch: Partial<Publication> = {}): Publication => ({ ...DEFAULT_PUBLICATIONS[0], id: "x-1", ...patch });
+const sample = (): Publication => ({
+  id: "paper-a",
+  title: "A paper",
+  title_en: "",
+  note_es: "Nota",
+  note_en: "Note",
+  authors: "Ada Lovelace",
+  year: 2026,
+  venue: "PDF",
+  url: "https://example.com/paper",
+  hidden: false,
+});
+const base = (): Publication[] => [sample(), { ...sample(), id: "paper-b", title: "Another", authors: "Grace Hopper", year: null, venue: "Blog", url: "https://example.com/other" }];
+const pub = (patch: Partial<Publication> = {}): Publication => ({ ...sample(), id: "x-1", ...patch });
 
-test("defaults: the two current articles, https links, no invented year for the PDF", () => {
-  assert.equal(DEFAULT_PUBLICATIONS.length, 2);
-  assert.deepEqual(URLS, [
-    "https://www.linkedin.com/feed/update/urn:li:activity:7501713293321854976/",
-    "https://drive.google.com/file/d/1Malx_E4Z1flmVr5hQgCRejJEWL8HxjiQ/view?usp=drive_link",
-  ]);
-  assert.equal(DEFAULT_PUBLICATIONS[0].year, 2026);
-  assert.equal(DEFAULT_PUBLICATIONS[1].year, null);
-  assert.deepEqual(citationParts(DEFAULT_PUBLICATIONS[1]), ["Mauro Andreoli, Luciano Oliva Bianco", "PDF"]);
-  // The defaults pass the same validation as a save.
+test("defaults: a fresh database has no publications", () => {
+  assert.deepEqual(DEFAULT_PUBLICATIONS, []);
   assert.equal(validatePublicationsPayload({ items: base() }).ok, true);
-  // No real English version beyond the original: same title in ES and EN.
-  for (const p of DEFAULT_PUBLICATIONS) assert.equal(publicationTitle(p, "en"), publicationTitle(p, "es"));
+  assert.deepEqual(citationParts(base()[1]), ["Grace Hopper", "Blog"]);
   assert.equal(publicationTitle(pub({ title: "Original", title_en: "English" }), "en"), "English");
   assert.equal(publicationTitle(pub({ title: "Original", title_en: "English" }), "es"), "Original");
 });
@@ -76,12 +82,12 @@ test("validation: strict shape, https only, lengths, year, ids", () => {
   assert.deepEqual(ok([missing]), { ok: false, error: "invalid_value", index: 0, field: "title" });
 });
 
-test("fallback: no rows, no table or no binding = code defaults; bad rows are skipped", async () => {
-  assert.deepEqual(publicationsFromRows([]), base());
-  assert.deepEqual(publicationsFromRows(null), base());
-  assert.deepEqual(await loadPublications(null), base());
-  assert.deepEqual(await loadPublications(d1([])), base()); // table missing (migration not applied yet)
-  assert.deepEqual(await loadPublications(d1(MIG)), base()); // table empty
+test("fallback: no rows, no table or no binding = empty list; bad rows are skipped", async () => {
+  assert.deepEqual(publicationsFromRows([]), []);
+  assert.deepEqual(publicationsFromRows(null), []);
+  assert.deepEqual(await loadPublications(null), []);
+  assert.deepEqual(await loadPublications(d1([])), []); // table missing (migration not applied yet)
+  assert.deepEqual(await loadPublications(d1(MIG)), []); // table empty
   const rows = publicationsFromRows([
     { id: "ok", title: "T", title_en: "", note_es: "", note_en: "", authors: "", year: null, venue: "", url: "https://x.com/", hidden: 0 },
     { id: "bad", title: "T", title_en: "", note_es: "", note_en: "", authors: "", year: null, venue: "", url: "http://x.com/", hidden: 0 },
@@ -94,16 +100,15 @@ test("D1: save is upsert in list order, remove = hidden (no DELETE), restore, ro
   const db = d1(MIG);
   const deletes: string[] = [];
   const spy = { ...db, prepare: (sql: string) => { if (/\bdelete\b/i.test(sql)) deletes.push(sql); return db.prepare(sql); } };
-  // First save materializes the defaults, reordered, with one new item.
   const added = pub({ id: "new-one", title: "New", url: "https://example.com/new", year: 2025, venue: "Blog" });
   await savePublications(spy, [base()[1], added, base()[0]]);
   let got = await loadPublications(db);
-  assert.deepEqual(got.map((p) => p.id), ["lcp-midnight-city", "new-one", "rwa-tokenization-cip-0113"]);
+  assert.deepEqual(got.map((p) => p.id), ["paper-b", "new-one", "paper-a"]);
   // Remove (hide) and edit.
   await savePublications(spy, got.map((p) => (p.id === "new-one" ? { ...p, hidden: true, title: "Edited" } : p)));
   got = await loadPublications(db);
   assert.deepEqual(got.find((p) => p.id === "new-one"), { ...added, hidden: true, title: "Edited" });
-  assert.deepEqual(publicationsFor(got, false).map((p) => p.id), ["lcp-midnight-city", "rwa-tokenization-cip-0113"]);
+  assert.deepEqual(publicationsFor(got, false).map((p) => p.id), ["paper-b", "paper-a"]);
   assert.equal(publicationsFor(got, true).length, 3);
   // Restore.
   await savePublications(spy, got.map((p) => ({ ...p, hidden: false })));
@@ -112,7 +117,7 @@ test("D1: save is upsert in list order, remove = hidden (no DELETE), restore, ro
   await savePublications(spy, [base()[0]]);
   const n = db.raw.prepare("SELECT count(*) AS n, sum(hidden) AS h FROM publications").get() as { n: number; h: number };
   assert.deepEqual({ n: n.n, h: n.h }, { n: 3, h: 2 });
-  assert.deepEqual(publicationsFor(await loadPublications(db), false).map((p) => p.id), ["rwa-tokenization-cip-0113"]);
+  assert.deepEqual(publicationsFor(await loadPublications(db), false).map((p) => p.id), ["paper-a"]);
   assert.deepEqual(deletes, []);
   const src = readFileSync(new URL("../src/lib/publications-db.ts", import.meta.url), "utf8");
   assert.doesNotMatch(src.replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, ""), /\bDELETE\b/i);

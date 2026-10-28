@@ -47,7 +47,7 @@ test("lulox-ref cookie: 90 days, parse back, garbage ignored", () => {
   assert.equal(refFromCookie("a=1; lulox-ref=Ana-Dev; b=2"), "ana-dev");
   assert.equal(refFromCookie("lulox-ref=%3Cscript%3E"), null);
   assert.equal(refFromCookie(""), null);
-  assert.deepEqual(shareLinks("ana-dev"), { es: "https://lulox.com.ar/contratar?ref=ana-dev", en: "https://lulox.com.ar/en/hire?ref=ana-dev" });
+  assert.deepEqual(shareLinks("ana-dev", "https://example.com"), { es: "https://example.com/contratar?ref=ana-dev", en: "https://example.com/en/hire?ref=ana-dev" });
 });
 
 test("money: 15% in cents, amounts in AR/US formats, totals per currency", () => {

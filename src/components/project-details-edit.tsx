@@ -5,7 +5,7 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { ToolbarButton } from "@/components/md-wysiwyg";
 import { saveProject } from "@/components/project-text";
-import type { PastProject, ProjectStatus, TeamMember } from "@/content/projects";
+import type { PortfolioProject, ProjectStatus, TeamMember } from "@/lib/projects";
 import { useLocale } from "@/i18n/locale-provider";
 
 /** "Name (https://url) · Name2" <-> team members. */
@@ -23,7 +23,7 @@ export function textToTeam(text: string): TeamMember[] {
     });
 }
 
-type Draft = { team: string; awards: string; status: ProjectStatus; reason: string; liveUrl: string; github: string };
+type Draft = { team: string; awards: string; status: ProjectStatus; reason: string; liveUrl: string; github: string; icon: string };
 
 const statusClass: Record<ProjectStatus, string> = {
   live: "project-status-live",
@@ -36,7 +36,7 @@ const statusClass: Record<ProjectStatus, string> = {
  * the values editable in place. Saves the current locale's text (awards,
  * disabled reason) plus the shared fields through /api/projects.
  */
-export function ProjectDetailsEdit({ project }: { project: PastProject }) {
+export function ProjectDetailsEdit({ project }: { project: PortfolioProject }) {
   const { t, locale } = useLocale();
   const router = useRouter();
   const es = locale === "es";
@@ -48,6 +48,7 @@ export function ProjectDetailsEdit({ project }: { project: PastProject }) {
     reason: project.disabledReason?.[L] ?? "",
     liveUrl: project.liveUrl ?? "",
     github: project.github ?? "",
+    icon: project.icon ?? "",
   };
   const [d, setD] = useState<Draft>(initial);
   const [saving, setSaving] = useState(false);
@@ -65,6 +66,7 @@ export function ProjectDetailsEdit({ project }: { project: PastProject }) {
       p.disabledReason = { ...(p.disabledReason ?? { es: "", en: "" }), [L]: d.reason.trim() };
       p.liveUrl = d.liveUrl.trim();
       p.github = d.github.trim();
+      p.icon = d.icon.trim();
     });
     setSaving(false);
     if (err) setError(err === "session" ? (es ? "Sesión expirada" : "Session expired") : (es ? `No se pudo guardar (${err})` : `Couldn't save (${err})`));
@@ -108,6 +110,12 @@ export function ProjectDetailsEdit({ project }: { project: PastProject }) {
             </dd>
           </div>
         ) : null}
+        <div className="project-meta-row">
+          <dt>{es ? "Icono" : "Icon"}</dt>
+          <dd>
+            <input className="ie-field" value={d.icon} onChange={set("icon")} placeholder="/projects/icon.svg" aria-label={es ? "Icono" : "Icon"} />
+          </dd>
+        </div>
         <div className="project-meta-row">
           <dt>{t.projects.openLive}</dt>
           <dd>

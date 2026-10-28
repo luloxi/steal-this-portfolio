@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { MdWysiwyg } from "@/components/md-wysiwyg";
-import type { PastProject } from "@/content/projects";
+import type { PortfolioProject } from "@/lib/projects";
 import { useLocale } from "@/i18n/locale-provider";
 import { COPY_CLASSES, prepCopyMarkdown } from "@/lib/md-editor-extensions";
 
@@ -12,7 +12,7 @@ import { COPY_CLASSES, prepCopyMarkdown } from "@/lib/md-editor-extensions";
  * the current locale through the admin-only /api/projects (rest unchanged).
  */
 export function ProjectText({ project, field, className = "", pClass = "cp-prose" }: {
-  project: PastProject;
+  project: PortfolioProject;
   field: "body" | "paragraphs";
   className?: string;
   pClass?: string;
@@ -45,28 +45,24 @@ export function ProjectText({ project, field, className = "", pClass = "cp-prose
  * Read the current merged project from /api/projects, apply a change, and PUT
  * the whole record back (admin-only). Returns an error code or null.
  */
-export async function saveProject(id: string, mutate: (p: PastProject) => void): Promise<string | null> {
+export async function saveProject(id: string, mutate: (p: PortfolioProject) => void): Promise<string | null> {
   const res = await fetch("/api/projects");
   if (!res.ok) return res.status === 401 ? "session" : String(res.status);
-  const { projects } = (await res.json()) as { projects: PastProject[] };
+  const { projects } = (await res.json()) as { projects: PortfolioProject[] };
   const found = projects.find((x) => x.id === id);
   if (!found) return "not_found";
-  const p: PastProject = structuredClone(found);
-  p.copy = { es: { ...p.copy.es }, en: { ...p.copy.en } };
+  const p: PortfolioProject = structuredClone(found);
+  p.copy = {
+    es: { ...p.copy.es, paragraphs: [...p.copy.es.paragraphs] },
+    en: { ...p.copy.en, paragraphs: [...p.copy.en.paragraphs] },
+  };
   p.disabledReason = { es: p.disabledReason?.es ?? "", en: p.disabledReason?.en ?? "" };
+  p.team = [...(p.team ?? [])];
   mutate(p);
   const put = await fetch("/api/projects", {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      id: p.id,
-      status: p.status,
-      liveUrl: p.liveUrl ?? "",
-      github: p.github ?? "",
-      team: p.team ?? [],
-      disabledReason: p.disabledReason,
-      copy: p.copy,
-    }),
+    body: JSON.stringify(p),
   });
   if (put.ok) return null;
   const data = (await put.json().catch(() => ({}))) as { error?: string };

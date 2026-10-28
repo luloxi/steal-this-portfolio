@@ -6,7 +6,7 @@ import { PageShell } from "@/components/page-shell";
 import { REFERRAL_PCT, formatCents, parseAmountCents, payoutCents, waLink, type Currency, type PayoutStatus, type Totals } from "@/lib/referrals";
 import type { Lead, ReferrerWithLeads } from "@/lib/referrals-db";
 
-/** /admin/referidos: Luciano's register (Spanish only). */
+/** /admin/referidos: the owner's register (Spanish only). */
 const fmtDate = (iso: string | null) => {
   if (!iso) return "";
   const d = new Date(iso);

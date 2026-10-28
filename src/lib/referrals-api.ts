@@ -52,6 +52,8 @@ export type SignupDeps = {
   limit?: () => Promise<boolean>;
   /** Referrals section hidden from the admin strip: closed to everyone but the admin. */
   sectionHidden?: boolean;
+  /** Public site origin for the share links. Missing = the neutral default. */
+  siteUrl?: string;
 };
 
 /**
@@ -80,14 +82,14 @@ export async function signup(viewer: Viewer, raw: unknown, deps: SignupDeps): Pr
   if (await getReferrerByCode(deps.db, shape.code)) return err(409, "code_taken");
   const r = await createReferrer(deps.db, { name, email, whatsapp: whatsapp || null, code: shape.code, userId: viewer.id });
   if (!r.ok) return err(409, r.error);
-  return { status: 200, body: { ok: true, code: shape.code, links: shareLinks(shape.code) } };
+  return { status: 200, body: { ok: true, code: shape.code, links: shareLinks(shape.code, deps.siteUrl) } };
 }
 
 /** The viewer's own code and totals. There is no parameter to ask for someone else's. */
-export async function myReferral(viewer: Viewer, db: D1Database): Promise<ApiResult> {
+export async function myReferral(viewer: Viewer, db: D1Database, siteUrl?: string): Promise<ApiResult> {
   if (!viewer) return err(401, "unauthorized");
   const mine = await getMyReferral(db, viewer.id);
-  return { status: 200, body: { referral: mine, links: mine ? shareLinks(mine.referrer.code) : null } };
+  return { status: 200, body: { referral: mine, links: mine ? shareLinks(mine.referrer.code, siteUrl) : null } };
 }
 
 export async function adminList(viewer: Viewer, db: D1Database): Promise<ApiResult> {

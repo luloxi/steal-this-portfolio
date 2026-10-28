@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { CALL_BOOKING_URL, site } from "@/content/site";
+import { turnstileSiteKey } from "@/content/site";
+import { useSiteSettings } from "@/components/site-settings-context";
 import { useSectionShown } from "@/components/site-order-context";
 import { useLocale } from "@/i18n/locale-provider";
 import { MagicHr } from "@/components/magic-hr";
@@ -171,6 +172,7 @@ function useReferralCode() {
 
 export function HireCalculator({ pricing = PRICING }: { pricing?: Pricing }) {
   const { locale, href } = useLocale();
+  const settings = useSiteSettings();
   const editOn = useEditMode();
   // Stored amounts from the server (D1 over the code defaults); the admin panel swaps them after a save.
   const [P, setP] = useState(pricing);
@@ -409,9 +411,11 @@ export function HireCalculator({ pricing = PRICING }: { pricing?: Pricing }) {
             ...(ref.state === "ok" ? [[c.ref.by, ref.norm] as [string, string]] : []),
           ]}
         />
-        <a className="hire-act hire-act-call" href={CALL_BOOKING_URL} target="_blank" rel="noopener noreferrer" data-testid="hire-call-cta">
-          {c.cta}
-        </a>
+        {settings.callBookingUrl ? (
+          <a className="hire-act hire-act-call" href={settings.callBookingUrl} target="_blank" rel="noopener noreferrer" data-testid="hire-call-cta">
+            {c.cta}
+          </a>
+        ) : null}
         {contactShown ? (
           <Link className="hire-act hire-act-contact" href={href("/contacto")}>
             {c.contact}
@@ -650,7 +654,7 @@ function useTurnstile(active: boolean) {
       .then((ts) => {
         if (!alive || !box.current || id.current) return;
         id.current = ts.render(box.current, {
-          sitekey: site.turnstileSiteKey,
+          sitekey: turnstileSiteKey,
           theme: document.documentElement.classList.contains("light") ? "light" : "dark",
           language: document.documentElement.lang || "auto",
           size: "flexible",

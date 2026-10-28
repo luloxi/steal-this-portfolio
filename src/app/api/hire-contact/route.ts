@@ -4,6 +4,7 @@ import { bodyFromForm, handleHireContact, type HireDeps, type HireEnv } from "@/
 import { getDb } from "@/lib/db";
 import { getActiveReferrer, insertLead } from "@/lib/referrals-db";
 import { loadPricing } from "@/lib/pricing-db";
+import { getSiteSettings } from "@/lib/site-settings-db";
 
 export async function POST(request: Request) {
   const type = request.headers.get("content-type") ?? "";
@@ -18,10 +19,10 @@ export async function POST(request: Request) {
   const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
   const db = await getDb();
   // Same stored amounts the page shows (code defaults if no rows); never the browser's numbers.
-  const pricing = await loadPricing(db);
+  const [pricing, settings] = await Promise.all([loadPricing(db), getSiteSettings()]);
   const deps: HireDeps = db
-    ? { pricing, findReferrer: (code) => getActiveReferrer(db, code), saveLead: (lead) => insertLead(db, lead) }
-    : { pricing };
+    ? { pricing, fromName: settings.name, publicUrl: settings.url, findReferrer: (code) => getActiveReferrer(db, code), saveLead: (lead) => insertLead(db, lead) }
+    : { pricing, fromName: settings.name, publicUrl: settings.url };
   const r = await handleHireContact(body, env as unknown as HireEnv, ip, deps);
   if (isForm) {
     // Plain form post: send the browser back to the page with the result in the URL.

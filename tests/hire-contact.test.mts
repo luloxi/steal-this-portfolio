@@ -40,7 +40,7 @@ test("valid submission sends via Resend with reply-to and server-computed budget
   const { via, m } = sent[0] as { via: string; m: Record<string, unknown> };
   assert.equal(via, "resend");
   assert.deepEqual(m.to, ["hola@lulox.com.ar"]);
-  assert.equal(m.from, "Lulox <no-responder@lulox.com.ar>");
+  assert.equal(m.from, "Portfolio <no-responder@lulox.com.ar>");
   assert.equal(m.reply_to, "ana@example.com");
   // 20h × 18 = 360, -15% = -54, on-site 2×25 + travel 2×25 = 100 → 406
   assert.match(String(m.text), /Total estimado: US\$ 406/);

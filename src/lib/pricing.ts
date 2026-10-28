@@ -1,5 +1,5 @@
 /**
- * Lulox's pricing method (public, no client data). These are the code defaults:
+ * Pricing method (public, no client data). These are the code defaults:
  * the admin can override the amounts from /contratar in edit mode (D1
  * pricing_settings, see src/lib/pricing-settings.ts); any missing or invalid
  * stored value falls back to the number here.

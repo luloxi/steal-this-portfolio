@@ -9,12 +9,15 @@ import { getViewer } from "@/lib/viewer";
 import { AdminProvider } from "@/components/admin-context";
 import { SiteOrderProvider } from "@/components/site-order-context";
 import { AdminStripGate } from "@/components/admin-strip-gate";
+import { SiteSettingsProvider } from "@/components/site-settings-context";
+import { SiteSettingsEditor } from "@/components/site-settings-editor";
 import { getSiteOrder } from "@/lib/site-order";
 import { PREFS_HEAD_SCRIPT } from "@/lib/prefs-shared";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { site } from "@/content/site";
 import { buildPageMetadata } from "@/lib/page-metadata";
 import { pathPair } from "@/lib/routes";
+import { descriptionFor, themeCss } from "@/lib/site-settings";
+import { getSiteSettings } from "@/lib/site-settings-db";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -29,92 +32,59 @@ const orbitron = Orbitron({
   display: "swap",
 });
 
-function siteUrl() {
-  if (process.env.NEXT_PUBLIC_SITE_URL) {
-    return process.env.NEXT_PUBLIC_SITE_URL;
-  }
-  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
-    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
-  }
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
-  }
-  return site.url;
+function siteUrl(fallback: string) {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return fallback;
 }
-
-const baseMetadata: Metadata = {
-  metadataBase: new URL(siteUrl()),
-  title: {
-    default: site.name,
-    template: `%s | ${site.name}`,
-  },
-  description: site.description,
-  applicationName: site.name,
-  authors: [{ name: "Luciano Oliva Bianco", url: siteUrl() }],
-  creator: site.name,
-  keywords: [
-    "Lulox",
-    "Luciano Oliva Bianco",
-    "AI",
-    "blockchain",
-    "tokenización",
-    "comercio agéntico",
-    "Midnight",
-    "Cardano",
-  ],
-  openGraph: {
-    type: "website",
-    locale: "es_AR",
-    alternateLocale: ["en_US"],
-    siteName: site.name,
-    title: site.name,
-    description: site.description,
-    url: "/",
-    images: [
-      {
-        url: new URL(site.ogImage, site.url).href,
-        width: 1200,
-        height: 630,
-        alt: `${site.name} · Luciano Oliva Bianco`,
-        type: "image/png",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: site.name,
-    description: site.description,
-    images: [new URL(site.ogImage, site.url).href],
-    creator: site.xHandle,
-    site: site.xHandle,
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
-
-/** Home share card stays "Lulox"; description in the URL's language (/ = es, /en = en). */
-const HOME_DESCRIPTION = {
-  es: site.description,
-  en: "I'm Luciano Oliva Bianco (Lulox). I research and build with AI, blockchain, tokenization and agentic commerce.",
-} as const;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const locale = await getRequestLocale();
-  const home = buildPageMetadata(locale, pathPair("/"), { title: null, description: HOME_DESCRIPTION[locale] });
-  // Keep the "%s | Lulox" template for routes that only set a plain title.
-  return { ...baseMetadata, ...home, title: baseMetadata.title };
+  const [locale, settings] = await Promise.all([getRequestLocale(), getSiteSettings()]);
+  const description = descriptionFor(settings, locale);
+  const base: Metadata = {
+    metadataBase: new URL(siteUrl(settings.url)),
+    title: { default: settings.name, template: `%s | ${settings.name}` },
+    description,
+    applicationName: settings.name,
+    authors: [{ name: settings.legalName, url: settings.url }],
+    creator: settings.name,
+    keywords: settings.keywords,
+    openGraph: {
+      type: "website",
+      locale: "es_AR",
+      alternateLocale: ["en_US"],
+      siteName: settings.name,
+      title: settings.name,
+      description,
+      url: "/",
+      images: [{ url: new URL(settings.ogImage, settings.url).href, width: 1200, height: 630, alt: settings.name }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: settings.name,
+      description,
+      images: [new URL(settings.ogImage, settings.url).href],
+      creator: settings.xHandle,
+      site: settings.xHandle,
+    },
+    robots: { index: true, follow: true },
+  };
+  const home = await buildPageMetadata(locale, pathPair("/"), { title: null, description });
+  return { ...base, ...home, title: base.title };
 }
 
-export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0e0607" },
-    { media: "(prefers-color-scheme: light)", color: "#f6f7f9" },
-  ],
-  width: "device-width",
-  initialScale: 1,
-};
+export async function generateViewport(): Promise<Viewport> {
+  const settings = await getSiteSettings();
+  return {
+    themeColor: [
+      { media: "(prefers-color-scheme: dark)", color: settings.themeColorDark },
+      { media: "(prefers-color-scheme: light)", color: settings.themeColorLight },
+    ],
+    width: "device-width",
+    initialScale: 1,
+  };
+}
 
 export default async function RootLayout({
   children,
@@ -122,20 +92,21 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // Per-request: language from the URL (proxy.ts header), theme from its cookie (else dark).
-  const [{ locale, theme }, overrides, viewer, order] = await Promise.all([
+  const [{ locale, theme }, overrides, viewer, order, settings] = await Promise.all([
     getServerPrefs(),
     getCopyOverrides(),
     getViewer(),
     getSiteOrder(),
+    getSiteSettings(),
   ]);
   // Admin = allowlisted Google account; any other session is a plain user (referrals only).
   const isAdmin = viewer?.isAdmin === true;
   // Project titles for the admin strip (admin only: visitors never pay for this read).
   let projectLabels: Record<string, { es: string; en: string }> = {};
   if (isAdmin) {
-    const { getMergedPastProjects } = await import("@/lib/projects");
+    const { getProjects } = await import("@/lib/projects-db");
     projectLabels = Object.fromEntries(
-      (await getMergedPastProjects()).map((p) => [p.id, { es: p.copy.es.title, en: p.copy.en.title }]),
+      (await getProjects()).map((p) => [p.id, { es: p.copy.es.title, en: p.copy.en.title }]),
     );
   }
   return (
@@ -153,18 +124,22 @@ export default async function RootLayout({
         className={`${spaceGrotesk.className} relative min-h-full`}
         suppressHydrationWarning
       >
-        <ThemeProvider initialTheme={theme}>
-          <LocaleProvider initialLocale={locale} overrides={overrides}>
-            <CosmicBg />
-            <SiteControls signedIn={Boolean(viewer)} />
-            <AdminProvider isAdmin={isAdmin} signedIn={Boolean(viewer)}>
-              <SiteOrderProvider initial={order}>
-                <div className="relative z-10">{children}</div>
-                {isAdmin ? <AdminStripGate projectLabels={projectLabels} /> : null}
-              </SiteOrderProvider>
-            </AdminProvider>
-          </LocaleProvider>
-        </ThemeProvider>
+        <style dangerouslySetInnerHTML={{ __html: themeCss(settings) }} />
+        <SiteSettingsProvider value={settings}>
+          <ThemeProvider initialTheme={theme}>
+            <LocaleProvider initialLocale={locale} overrides={overrides}>
+              <CosmicBg />
+              <SiteControls signedIn={Boolean(viewer)} />
+              <AdminProvider isAdmin={isAdmin} signedIn={Boolean(viewer)}>
+                <SiteOrderProvider initial={order}>
+                  <div className="relative z-10">{children}</div>
+                  {isAdmin ? <AdminStripGate projectLabels={projectLabels} /> : null}
+                  {isAdmin ? <SiteSettingsEditor /> : null}
+                </SiteOrderProvider>
+              </AdminProvider>
+            </LocaleProvider>
+          </ThemeProvider>
+        </SiteSettingsProvider>
       </body>
     </html>
   );

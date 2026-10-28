@@ -10,14 +10,11 @@ import {
 } from "@/components/icons/social";
 import { PageShell } from "@/components/page-shell";
 import { HireButton } from "@/components/hire-button";
-import { contactSocials } from "@/content/site";
+import { useSiteSettings } from "@/components/site-settings-context";
 import { useSectionShown } from "@/components/site-order-context";
 import { useLocale } from "@/i18n/locale-provider";
 
-const socialIcons: Record<
-  (typeof contactSocials)[number]["id"],
-  { Icon: ComponentType<{ className?: string }>; className?: string; accent: string }
-> = {
+const socialIcons: Record<string, { Icon: ComponentType<{ className?: string }>; className?: string; accent: string }> = {
   x: {
     Icon: XIcon,
     className: "text-foreground",
@@ -41,13 +38,18 @@ const socialIcons: Record<
 
 export default function ContactPage() {
   const { t } = useLocale();
+  const settings = useSiteSettings();
   const hireShown = useSectionShown("hire");
+  const rows = settings.socials.filter((s) => s.id !== "github");
 
   return (
     <PageShell title={t.contact.title}>
       <div className="cp-list cp-list-2col">
-        {contactSocials.map((s) => {
-          const { Icon, className: iconClass, accent } = socialIcons[s.id];
+        {rows.map((s) => {
+          const known = socialIcons[s.id];
+          const Icon = known?.Icon;
+          const iconClass = known?.className;
+          const accent = known?.accent ?? "var(--foreground)";
           return (
             <CpRow
               key={s.id}

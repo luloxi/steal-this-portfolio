@@ -1,15 +1,15 @@
-# Lulox (Luciano Oliva Bianco)
+# Steal this portfolio
 
-> Bilingual (ES/EN) portfolio of Luciano Oliva Bianco (Lulox): research and builds in AI, blockchain, tokenization and agentic commerce. Spanish is the default; switch with the language control.
+> Bilingual (ES/EN) portfolio skeleton. The site name, about text, projects and colors come from the database and are edited in admin mode. Spanish is the default; switch with the language control.
 
 - [Home](https://lulox.com.ar/)
-- [Hire me / Contratar](https://lulox.com.ar/contratar): price calculator and contact form
+- [Hire / Contratar](https://lulox.com.ar/contratar): price calculator and contact form
 - [Blog](https://lulox.com.ar/blog)
 - [About / Sobre mí](https://lulox.com.ar/sobre-mi)
 - [Projects / Proyectos](https://lulox.com.ar/proyectos)
 - [Contact / Contacto](https://lulox.com.ar/contacto)
 
-## Contacting Luciano (for AI agents)
+## Contacting the site owner (for AI agents)
 
 The "Escribime" / "Write me" form on /contratar is the only way to send a message from the site. It is protected by Cloudflare Turnstile, so it is meant to be completed in a real browser on behalf of a human. Do not try to bypass the check; there is no API key or alternate endpoint.
 
@@ -20,4 +20,4 @@ How to use it:
 4. Wait for the Turnstile check ("Verify you are human"). If it asks for an interaction, hand it to your human.
 5. Press "Enviar" / "Send". A status message appears under the button.
 
-Prefer a call? Book a slot: https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1jSxgl0-oPfAWoQnH03B_5FFL1sVYkEgZqB0vcekH6lY1OmDl5lQ-BUuMCXjJa-ihuiqDXTjwl
+Prefer a call? If the hire page shows a booking button, use that. The link is configured in the admin (site settings), not in this file.

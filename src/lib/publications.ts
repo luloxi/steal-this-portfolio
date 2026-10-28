@@ -3,7 +3,7 @@
  * the story that mentions them. Pure logic (defaults, validation, display),
  * shared by the page, the admin editor and PUT /api/publications.
  * Storage: D1 table `publications` (migrations/0011_publications.sql). No rows
- * = DEFAULT_PUBLICATIONS. "Remove" is a soft hide (hidden = true), never a DELETE.
+ * = an empty list (DEFAULT_PUBLICATIONS). "Remove" is a soft hide (hidden = true), never a DELETE.
  */
 import type { Locale } from "@/i18n/types";
 import { joinSections, splitSections } from "@/lib/md-sections";
@@ -30,43 +30,8 @@ export type Publication = {
   hidden: boolean;
 };
 
-/**
- * Code defaults (used while D1 has no rows). Every field comes from the
- * public pages themselves (checked 2026-10-23):
- * - LinkedIn post: document title, cover "Authors, consultants, and
- *   reviewers", post date 2026-09-04.
- * - Google Drive PDF: title and author line of page 1. No date in the PDF.
- * The notes are the labels this site already used for each link.
- */
-export const DEFAULT_PUBLICATIONS: readonly Publication[] = [
-  {
-    id: "rwa-tokenization-cip-0113",
-    title:
-      "A Technical, Commercial, and Regulatory Analysis to Strengthen Cardano's Position in Real-World Asset Tokenization: CIP-0113 vs ERC-3643",
-    title_en: "",
-    note_es: "El panorama actual de tokenización",
-    note_en: "The current landscape of tokenization",
-    authors:
-      "Juan Ignacio Lazarte, Mauro Agustín Andreoli, Lucas Macchiavelli, Alejandro Ravasio, Luciano Oliva Bianco, Claudio J. Tessone, Alejandro Rodríguez Ariola",
-    year: 2026,
-    venue: "LinkedIn",
-    url: "https://www.linkedin.com/feed/update/urn:li:activity:7501713293321854976/",
-    hidden: false,
-  },
-  {
-    id: "lcp-midnight-city",
-    title:
-      "How to Align Midnight City with the Legal Context Protocol (LCP): Integrating Midnight’s Smart Compliance Principle into Agentic Commerce",
-    title_en: "",
-    note_es: "El contexto legal del comercio agéntico",
-    note_en: "The legal context of agentic commerce",
-    authors: "Mauro Andreoli, Luciano Oliva Bianco",
-    year: null,
-    venue: "PDF",
-    url: "https://drive.google.com/file/d/1Malx_E4Z1flmVr5hQgCRejJEWL8HxjiQ/view?usp=drive_link",
-    hidden: false,
-  },
-];
+/** Code defaults when D1 has no rows. A fresh portfolio has no publications. */
+export const DEFAULT_PUBLICATIONS: readonly Publication[] = [];
 
 export const PUB_MAX_ITEMS = 30;
 export const PUB_LIMITS = {

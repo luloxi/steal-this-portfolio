@@ -51,7 +51,7 @@
   "vars": {
     "CONTACT_TO": "hola@lulox.com.ar",
     "CONTACT_FROM": "no-responder@lulox.com.ar",
-    // With RESEND_API_KEY set: Luciano's copy goes here and the visitor gets a confirmation.
+    // With RESEND_API_KEY set: the owner's copy goes here and the visitor gets a confirmation.
     "CONTACT_INBOX": "hola@lulox.com.ar",
     "TURNSTILE_SITE_KEY": "0x4AAAAAAFYS_U1JH5j5qo8w"
   },

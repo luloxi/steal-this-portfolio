@@ -7,7 +7,7 @@ export { MAX_MESSAGE };
 /**
  * /contratar contact form: validates the submission, recomputes the budget
  * server-side from the calculator inputs (never trusts client totals) and
- * sends one email to Luciano via Resend (RESEND_API_KEY), falling back to the
+ * sends one email via Resend (RESEND_API_KEY), falling back to the
  * Email Routing `send_email` binding. Every send needs a valid Cloudflare
  * Turnstile token, checked server-side via siteverify (TURNSTILE_SECRET_KEY).
  */
@@ -108,6 +108,10 @@ export type HireDeps = {
   /** Stored pricing (same as the page). Missing = code defaults. Never taken from the request. */
   pricing?: Pricing;
   saveLead?: (lead: { name: string; email: string; message: string; budgetJson: string; totalUsd: number; refCode: string | null; referrerId: string | null }) => Promise<unknown>;
+  /** From-name on the email. Missing = a generic label. */
+  fromName?: string;
+  /** Public site URL, used in the footer ("sent from host/contratar"). */
+  publicUrl?: string;
 };
 
 export async function handleHireContact(raw: unknown, env: HireEnv, ip: string, deps: HireDeps = {}): Promise<Result> {
@@ -150,6 +154,13 @@ export async function handleHireContact(raw: unknown, env: HireEnv, ip: string, 
   const refLine = referrer ? `Referido por: ${referrer.code} (${oneLine(referrer.name)})` : null;
   const to = env.CONTACT_TO ?? "hola@lulox.com.ar";
   const from = env.CONTACT_FROM ?? "no-responder@lulox.com.ar";
+  const fromName = (deps.fromName ?? "Portfolio").trim() || "Portfolio";
+  let publicHost = "example.com";
+  try {
+    publicHost = new URL(deps.publicUrl || "https://example.com").host;
+  } catch {
+    publicHost = "example.com";
+  }
   const subject = `Contratar: ${name} · ${b.total} (${LABEL.mode[budget.mode]})`;
   const text = [
     `${name} <${email}>`,
@@ -164,7 +175,7 @@ export async function handleHireContact(raw: unknown, env: HireEnv, ip: string, 
     ...(refLine ? ["", refLine] : []),
     "",
     "--",
-    `Enviado desde lulox.com.ar/contratar. Respondé este email para contestarle a ${email}.`,
+    `Enviado desde ${publicHost}/contratar. Respondé este email para contestarle a ${email}.`,
   ].join("\n");
   const row = (k: string, v: string, strong = false) =>
     `<tr><td style="padding:4px 12px 4px 0;color:#555">${esc(k)}</td><td style="padding:4px 0;text-align:right;font-family:monospace${strong ? ";font-weight:700;font-size:18px" : ""}">${esc(v)}</td></tr>`;
@@ -175,7 +186,7 @@ export async function handleHireContact(raw: unknown, env: HireEnv, ip: string, 
 <p style="margin:0 0 8px;font-size:14px;line-height:1.6">${b.summary.map(esc).join("<br>")}</p>
 <table role="presentation" style="border-collapse:collapse;width:100%;font-size:14px">${b.lines.map(([k, v]) => row(k, v)).join("")}${row("Total estimado", b.total, true)}${row(b.depositLabel, b.deposit)}</table>
 ${refLine ? `<p style="margin:16px 0 0;font-size:14px;font-weight:700;color:#0F766E">${esc(refLine)}</p>` : ""}
-<p style="font-size:12px;color:#666;margin-top:24px">Enviado desde lulox.com.ar/contratar. Respondé este email para contestarle a ${esc(email)}.</p>
+<p style="font-size:12px;color:#666;margin-top:24px">Enviado desde ${esc(publicHost)}/contratar. Respondé este email para contestarle a ${esc(email)}.</p>
 </div></body></html>`;
 
   try {
@@ -183,11 +194,11 @@ ${refLine ? `<p style="margin:16px 0 0;font-size:14px;font-weight:700;color:#0F7
       const r = await (env.fetch ?? fetch)("https://api.resend.com/emails", {
         method: "POST",
         headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ from: `Lulox <${from}>`, to: [to], reply_to: email, subject, html, text }),
+        body: JSON.stringify({ from: `${fromName} <${from}>`, to: [to], reply_to: email, subject, html, text }),
       });
       if (!r.ok) throw new Error(`resend ${r.status}`);
     } else {
-      await env.CONTACT_EMAIL!.send({ from: { email: from, name: "Lulox" }, to, replyTo: { email, name }, subject, html, text });
+      await env.CONTACT_EMAIL!.send({ from: { email: from, name: fromName }, to, replyTo: { email, name }, subject, html, text });
     }
   } catch {
     console.error("[hire-contact] send failed");

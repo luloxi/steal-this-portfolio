@@ -5,7 +5,7 @@ import { COPY_MAX_LENGTH, normalizeCopyValue } from "../src/lib/copy-value.ts";
 import { continueList, prefixLines, wrapSelection } from "../src/lib/md-edit.ts";
 
 test("long Markdown body (Sobre mí, ~5.5k chars) is accepted unchanged", () => {
-  const body = "Buenas *.\n\n## PRIMEROS PASOS\n\nEn **FEDUN** y *comida barata* #1 _x_ [a](https://x.y)\n\n" + "texto ".repeat(900) + "\n\n* Respecto a Lulox: nota.";
+  const body = "Buenas *.\n\n## PRIMEROS PASOS\n\nEn **FEDUN** y *comida barata* #1 _x_ [a](https://x.y)\n\n" + "texto ".repeat(900) + "\n\n* Respecto al sitio: nota.";
   assert.ok(body.length > 5000);
   const r = normalizeCopyValue(body);
   assert.equal(r.ok, true);

@@ -4,13 +4,13 @@ import { CopyMarkdown } from "@/components/copy-markdown";
 import { CpRow } from "@/components/cp-row";
 import { GitHubIcon } from "@/components/icons/social";
 import { PageShell } from "@/components/page-shell";
-import type { PastProject, ProjectStatus } from "@/content/projects";
+import type { PortfolioProject, ProjectStatus } from "@/lib/projects";
 import { useLocale } from "@/i18n/locale-provider";
 import { useEditMode } from "@/components/admin-context";
 import { ProjectText, saveProject } from "@/components/project-text";
 import { CopyText } from "@/components/copy-text";
 import { ProjectDetailsEdit } from "@/components/project-details-edit";
-import { MochiPet } from "@/components/mochi-pet";
+import { ProjectPet } from "@/components/mochi-pet";
 
 const statusClass: Record<ProjectStatus, string> = {
   live: "project-status-live",
@@ -19,7 +19,7 @@ const statusClass: Record<ProjectStatus, string> = {
 };
 
 /** Project detail, rendered on the server with D1 overrides already merged. */
-export function ProjectDetail({ project }: { project: PastProject }) {
+export function ProjectDetail({ project }: { project: PortfolioProject }) {
   const { t, locale } = useLocale();
   const editOn = useEditMode();
 
@@ -41,7 +41,7 @@ export function ProjectDetail({ project }: { project: PastProject }) {
       footerHref="/proyectos"
       footerLabel={t.projects.backToProjectsCta}
     >
-      {project.id === "mochi" ? <MochiPet /> : null}
+      {project.widget === "pet" ? <ProjectPet /> : null}
       <div className="space-y-6">
         <div
           className="cp-panel project-detail-hero"
@@ -52,14 +52,10 @@ export function ProjectDetail({ project }: { project: PastProject }) {
             <span className="cp-nav-corner cp-nav-corner-br" />
           </span>
           <div className="cp-panel-inner flex items-center gap-4 sm:gap-5">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={project.icon}
-              alt=""
-              width={88}
-              height={88}
-              className="project-detail-icon shrink-0"
-            />
+            {project.icon ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={project.icon} alt="" width={88} height={88} className="project-detail-icon shrink-0" />
+            ) : null}
             <div className="min-w-0">
               <CopyText
                 as="p"
@@ -163,13 +159,15 @@ export function ProjectDetail({ project }: { project: PastProject }) {
               accent="var(--section-projects)"
             />
           ) : null}
-          <CpRow
-            href={project.github}
-            label={t.projects.openGithub}
-            accent="var(--foreground)"
-            Icon={GitHubIcon}
-            iconClass="text-foreground"
-          />
+          {project.github ? (
+            <CpRow
+              href={project.github}
+              label={t.projects.openGithub}
+              accent="var(--foreground)"
+              Icon={GitHubIcon}
+              iconClass="text-foreground"
+            />
+          ) : null}
         </div>
       </div>
     </PageShell>

@@ -4,7 +4,7 @@ import { test } from "node:test";
 import { deleteSection, joinSections, replaceIntro, splitSections, upsertSection } from "../src/lib/md-sections.ts";
 
 const md = [
-  "Buenas, soy Lulox *. ",
+  "Buenas, soy Ana *. ",
   "",
   "## PRIMEROS PASOS",
   "",
@@ -21,7 +21,7 @@ const md = [
   "",
   "Fin.",
   "",
-  "* Respecto a Lulox: nota.",
+  "* Respecto al sitio: nota.",
 ].join("\n");
 
 test("split/join round-trips exactly", () => {
@@ -53,6 +53,6 @@ test("add, delete, intro", () => {
   assert.equal(splitSections(del).sections.length, 2);
   assert.ok(!del.includes("SEGUNDA"));
   assert.ok(del.includes("Dos con **negrita**.\n\n## ÚLTIMA"));
-  const intro = replaceIntro(md, "Hola, soy Lulox.");
-  assert.match(intro, /^Hola, soy Lulox\.\s*\n\n## PRIMEROS PASOS/);
+  const intro = replaceIntro(md, "Hola, soy Ana.");
+  assert.match(intro, /^Hola, soy Ana\.\s*\n\n## PRIMEROS PASOS/);
 });

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
-import { pastProjectIds } from "@/content/projects";
+import { listProjectIds } from "@/lib/projects-db";
 import { getPostBySlug, getPostBySlugEn } from "@/lib/blog";
 import { EN_PREFIX, LOCALE_HEADER, enToEsPath, localeFromPath } from "@/lib/routes";
 import type { Locale } from "@/i18n/types";
@@ -62,6 +62,15 @@ function notFoundRewrite(request: NextRequest, locale: Locale) {
  * allowlisted admin with edit mode ON still opens them (marked as hidden).
  * D1 is read only for paths that belong to a section.
  */
+/** True when this id is a row in `projects` (hidden rows included: the hide check is separate). */
+async function knownProjectId(id: string): Promise<boolean> {
+  try {
+    return (await listProjectIds(await getDb())).includes(id);
+  } catch {
+    return false;
+  }
+}
+
 async function hiddenFromVisitor(request: NextRequest, esPath: string | null): Promise<boolean> {
   if (!esPath || !sectionForPath(esPath)) return false;
   const order = await loadSiteOrder();
@@ -156,7 +165,7 @@ async function route(request: NextRequest): Promise<NextResponse> {
     const es = enToEsPath(pathname);
     if (!es) return notFoundRewrite(request, "en");
     const project = es.match(/^\/proyectos\/([^/]+)\/?$/);
-    if (project && !(pastProjectIds as string[]).includes(decodeURIComponent(project[1]))) {
+    if (project && !(await knownProjectId(decodeURIComponent(project[1])))) {
       return notFoundRewrite(request, "en");
     }
     return rewrite(request, "en", es);
@@ -178,9 +187,7 @@ async function route(request: NextRequest): Promise<NextResponse> {
   const project = pathname.match(/^\/proyectos\/([^/]+)\/?$/);
   if (project) {
     const id = decodeURIComponent(project[1]);
-    return (pastProjectIds as string[]).includes(id)
-      ? next(request, "es")
-      : notFoundRewrite(request, "es");
+    return (await knownProjectId(id)) ? next(request, "es") : notFoundRewrite(request, "es");
   }
 
   return next(request, "es");

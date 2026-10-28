@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { site } from "@/content/site";
 import type { Locale } from "@/i18n/types";
 import { getRequestLocale } from "@/lib/prefs";
 import { pathPair } from "@/lib/routes";
+import { getSiteSettings } from "@/lib/site-settings-db";
 
 /**
  * Per-route share metadata (og:* + twitter:* + canonical + hreflang) in the
@@ -14,13 +14,16 @@ import { pathPair } from "@/lib/routes";
  */
 export type PageCopy = Record<Locale, { title: string | null; description: string }>;
 
-export const ogImageUrl = () => new URL(site.ogImage, site.url).href;
+export async function ogImageUrl() {
+  const s = await getSiteSettings();
+  return new URL(s.ogImage, s.url).href;
+}
 
 export const OG_LOCALE: Record<Locale, string> = { es: "es_AR", en: "en_US" };
 
-/** "Página | Lulox", or just "Lulox" when title is null (home). */
-export const shareTitle = (title: string | null) =>
-  title ? `${title} | ${site.name}` : site.name;
+/** "Page | Name", or just the site name when title is null (home). */
+export const shareTitle = (title: string | null, name: string) =>
+  title ? `${title} | ${name}` : name;
 
 /**
  * Short plain-text excerpt of a Markdown body (share card fallback when a post
@@ -42,34 +45,35 @@ export function excerpt(md: string, max = 160): string {
   return `${(sp > max * 0.6 ? cut.slice(0, sp) : cut).replace(/[\s,.;:]+$/, "")}…`;
 }
 
-const abs = (path: string) => new URL(path, site.url).href;
-
 /** Own canonical + hreflang es-AR / en-US / x-default (= Spanish). */
-export function alternatesFor(locale: Locale, paths: Record<Locale, string>): Metadata["alternates"] {
+export async function alternatesFor(locale: Locale, paths: Record<Locale, string>): Promise<Metadata["alternates"]> {
+  const s = await getSiteSettings();
+  const abs = (path: string) => new URL(path, s.url).href;
   return {
     canonical: abs(paths[locale]),
     languages: { "es-AR": abs(paths.es), "en-US": abs(paths.en), "x-default": abs(paths.es) },
   };
 }
 
-export function buildPageMetadata(
+export async function buildPageMetadata(
   locale: Locale,
   paths: Record<Locale, string>,
   copy: { title: string | null; description: string },
   extra?: { type?: "website" | "article"; images?: string[] },
-): Metadata {
-  const full = shareTitle(copy.title);
-  const url = abs(paths[locale]);
-  const images = extra?.images ?? [ogImageUrl()];
+): Promise<Metadata> {
+  const s = await getSiteSettings();
+  const full = shareTitle(copy.title, s.name);
+  const url = new URL(paths[locale], s.url).href;
+  const images = extra?.images ?? [new URL(s.ogImage, s.url).href];
   return {
     title: { absolute: full },
     description: copy.description,
-    alternates: alternatesFor(locale, paths),
+    alternates: await alternatesFor(locale, paths),
     openGraph: {
       type: extra?.type ?? "website",
       locale: OG_LOCALE[locale],
       alternateLocale: [OG_LOCALE[locale === "es" ? "en" : "es"]],
-      siteName: site.name,
+      siteName: s.name,
       url,
       title: full,
       description: copy.description,
@@ -80,8 +84,8 @@ export function buildPageMetadata(
       title: full,
       description: copy.description,
       images,
-      creator: site.xHandle,
-      site: site.xHandle,
+      creator: s.xHandle,
+      site: s.xHandle,
     },
   };
 }

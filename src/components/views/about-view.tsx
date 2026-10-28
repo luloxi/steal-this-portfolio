@@ -13,7 +13,7 @@ import {
 import { PageShell } from "@/components/page-shell";
 import { CopyMarkdown } from "@/components/copy-markdown";
 import { CopyText } from "@/components/copy-text";
-import { socials, tasteLinks } from "@/content/site";
+import { useSiteSettings } from "@/components/site-settings-context";
 import { useLocale } from "@/i18n/locale-provider";
 import { insertSection, splitSections } from "@/lib/md-sections";
 import { insertJob, insertStory, parseLayout, recordsAfterStory, serializeLayout, type LayoutItem } from "@/lib/page-layout";
@@ -22,10 +22,6 @@ import { DEFAULT_PUBLICATIONS, stripPublicationLinksInBody, type Publication } f
 import { saveCopy, useEditMode } from "@/components/admin-context";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-const linkedInHref =
-  socials.find((s) => s.id === "linkedin")?.href ??
-  "https://linkedin.com/in/lulox";
 
 type OrgLogo =
   | { type: "icon"; Icon: ComponentType<{ className?: string }> }
@@ -50,7 +46,6 @@ const platforms = [
   {
     id: "letterboxd" as const,
     label: "Letterboxd",
-    href: tasteLinks.letterboxd,
     Icon: LetterboxdBrandIcon,
     iconClass: undefined as string | undefined,
     accent: "#ff8000",
@@ -58,7 +53,6 @@ const platforms = [
   {
     id: "lastfm" as const,
     label: "Last.fm",
-    href: tasteLinks.lastfm,
     Icon: LastFmIcon,
     iconClass: "text-[#D51007]",
     accent: "#D51007",
@@ -66,7 +60,6 @@ const platforms = [
   {
     id: "spotify" as const,
     label: "Spotify",
-    href: tasteLinks.spotify,
     Icon: SpotifyIcon,
     iconClass: "text-[#1DB954]",
     accent: "#1DB954",
@@ -79,7 +72,14 @@ const platforms = [
  */
 export function AboutView({ publications }: { publications: readonly Publication[] }) {
   const { t } = useLocale();
+  const settings = useSiteSettings();
   const editOn = useEditMode();
+  const linkedInHref = settings.socials.find((s) => s.id === "linkedin")?.href ?? "";
+  const tasteHref = {
+    letterboxd: settings.tasteLetterboxd,
+    lastfm: settings.tasteLastfm,
+    spotify: settings.tasteSpotify,
+  };
   const about = t.about;
   // Old copy tolerance: a trailing list of links to these publications is
   // dropped from the story (the block below shows them). Edit mode keeps the
@@ -125,27 +125,31 @@ export function AboutView({ publications }: { publications: readonly Publication
 
         <section aria-label={t.tastes.title}>
           <div className="cp-list">
-            <CpRow
-              href={linkedInHref}
-              label={about.linkedInCta}
-              detail={about.linkedInDetail}
-              accent="#0A66C2"
-              Icon={LinkedInIcon}
-              iconClass="text-[#0A66C2]"
-              iconSize="lg"
-            />
-            {platforms.map((p) => (
+            {linkedInHref ? (
               <CpRow
-                key={p.id}
-                href={p.href}
-                label={p.label}
-                detail={t.tastes.platforms[p.id]}
-                accent={p.accent}
-                Icon={p.Icon as ComponentType<{ className?: string }>}
-                iconClass={p.iconClass}
+                href={linkedInHref}
+                label={about.linkedInCta}
+                detail={about.linkedInDetail}
+                accent="#0A66C2"
+                Icon={LinkedInIcon}
+                iconClass="text-[#0A66C2]"
                 iconSize="lg"
               />
-            ))}
+            ) : null}
+            {platforms.map((p) =>
+              tasteHref[p.id] ? (
+                <CpRow
+                  key={p.id}
+                  href={tasteHref[p.id]}
+                  label={p.label}
+                  detail={t.tastes.platforms[p.id]}
+                  accent={p.accent}
+                  Icon={p.Icon as ComponentType<{ className?: string }>}
+                  iconClass={p.iconClass}
+                  iconSize="lg"
+                />
+              ) : null,
+            )}
           </div>
         </section>
       </div>

@@ -4,7 +4,6 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { DatabaseSync } from "node:sqlite";
 import {
-  PROJECT_KEYS,
   SECTION_KEYS,
   defaultOrder,
   hiddenSet,
@@ -22,19 +21,18 @@ import {
 } from "../src/lib/site-sections.ts";
 import { enToEsPath, pathPair } from "../src/lib/routes.ts";
 import { sections } from "../src/content/site.ts";
-import { pastProjectIds } from "../src/content/projects.ts";
 
-test("keys come from the code, in the current order", () => {
+test("section keys come from the code, in the current order", () => {
   assert.deepEqual(SECTION_KEYS, sections.map((s) => s.id));
   assert.deepEqual(SECTION_KEYS, ["hire", "blog", "about", "projects", "contact", "referrals"]);
-  assert.deepEqual(PROJECT_KEYS, pastProjectIds);
   assert.ok(!(SECTION_KEYS as readonly string[]).includes("home"), "home is not hideable");
 });
 
-test("no rows (or missing table) = everything visible in code order", () => {
+test("no rows (or missing table) = sections visible in code order, and no projects", () => {
   assert.deepEqual(mergeSections([]), defaultOrder(SECTION_KEYS));
   assert.deepEqual(mergeSections(null), defaultOrder(SECTION_KEYS));
-  assert.deepEqual(mergeProjects(undefined), defaultOrder(PROJECT_KEYS));
+  assert.deepEqual(mergeProjects(undefined), []);
+  assert.deepEqual(mergeProjects([]), []);
 });
 
 test("merge: sort by position, drop unknown/duplicates, append missing visible", () => {
@@ -82,14 +80,16 @@ test("validation: full permutation with boolean visible only", () => {
     validateOrderPayload({ kind: "sections", items: [{ key: "hire", visible: "no" }, ...items.slice(1)] }),
     { ok: false, error: "invalid_visible" },
   );
-  // Project ids are checked against projects, not sections.
-  assert.deepEqual(validateOrderPayload({ kind: "projects", items }), { ok: false, error: "wrong_length" });
-  const p = PROJECT_KEYS.map((key) => ({ key, visible: true }));
-  assert.ok(validateOrderPayload({ kind: "projects", items: p }).ok);
+  // Projects are a dynamic set: the route passes the ids that exist in D1.
+  const ids = ["alpha", "beta"];
+  assert.deepEqual(validateOrderPayload({ kind: "projects", items }, ids), { ok: false, error: "wrong_length" });
+  const p = ids.map((key) => ({ key, visible: true }));
+  assert.ok(validateOrderPayload({ kind: "projects", items: p }, ids).ok);
   assert.deepEqual(
-    validateOrderPayload({ kind: "projects", items: [{ key: "blog", visible: true }, ...p.slice(1)] }),
+    validateOrderPayload({ kind: "projects", items: [{ key: "nope", visible: true }, p[1]] }, ids),
     { ok: false, error: "unknown_key" },
   );
+  assert.equal(validateOrderPayload({ kind: "projects", items: [{ key: "Bad", visible: true }] }).ok, false);
 });
 
 test("moveItem and visibleItems", () => {
@@ -102,16 +102,16 @@ test("moveItem and visibleItems", () => {
 });
 
 test("orderRecords: order, hide, admin sees hidden", () => {
-  const recs = pastProjectIds.map((id) => ({ id }));
+  const recs = ["alpha", "beta", "gamma"].map((id) => ({ id }));
   const order = mergeProjects([
-    { key: "punksociety", position: 0, visible: 1 },
-    { key: "mochi", position: 1, visible: 0 },
-    { key: "sami", position: 2, visible: 1 },
+    { key: "gamma", position: 0, visible: 1 },
+    { key: "beta", position: 1, visible: 0 },
+    { key: "alpha", position: 2, visible: 1 },
   ]);
-  // No row for djtube: merge appends missing ids, visible, in code order.
-  assert.deepEqual(orderRecords(recs, order).map((r) => r.id), ["punksociety", "sami", "djtube"]);
-  assert.deepEqual(orderRecords(recs, order, true).map((r) => r.id), ["punksociety", "mochi", "sami", "djtube"]);
-  assert.deepEqual(orderRecords(recs, defaultOrder(PROJECT_KEYS)).map((r) => r.id), pastProjectIds);
+  assert.deepEqual(orderRecords(recs, order).map((r) => r.id), ["gamma", "alpha"]);
+  assert.deepEqual(orderRecords(recs, order, true).map((r) => r.id), ["gamma", "beta", "alpha"]);
+  // A record the order does not know stays at the end.
+  assert.deepEqual(orderRecords([...recs, { id: "extra" }], order, true).map((r) => r.id), ["gamma", "beta", "alpha", "extra"]);
 });
 
 test("path -> section / project, subpages included", () => {
@@ -122,9 +122,9 @@ test("path -> section / project, subpages included", () => {
   assert.equal(sectionForPath("/blog/un-articulo?x=1"), "blog");
   assert.equal(sectionForPath("/sobre-mi"), "about");
   assert.equal(sectionForPath("/tastes"), "about");
-  assert.equal(sectionForPath("/proyectos/mochi"), "projects");
+  assert.equal(sectionForPath("/proyectos/alpha"), "projects");
   assert.equal(sectionForPath("/contacto/"), "contact");
-  assert.equal(projectForPath("/proyectos/mochi"), "mochi");
+  assert.equal(projectForPath("/proyectos/alpha"), "alpha");
   assert.equal(projectForPath("/proyectos"), null);
 });
 
@@ -136,7 +136,7 @@ test("404 gating: hidden section pages in es and /en (proxy maps /en first)", ()
     const es = p.startsWith("/en") ? enToEsPath(p) : p;
     assert.ok(es && isPathHidden(es, blogOff), p);
   }
-  for (const p of ["/", "/en", "/contratar", "/en/hire", "/privacidad", "/en/privacy", "/proyectos/mochi"]) {
+  for (const p of ["/", "/en", "/contratar", "/en/hire", "/privacidad", "/en/privacy", "/proyectos/alpha"]) {
     const es = p.startsWith("/en") ? enToEsPath(p) : p;
     assert.ok(es && !isPathHidden(es, blogOff), p);
   }
@@ -153,25 +153,24 @@ test("404 gating: hidden section pages in es and /en (proxy maps /en first)", ()
 
 test("404 gating: hidden project only (es + en), the list stays", () => {
   const sec = mergeSections([]);
-  const proj = mergeProjects([{ key: "sami", position: 0, visible: 0 }]);
-  assert.ok(isPathHidden("/proyectos/sami", sec, proj));
-  assert.ok(isPathHidden(enToEsPath("/en/projects/sami")!, sec, proj));
-  assert.ok(!isPathHidden("/proyectos/mochi", sec, proj));
+  const proj = mergeProjects([{ key: "alpha", position: 0, visible: 0 }]);
+  assert.ok(isPathHidden("/proyectos/alpha", sec, proj));
+  assert.ok(isPathHidden(enToEsPath("/en/projects/alpha")!, sec, proj));
+  assert.ok(!isPathHidden("/proyectos/beta", sec, proj));
   assert.ok(!isPathHidden("/proyectos", sec, proj));
   // Whole projects section hidden: every project page too.
-  assert.ok(isPathHidden("/proyectos/mochi", HIDE(["projects"]), mergeProjects([])));
+  assert.ok(isPathHidden("/proyectos/beta", HIDE(["projects"]), mergeProjects([])));
 });
 
 test("sitemap filter: hidden sections and projects leave both languages", () => {
-  const order = { sections: HIDE(["contact"]), projects: mergeProjects([{ key: "mochi", position: 0, visible: 0 }]) };
+  const order = { sections: HIDE(["contact"]), projects: mergeProjects([{ key: "alpha", position: 0, visible: 0 }]) };
   const shown = (p: string) => !isPathHidden(p, order.sections, order.projects);
   const pages = ["/", "/sobre-mi", "/proyectos", "/blog", "/contacto", "/contratar", "/privacidad"].filter(shown);
   assert.deepEqual(pages, ["/", "/sobre-mi", "/proyectos", "/blog", "/contratar", "/privacidad"]);
   const urls = pages.flatMap((p) => Object.values(pathPair(p)));
   assert.ok(!urls.includes("/contacto") && !urls.includes("/en/contact"));
-  const projects = pastProjectIds.filter((id) => shown(`/proyectos/${id}`));
-  assert.ok(!projects.includes("mochi"));
-  assert.equal(projects.length, pastProjectIds.length - 1);
+  const projects = ["alpha", "beta"].filter((id) => shown(`/proyectos/${id}`));
+  assert.deepEqual(projects, ["beta"]);
 });
 
 test("referrals is a section: hiding it 404s /referidos and /en/referrals and drops it from the sitemap", () => {
@@ -208,7 +207,7 @@ test("migration 0008 is additive and the upsert never deletes", () => {
   assert.equal(rows.length, SECTION_KEYS.length);
   assert.deepEqual(mergeSections(rows), [...SECTION_KEYS].reverse().map((key) => ({ key, visible: true })));
   assert.throws(() => db.prepare("INSERT INTO site_sections (key, position, visible) VALUES ('x', 0, 2)").run());
-  db.prepare("INSERT INTO project_settings (id, position, visible) VALUES ('mochi', 0, 0)").run();
+  db.prepare("INSERT INTO project_settings (id, position, visible) VALUES ('alpha', 0, 0)").run();
   const p = db.prepare("SELECT id AS key, position, visible FROM project_settings").all() as { key: string; position: number; visible: number }[];
-  assert.equal(hiddenSet(mergeProjects(p)).has("mochi"), true);
+  assert.equal(hiddenSet(mergeProjects(p)).has("alpha"), true);
 });

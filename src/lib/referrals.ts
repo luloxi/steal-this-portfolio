@@ -3,7 +3,7 @@
  * cookie, payouts. Whoever brings a client earns REFERRAL_PCT of what that
  * client pays. Used by proxy.ts, the API routes, the pages and tests.
  */
-import { site } from "@/content/site";
+import { DEFAULT_SITE } from "@/lib/site-settings";
 
 export const REFERRAL_PCT = 15;
 export const REF_COOKIE = "lulox-ref";
@@ -61,10 +61,11 @@ export function refCookie(code: string, secure: boolean): string {
   return `${REF_COOKIE}=${encodeURIComponent(code)}; Path=/; Max-Age=${REF_MAX_AGE}; SameSite=Lax${secure ? "; Secure" : ""}`;
 }
 
-/** Share links for a code, in both languages. */
-export function shareLinks(code: string): { es: string; en: string } {
+/** Share links for a code, in both languages. `base` is the public site URL. */
+export function shareLinks(code: string, base = DEFAULT_SITE.url): { es: string; en: string } {
+  const root = base.replace(/\/$/, "");
   const c = encodeURIComponent(code);
-  return { es: `${site.url}/contratar?${REF_PARAM}=${c}`, en: `${site.url}/en/hire?${REF_PARAM}=${c}` };
+  return { es: `${root}/contratar?${REF_PARAM}=${c}`, en: `${root}/en/hire?${REF_PARAM}=${c}` };
 }
 
 /* ---------- people ---------- */

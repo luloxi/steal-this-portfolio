@@ -3,85 +3,84 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* CTA rainbow (Contratar / Escribime buttons, limit modal border). */
+  /* CTA rainbow (hire / write buttons, limit modal border). Neutral until site_settings overrides it. */
   --cta-rainbow: #ff3b3b, #ff9f1c, #ffe14d, #7CFF3A, #2ec5ff, #8a5cff, #ff4fd8, #ff3b3b;
-  --background: #120708;
-  --foreground: #ffecef;
-  --muted: #b59095;
-  --border: color-mix(in oklab, #fdb5bf 18%, transparent);
-  --accent: #f43f5e;
-  --accent-2: #fb923c;
-  --surface: color-mix(in oklab, #301014 80%, transparent);
-  --neon-crimson: #e11d48;
-  --neon-orange: #f97316;
-  --glow-crimson: color-mix(in oklab, #e11d48 45%, transparent);
-  --glow-orange: color-mix(in oklab, #f97316 35%, transparent);
-  --email-bg: color-mix(in oklab, #f97316 18%, transparent);
-  --email-border: color-mix(in oklab, #fb923c 55%, transparent);
-  --email-fg: #fdba74;
-  --email-btn-bg: color-mix(in oklab, #f97316 28%, transparent);
-  --section-about: #F25022;
-  --section-projects: #FFB900;
-  --section-blog: #00A4EF;
-  --section-tastes: #fb7185;
-  --section-contact: #7FBA00;
-  --section-hire: #B46CFF;
-  --section-referrals: #2DD4BF;
+  --background: #121417;
+  --foreground: #f4f4f5;
+  --muted: #a1a1aa;
+  --border: color-mix(in oklab, #a1a1aa 22%, transparent);
+  --accent: #3b82f6;
+  --accent-2: #60a5fa;
+  --surface: color-mix(in oklab, #1c1f26 86%, transparent);
+  --neon-crimson: #3b82f6;
+  --neon-orange: #64748b;
+  --glow-crimson: color-mix(in oklab, #3b82f6 40%, transparent);
+  --glow-orange: color-mix(in oklab, #64748b 28%, transparent);
+  --email-bg: color-mix(in oklab, #3b82f6 16%, transparent);
+  --email-border: color-mix(in oklab, #60a5fa 50%, transparent);
+  --email-fg: #bfdbfe;
+  --email-btn-bg: color-mix(in oklab, #3b82f6 28%, transparent);
+  --section-about: #64748b;
+  --section-projects: #3b82f6;
+  --section-blog: #0ea5e9;
+  --section-tastes: #a1a1aa;
+  --section-contact: #22c55e;
+  --section-hire: #8b5cf6;
+  --section-referrals: #14b8a6;
 }
 
-/* Light mode: clean neutral (white / cool grey), crimson accent used sparingly */
+/* Light mode: neutral. The live palette is injected from site_settings. */
 :root:not(.dark) {
   --background: #f6f7f9;
   --foreground: #17191e;
   --muted: #5a5f69;
   --border: color-mix(in oklab, #1d2027 14%, transparent);
-  --accent: #a50021;
-  --accent-2: #c2410c;
+  --accent: #1d4ed8;
+  --accent-2: #2563eb;
   --surface: #ffffff;
-  --neon-crimson: #c8102e;
-  --neon-orange: #ea580c;
-  --glow-crimson: color-mix(in oklab, #c8102e 20%, transparent);
-  --glow-orange: color-mix(in oklab, #ea580c 16%, transparent);
-  --email-bg: color-mix(in oklab, #ffedd5 55%, #ffffff);
-  --email-border: color-mix(in oklab, #ea580c 75%, #c2410c);
-  --email-fg: #9a3412;
-  --email-btn-bg: color-mix(in oklab, #fdba74 45%, #ffffff);
-  /* Deep jewel tones that read clean on pearl, not neon-on-white */
-  --section-about: #D2381A;
-  --section-projects: #B07800;
-  --section-blog: #0078C8;
-  --section-tastes: #be123c;
-  --section-contact: #4E8A00;
-  --section-hire: #7A2FE0;
-  --section-referrals: #0F766E;
+  --neon-crimson: #1d4ed8;
+  --neon-orange: #475569;
+  --glow-crimson: color-mix(in oklab, #1d4ed8 18%, transparent);
+  --glow-orange: color-mix(in oklab, #475569 14%, transparent);
+  --email-bg: color-mix(in oklab, #dbeafe 55%, #ffffff);
+  --email-border: color-mix(in oklab, #1d4ed8 45%, #ffffff);
+  --email-fg: #1e3a8a;
+  --email-btn-bg: color-mix(in oklab, #bfdbfe 50%, #ffffff);
+  --section-about: #475569;
+  --section-projects: #1d4ed8;
+  --section-blog: #0369a1;
+  --section-tastes: #52525b;
+  --section-contact: #15803d;
+  --section-hire: #6d28d9;
+  --section-referrals: #0f766e;
   /* Shared light elevation */
   --light-ink: color-mix(in oklab, #1d2027 8%, transparent);
   --light-glass: color-mix(in oklab, #ffffff 78%, transparent);
 }
 
 .dark {
-  --background: #0e0607;
-  --foreground: #ffecef;
-  --muted: #b59095;
-  --border: color-mix(in oklab, #fdb5bf 16%, transparent);
-  --accent: #f43f5e;
-  --accent-2: #fb923c;
-  --surface: color-mix(in oklab, #240f12 85%, transparent);
-  --neon-crimson: #e11d48;
-  --neon-orange: #f97316;
-  --glow-crimson: color-mix(in oklab, #e11d48 50%, transparent);
-  --glow-orange: color-mix(in oklab, #f97316 40%, transparent);
-  --email-bg: color-mix(in oklab, #f97316 18%, transparent);
-  --email-border: color-mix(in oklab, #fb923c 55%, transparent);
-  --email-fg: #fdba74;
-  --email-btn-bg: color-mix(in oklab, #f97316 28%, transparent);
-  --section-about: #F25022;
-  --section-projects: #FFB900;
-  --section-blog: #00A4EF;
-  --section-tastes: #fb7185;
-  --section-contact: #7FBA00;
-  --section-hire: #B46CFF;
-  --section-referrals: #2DD4BF;
+  --background: #121417;
+  --foreground: #f4f4f5;
+  --muted: #a1a1aa;
+  --border: color-mix(in oklab, #a1a1aa 22%, transparent);
+  --accent: #3b82f6;
+  --accent-2: #60a5fa;
+  --surface: color-mix(in oklab, #1c1f26 86%, transparent);
+  --neon-crimson: #3b82f6;
+  --neon-orange: #64748b;
+  --glow-crimson: color-mix(in oklab, #3b82f6 40%, transparent);
+  --glow-orange: color-mix(in oklab, #64748b 28%, transparent);
+  --email-bg: color-mix(in oklab, #3b82f6 16%, transparent);
+  --email-border: color-mix(in oklab, #60a5fa 50%, transparent);
+  --email-fg: #bfdbfe;
+  --email-btn-bg: color-mix(in oklab, #3b82f6 28%, transparent);
+  --section-about: #64748b;
+  --section-projects: #3b82f6;
+  --section-blog: #0ea5e9;
+  --section-tastes: #a1a1aa;
+  --section-contact: #22c55e;
+  --section-hire: #8b5cf6;
+  --section-referrals: #14b8a6;
 }
 
 @theme inline {
@@ -3871,7 +3870,7 @@ body.ie-off .ie-row-pencil { display: none; }
 
 /* r7: Contacto, successful send: the container glows to max, then the form fades and collapses (JS). */
 
-/* r7: Mochi pet on the Mochi project page. Layer never takes clicks; only Mochi does. */
+/* Desk pet on a project page whose widget is "pet". The layer never takes clicks; only the pet does. */
 .mochi-layer { position: fixed; inset: 0; z-index: 40; pointer-events: none; overflow: hidden; }
 .mochi-pet {
   position: absolute; left: 0; bottom: 0; width: 84px; height: 84px; padding: 0; border: 0; background: none;
@@ -4658,6 +4657,22 @@ html.has-admin-strip .home-root { overflow-y: auto; }
 .pub-btn:hover { border-color: var(--cp-accent); background: color-mix(in oklab, var(--cp-accent) 12%, transparent); }
 .pub-btn:focus-visible { outline: 2px solid var(--cp-accent); outline-offset: 2px; }
 .pub-btn:disabled { cursor: not-allowed; opacity: 0.4; }
+select.ie-field { cursor: pointer; }
+.site-editor {
+  position: fixed;
+  z-index: 70;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  width: min(26rem, calc(100vw - 1.5rem));
+  max-height: min(70vh, 36rem);
+  overflow: auto;
+  padding: 0.6rem 0.8rem 0.8rem;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--background);
+}
+.site-editor summary { cursor: pointer; font-weight: 700; }
+.site-editor-body { display: grid; gap: 0.45rem; margin-top: 0.6rem; }
 .pub-btn.is-primary { border-color: var(--cp-accent); background: color-mix(in oklab, var(--cp-accent) 20%, transparent); }
 .pub-form { grid-column: 1 / -1; position: relative; z-index: 2; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.55rem 0.6rem; margin-top: 0.6rem; padding: 0.7rem; border-radius: 12px; border: 1px dashed color-mix(in oklab, var(--cp-accent) 45%, transparent); }
 .pub-field { display: grid; gap: 0.2rem; min-width: 0; cursor: text; }

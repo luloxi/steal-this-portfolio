@@ -4,23 +4,22 @@ import { useEffect, useRef, useState } from "react";
 import { useLocale } from "@/i18n/locale-provider";
 
 /**
- * Mochi, the desktop pet from github.com/luloxi/Mochi, visiting its own
- * project page. Real Mochi sprites (one 7-frame sheet). It walks along the
- * bottom of the screen, sometimes climbs a side wall up to ~half the height
- * and drops back down. Click it: it sits with its little laptop, swinging its
- * feet, and answers. Only Mochi itself takes clicks; the layer around it is
- * pointer-events: none. Reduced motion: a static Mochi that still answers.
+ * Desk pet for a project whose widget is "pet". One 7-frame sheet. It walks
+ * along the bottom of the screen, sometimes climbs a side wall up to about
+ * half the height and drops back down. Click it: it sits with a laptop and
+ * answers. Only the pet takes clicks. Reduced motion: it stays still and
+ * still answers.
  */
 const SHEET = "/projects/mochi-pet.webp";
 const F = { stand: 0, walkL: 1, walkR: 2, pc: 3, pc1: 4, pc2: 5, sprawl: 6 } as const;
 const COPY = {
-  es: { say: "Estoy en mantenimiento, ¡volvé pronto!", close: "Cerrar", label: "Mochi, tocá para hablar" },
-  en: { say: "I'm under maintenance, come back soon!", close: "Close", label: "Mochi, tap to talk" },
+  es: { say: "Estoy en mantenimiento, ¡volvé pronto!", close: "Cerrar", label: "Mascota, tocá para hablar" },
+  en: { say: "I'm under maintenance, come back soon!", close: "Close", label: "Pet, tap to talk" },
 };
 
 type Mode = "walk" | "idle" | "climb" | "hang" | "fall" | "land" | "talk";
 
-export function MochiPet() {
+export function ProjectPet() {
   const { locale } = useLocale();
   const c = COPY[locale === "en" ? "en" : "es"];
   const petRef = useRef<HTMLButtonElement>(null);
@@ -54,7 +53,7 @@ export function MochiPet() {
 
     const draw = (now: number) => {
       let rot = 0;
-      // Mochi's art faces left: mirror it when walking right.
+      // The art faces left: mirror it when walking right.
       let flip = dir === 1 ? -1 : 1;
       let tx = x;
       const ty = -y;
@@ -228,7 +227,7 @@ export function MochiPet() {
   return (
     <div className="mochi-layer" aria-live="polite" data-inline-editor="skip">
       {talking && pos ? (
-        <div className="mochi-bubble" role="dialog" aria-label="Mochi" style={{ left: bubbleLeft, bottom: pos.size + 10 }}>
+        <div className="mochi-bubble" role="dialog" aria-label={c.label} style={{ left: bubbleLeft, bottom: pos.size + 10 }}>
           <button type="button" className="mochi-bubble-close" onClick={close} aria-label={c.close}>
             ×
           </button>

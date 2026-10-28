@@ -22,7 +22,7 @@ const MAP: [string, string][] = [
   ["/contratar", "/en/hire"],
   ["/sobre-mi", "/en/about"],
   ["/proyectos", "/en/projects"],
-  ["/proyectos/mochi", "/en/projects/mochi"],
+  ["/proyectos/demo", "/en/projects/demo"],
   ["/contacto", "/en/contact"],
   ["/privacidad", "/en/privacy"],
   ["/blog", "/en/blog"],
@@ -56,9 +56,9 @@ test("links: Spanish paths localized, external/hash/already-en untouched", () =>
   assert.equal(localizePath("es", "/contratar"), "/contratar");
   assert.equal(localizePath("en", "/contratar"), "/en/hire");
   assert.equal(localizePath("en", "/"), "/en");
-  assert.equal(localizePath("en", "/proyectos/sami?x=1#a"), "/en/projects/sami?x=1#a");
+  assert.equal(localizePath("en", "/proyectos/demo?x=1#a"), "/en/projects/demo?x=1#a");
   assert.equal(localizePath("en", "/en/blog"), "/en/blog");
-  assert.equal(localizePath("en", "https://x.com/LuloxDev"), "https://x.com/LuloxDev");
+  assert.equal(localizePath("en", "https://x.com/ExampleDev"), "https://x.com/ExampleDev");
   assert.equal(localizePath("en", "mailto:a@b.c"), "mailto:a@b.c");
   assert.equal(localizePath("en", "/no-existe"), "/no-existe");
 });

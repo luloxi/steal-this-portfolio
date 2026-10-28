@@ -4,8 +4,10 @@ import { CopyMarkdown } from "@/components/copy-markdown";
 import Link from "next/link";
 import { CpRow } from "@/components/cp-row";
 import { GitHubIcon } from "@/components/icons/social";
-import type { PastProject } from "@/content/projects";
-import { github } from "@/content/site";
+import { ProjectsAdmin } from "@/components/projects-admin";
+import { useEditMode } from "@/components/admin-context";
+import { useSiteSettings } from "@/components/site-settings-context";
+import type { PortfolioProject } from "@/lib/projects";
 import { useLocale } from "@/i18n/locale-provider";
 import { useSiteOrder } from "@/components/site-order-context";
 import { orderRecords } from "@/lib/site-sections";
@@ -29,25 +31,30 @@ const pastAccents = [
   "var(--section-projects)",
 ];
 
-export function ProjectsAccordion({ projects: all }: { projects: PastProject[] }) {
+export function ProjectsAccordion({ projects: all }: { projects: PortfolioProject[] }) {
   const { t, locale, href } = useLocale();
+  const settings = useSiteSettings();
+  const editOn = useEditMode();
   // The server already dropped hidden projects for visitors; this applies live reorders/hides from the admin strip.
   const order = useSiteOrder();
   const projects = order.projects.length ? orderRecords(all, order.projects, order.showHidden) : all;
   const hidden = new Set(order.projects.filter((p) => !p.visible).map((p) => p.key));
   return (
     <div className="space-y-10">
-      {/* Code: GitHub CTA + past projects underneath */}
       <section>
         <h2 className="cp-heading">{t.projects.githubHeading}</h2>
-        <CpRow
-          href={github.href}
-          label={github.handle}
-          accent="var(--foreground)"
-          Icon={GitHubIcon}
-          iconClass="text-foreground"
-          iconSize="lg"
-        />
+        {settings.githubHref ? (
+          <CpRow
+            href={settings.githubHref}
+            label={settings.githubHandle || settings.githubHref.replace(/^https?:\/\/(www\.)?/, "")}
+            accent="var(--foreground)"
+            Icon={GitHubIcon}
+            iconClass="text-foreground"
+            iconSize="lg"
+          />
+        ) : null}
+        {editOn ? <ProjectsAdmin projects={all} /> : null}
+        {projects.length === 0 ? <p className="cp-prose mt-3 text-muted">{t.projects.empty}</p> : null}
         <ul className="cp-list mt-3">
           {projects.map((project, i) => {
             const copy = project.copy[locale] ?? project.copy.es;

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { bounce, playLaugh } from "@/components/laugh-button";
 import { GitHubIcon } from "@/components/icons/social";
 import { SectionNav } from "@/components/section-nav";
-import { site } from "@/content/site";
+import { useSiteSettings } from "@/components/site-settings-context";
 import { useLocale } from "@/i18n/locale-provider";
 
 /**
@@ -16,12 +16,13 @@ import { useLocale } from "@/i18n/locale-provider";
  */
 export default function HomePage() {
   const { t } = useLocale();
+  const site = useSiteSettings();
   const hudRef = useRef<HTMLDivElement>(null);
   const lastTap = useRef<{ t: number; x: number; y: number } | null>(null);
   const touchLaughAt = useRef(0);
   const [glitch, setGlitch] = useState(false);
 
-  // LULOX: a very short glitch flicker every 6-10 s (off under reduced motion).
+  // A very short glitch flicker on the name every 6-10 s (off under reduced motion).
   useEffect(() => {
     const mq = window.matchMedia?.("(prefers-reduced-motion: reduce)");
     let timer = 0;

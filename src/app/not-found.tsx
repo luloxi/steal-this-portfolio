@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { site } from "@/content/site";
 import { getMessages } from "@/i18n/messages";
 import { getServerPrefs } from "@/lib/prefs";
+import { getSiteSettings } from "@/lib/site-settings-db";
 
 /** Server component so the 404 page is fully in the HTML (no client-only render). */
 export default async function NotFound() {
-  const { locale } = await getServerPrefs();
+  const [{ locale }, settings] = await Promise.all([getServerPrefs(), getSiteSettings()]);
   const t = getMessages(locale);
 
   return (
@@ -16,7 +16,7 @@ export default async function NotFound() {
         href={locale === "en" ? "/en" : "/"}
         className="mt-6 text-sm text-accent transition-colors hover:text-accent-2"
       >
-        ← {site.name}
+        ← {settings.name}
       </Link>
     </div>
   );
