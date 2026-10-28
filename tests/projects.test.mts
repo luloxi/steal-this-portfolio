@@ -22,7 +22,7 @@ test("djtube is first, live, and the only live project", () => {
   );
   const dj = pastProjects[0]!;
   assert.equal(dj.github, "https://github.com/luloxi/djtube");
-  assert.equal(dj.liveUrl, "https://djtube.lucianoolivabianco.workers.dev");
+  assert.equal(dj.liveUrl, "https://dj.lulox.com.ar");
   assert.equal(dj.liveUrl, DJTUBE_URL);
   assert.equal(dj.icon, "/projects/djtube.svg");
   assert.equal(dj.disabledReason, undefined);

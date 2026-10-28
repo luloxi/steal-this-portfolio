@@ -145,8 +145,8 @@ export type PastProject = {
   copy: ProjectCopy;
 };
 
-/** Public DJTube URL. Swap for https://dj.lulox.com.ar when that domain is ready. */
-export const DJTUBE_URL = "https://djtube.lucianoolivabianco.workers.dev";
+/** Public DJTube URL. */
+export const DJTUBE_URL = "https://dj.lulox.com.ar";
 
 export const pastProjects: PastProject[] = [
   {
