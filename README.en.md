@@ -130,12 +130,12 @@ Everything clickable shows `cursor: pointer` and anything disabled shows `cursor
 │   ├── components/     # UI pieces (calculator, editor, nav, icons...)
 │   ├── content/        # site.ts (sections, Turnstile), projects.ts (topics), blog seed
 │   ├── i18n/           # messages.ts (ES/EN), locale provider
-│   └── lib/            # pricing, blog, auth, db, contact form logic
+│   └── lib/            # pricing, blog, auth, db, contact form logic, junk-paths.ts (scanner filter)
 ├── migrations/         # D1 SQL migrations
 ├── scripts/            # seed and maintenance scripts (scripts/sql: manual SQL, not migrations)
 ├── tests/              # unit tests (pnpm test)
 ├── public/             # images, audio
-├── worker.ts           # Worker entry (www → apex redirect, then OpenNext)
+├── worker.ts           # Worker entry (www → apex redirect, cheap 404 for bot scanner probes, then OpenNext)
 └── wrangler.jsonc      # Cloudflare config: D1, R2, email, rate limit, vars
 ```
 

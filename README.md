@@ -129,12 +129,12 @@ Todo lo clickeable muestra `cursor: pointer` y lo deshabilitado `cursor: not-all
 │   ├── components/     # piezas de UI (calculadora, editor, nav, íconos...)
 │   ├── content/        # site.ts (secciones, Turnstile), projects.ts (temas), post de ejemplo
 │   ├── i18n/           # messages.ts (ES/EN), provider de idioma
-│   └── lib/            # presupuestos, blog, auth, base de datos, lógica del formulario
+│   └── lib/            # presupuestos, blog, auth, base de datos, lógica del formulario, junk-paths.ts (filtro de escaneos)
 ├── migrations/         # migraciones SQL de D1
 ├── scripts/            # scripts de seed y mantenimiento (scripts/sql: SQL manual, no son migraciones)
 ├── tests/              # tests unitarios (pnpm test)
 ├── public/             # imágenes, audio
-├── worker.ts           # entrada del Worker (redirige www al dominio raíz y después OpenNext)
+├── worker.ts           # entrada del Worker (redirige www al dominio raíz, responde 404 liviano a los escaneos de bots y después OpenNext)
 └── wrangler.jsonc      # config de Cloudflare: D1, R2, email, rate limit, vars
 ```
 
