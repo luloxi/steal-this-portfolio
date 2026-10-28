@@ -57,6 +57,7 @@ pnpm dev                      # o: npm run dev  → http://localhost:3000
 | `RESEND_API_KEY` | secret opcional | Envía el mail del formulario |
 | `TURNSTILE_SECRET_KEY` | secret | Clave secreta de Cloudflare Turnstile. El formulario de /contratar verifica el token en el server (siteverify) antes de mandar el mail; sin ella responde 503. La site key pública está en `src/content/site.ts` (`turnstileSiteKey`); si forkeás, creá tu widget (dominios: el tuyo y `localhost`) y cambiala |
 | `CONTACT_RL`, `REF_CHECK_RL` | `ratelimits` en `wrangler.jsonc` | Rate limit del formulario y del alta de referidos (5/min por IP) y del chequeo de códigos en vivo (60/min por IP) |
+| `SITE_RL`, `API_RL`, `EXEMPT_RL` | `ratelimits` en `wrangler.jsonc` | Tope por IP en `worker.ts` (`src/lib/rate-limit.ts`): 100 pedidos / 10 s en páginas, 40 / 10 s en `/api/*`; pasado el tope, `429` con `Retry-After: 10` antes de que corra Next. El dueño (`ADMIN_EMAILS`) y los emails de **Personalizar → Info personal → Sin límite de pedidos** (`site_settings.privileged_emails`, `/api/admin/privileged`) no se cortan; la sesión solo se mira cuando se pasa el tope (`EXEMPT_RL`, 5 / 10 s). Aproximado y por ubicación de Cloudflare. Los archivos estáticos no pasan por el Worker. |
 | `CONTACT_TO`, `CONTACT_FROM`, `CONTACT_INBOX` | `vars` en `wrangler.jsonc` | A dónde llega el mail del formulario, el remitente (un dominio verificado en Resend) y la casilla para tu copia |
 
 En local van en `.dev.vars`. En producción: `npx wrangler secret put <NOMBRE>`.

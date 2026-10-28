@@ -58,6 +58,7 @@ pnpm dev                     # or: npm run dev  → http://localhost:3000
 | `RESEND_API_KEY` | optional secret | Sends the contact form email |
 | `TURNSTILE_SECRET_KEY` | secret | Cloudflare Turnstile secret. The /contratar form verifies the token server-side (siteverify) before sending; without it the form returns 503. The public site key lives in `src/content/site.ts` (`turnstileSiteKey`); if you fork, create your own widget (domains: yours and `localhost`) and swap it |
 | `CONTACT_RL`, `REF_CHECK_RL` | `ratelimits` in `wrangler.jsonc` | Rate limit for the form and referral signup (5/min per IP) and for the live code check (60/min per IP) |
+| `SITE_RL`, `API_RL`, `EXEMPT_RL` | `ratelimits` in `wrangler.jsonc` | Per-IP cap in `worker.ts` (`src/lib/rate-limit.ts`): 100 requests / 10 s for pages, 40 / 10 s for `/api/*`; past the cap, `429` with `Retry-After: 10` before Next runs. The owner (`ADMIN_EMAILS`) and the emails under **Customize → Personal info → No request limit** (`site_settings.privileged_emails`, `/api/admin/privileged`) are never cut off; the session is only looked up once a cap is hit (`EXEMPT_RL`, 5 / 10 s). Approximate and per Cloudflare location. Static assets never reach the Worker. |
 | `CONTACT_TO`, `CONTACT_FROM`, `CONTACT_INBOX` | `vars` in `wrangler.jsonc` | Where the form email goes, the sender (a domain verified in Resend) and the inbox for your copy |
 
 Locally they live in `.dev.vars`. In production: `npx wrangler secret put <NAME>`.
@@ -135,7 +136,7 @@ Everything clickable shows `cursor: pointer` and anything disabled shows `cursor
 ├── scripts/            # seed and maintenance scripts (scripts/sql: manual SQL, not migrations)
 ├── tests/              # unit tests (pnpm test)
 ├── public/             # images, audio
-├── worker.ts           # Worker entry (www → apex redirect, cheap 404 for bot scanner probes, then OpenNext)
+├── worker.ts           # Worker entry (www → apex redirect, cheap 404 for bot scanner probes, per-IP 429 burst limit, then OpenNext)
 └── wrangler.jsonc      # Cloudflare config: D1, R2, email, rate limit, vars
 ```
 

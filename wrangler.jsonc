@@ -45,7 +45,11 @@
   "ratelimits": [
     { "name": "CONTACT_RL", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } },
     // Referral code availability check (/api/referrals/check), typed live with a debounce.
-    { "name": "REF_CHECK_RL", "namespace_id": "1002", "simple": { "limit": 60, "period": 60 } }
+    { "name": "REF_CHECK_RL", "namespace_id": "1002", "simple": { "limit": 60, "period": 60 } },
+    // Per-IP burst limits in worker.ts (src/lib/rate-limit.ts). Owner and "sin límite" accounts are exempt.
+    { "name": "SITE_RL", "namespace_id": "1003", "simple": { "limit": 100, "period": 10 } },
+    { "name": "API_RL", "namespace_id": "1004", "simple": { "limit": 40, "period": 10 } },
+    { "name": "EXEMPT_RL", "namespace_id": "1005", "simple": { "limit": 5, "period": 10 } }
   ],
   // TURNSTILE_SECRET is a Worker secret (never in this file).
   "vars": {

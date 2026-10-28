@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useEditModeSwitch } from "@/components/admin-context";
+import { AdminPrivileged } from "@/components/admin-privileged";
 import { Tip } from "@/components/tip";
 import { useSiteSettings } from "@/components/site-settings-context";
 import { useLocale } from "@/i18n/locale-provider";
@@ -271,6 +272,7 @@ export function AdminSettings({ tab }: { tab: SettingsTab | null }) {
             {field("Last.fm", es ? "Tu usuario de Last.fm" : "Your Last.fm username", "lastfm")}
             {field("Spotify", es ? "Link a tu perfil de Spotify" : "Link to your Spotify profile", "spotify")}
           </section>
+          <AdminPrivileged />
         </div>
       ) : null}
       {tab ? (
