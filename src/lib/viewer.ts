@@ -19,7 +19,7 @@ export const getViewer = cache(async (): Promise<Viewer> => {
     const session = await auth.api.getSession({ headers: h });
     const u = session?.user;
     if (!u?.id || !u.email) return null;
-    return { id: u.id, email: u.email, name: u.name ?? "", isAdmin: isAdminUser(u) };
+    return { id: u.id, email: u.email, name: u.name ?? "", isAdmin: isAdminUser(u), image: typeof u.image === "string" && /^https:\/\//.test(u.image) ? u.image : undefined };
   } catch {
     return null;
   }

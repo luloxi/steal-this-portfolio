@@ -26,7 +26,7 @@ import {
   upsertPayout,
 } from "@/lib/referrals-db";
 
-export type Viewer = { id: string; email: string; name: string; isAdmin: boolean } | null;
+export type Viewer = { id: string; email: string; name: string; isAdmin: boolean; image?: string } | null;
 export type ApiResult = { status: number; body: Record<string, unknown> };
 
 const err = (status: number, error: string): ApiResult => ({ status, body: { error } });

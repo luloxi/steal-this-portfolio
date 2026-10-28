@@ -1,12 +1,26 @@
 "use client";
 
 import { LocaleToggle } from "@/components/locale-toggle";
-import { LoginLink, LogoutButton } from "@/components/logout-button";
+import { LoginLink } from "@/components/logout-button";
+import { ProfileMenu } from "@/components/profile-menu";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
-/** Fixed chrome — always same screen corner on every page */
-export function SiteControls({ className, signedIn = false }: { className?: string; signedIn?: boolean }) {
+/**
+ * Fixed chrome, same screen corner on every page. Logged out: "Entrar".
+ * Logged in: the profile photo, which opens the account menu.
+ */
+export function SiteControls({
+  className,
+  signedIn = false,
+  image,
+  name,
+}: {
+  className?: string;
+  signedIn?: boolean;
+  image?: string;
+  name?: string;
+}) {
   return (
     <div
       data-inline-editor="skip"
@@ -17,7 +31,7 @@ export function SiteControls({ className, signedIn = false }: { className?: stri
     >
       <LocaleToggle />
       <ThemeToggle />
-      {signedIn ? <LogoutButton /> : <LoginLink />}
+      {signedIn ? <ProfileMenu image={image} name={name} /> : <LoginLink />}
     </div>
   );
 }

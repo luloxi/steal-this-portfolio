@@ -8,9 +8,8 @@ import { getCopyOverrides } from "@/lib/site-copy";
 import { getViewer } from "@/lib/viewer";
 import { AdminProvider } from "@/components/admin-context";
 import { SiteOrderProvider } from "@/components/site-order-context";
-import { AdminStripGate } from "@/components/admin-strip-gate";
+import { AdminPanel } from "@/components/admin-panel";
 import { SiteSettingsProvider } from "@/components/site-settings-context";
-import { SiteSettingsEditor } from "@/components/site-settings-editor";
 import { getSiteOrder } from "@/lib/site-order";
 import { PREFS_HEAD_SCRIPT } from "@/lib/prefs-shared";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -101,7 +100,7 @@ export default async function RootLayout({
   ]);
   // Admin = allowlisted Google account; any other session is a plain user (referrals only).
   const isAdmin = viewer?.isAdmin === true;
-  // Project titles for the admin strip (admin only: visitors never pay for this read).
+  // Project titles for the admin panel (admin only: visitors never pay for this read).
   let projectLabels: Record<string, { es: string; en: string }> = {};
   if (isAdmin) {
     const { getProjects } = await import("@/lib/projects-db");
@@ -129,12 +128,11 @@ export default async function RootLayout({
           <ThemeProvider initialTheme={theme}>
             <LocaleProvider initialLocale={locale} overrides={overrides}>
               <CosmicBg />
-              <SiteControls signedIn={Boolean(viewer)} />
               <AdminProvider isAdmin={isAdmin} signedIn={Boolean(viewer)}>
+                <SiteControls signedIn={Boolean(viewer)} image={viewer?.image} name={viewer?.name} />
                 <SiteOrderProvider initial={order}>
                   <div className="relative z-10">{children}</div>
-                  {isAdmin ? <AdminStripGate projectLabels={projectLabels} /> : null}
-                  {isAdmin ? <SiteSettingsEditor /> : null}
+                  {isAdmin ? <AdminPanel projectLabels={projectLabels} /> : null}
                 </SiteOrderProvider>
               </AdminProvider>
             </LocaleProvider>

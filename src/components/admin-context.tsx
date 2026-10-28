@@ -1,56 +1,59 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { useLocale } from "@/i18n/locale-provider";
 import { EDIT_MODE_KEY, editModeCookie, editModeFromCookie } from "@/lib/edit-mode";
 
-type AdminState = { isAdmin: boolean; editOn: boolean; signedIn: boolean };
-const AdminContext = createContext<AdminState>({ isAdmin: false, editOn: false, signedIn: false });
+type AdminState = {
+  isAdmin: boolean;
+  editOn: boolean;
+  signedIn: boolean;
+  panelOpen: boolean;
+  setPanelOpen: (open: boolean) => void;
+  setEditOn: (on: boolean) => void;
+};
+const AdminContext = createContext<AdminState>({
+  isAdmin: false,
+  editOn: false,
+  signedIn: false,
+  panelOpen: false,
+  setPanelOpen: () => {},
+  setEditOn: () => {},
+});
 
 /**
- * Admin flag (decided server-side per request) plus the edit-mode toggle.
+ * Admin flag (decided server-side per request), the edit-mode switch and the
+ * state of the admin panel (opened from the profile menu in the header).
  * Edit mode makes allowlisted body content editable in place; the page looks
- * exactly the same, no pencils or outlines.
+ * exactly the same, no pencils or outlines. The switch itself lives in the panel.
  */
 export function AdminProvider({ isAdmin, signedIn = isAdmin, children }: { isAdmin: boolean; signedIn?: boolean; children: ReactNode }) {
-  const { locale } = useLocale();
   const router = useRouter();
-  const [editOn, setEditOn] = useState(true);
+  const [editOn, setEditOnState] = useState(true);
+  const [panelOpen, setPanelOpen] = useState(false);
   useEffect(() => {
     const v = window.localStorage.getItem(EDIT_MODE_KEY);
-    if (v === "off") setEditOn(false); // eslint-disable-line react-hooks/set-state-in-effect -- restore saved preference
+    if (v === "off") setEditOnState(false); // eslint-disable-line react-hooks/set-state-in-effect -- restore saved preference
     // Mirror to the cookie the server reads (blog drafts); re-render if it was out of sync.
     if (isAdmin && editModeFromCookie(document.cookie) !== (v !== "off")) {
       document.cookie = editModeCookie(v !== "off");
       router.refresh();
     }
   }, [isAdmin, router]);
-  const es = locale === "es";
+  const setEditOn = useCallback(
+    (next: boolean) => {
+      window.localStorage.setItem(EDIT_MODE_KEY, next ? "on" : "off");
+      document.cookie = editModeCookie(next);
+      setEditOnState(next);
+      router.refresh(); // server pages (blog) re-read the cookie: drafts hide/show
+    },
+    [router],
+  );
   return (
-    <AdminContext.Provider value={{ isAdmin, editOn: isAdmin && editOn, signedIn: signedIn || isAdmin }}>
+    <AdminContext.Provider
+      value={{ isAdmin, editOn: isAdmin && editOn, signedIn: signedIn || isAdmin, panelOpen: isAdmin && panelOpen, setPanelOpen, setEditOn }}
+    >
       {children}
-      {isAdmin ? (
-        <button
-          type="button"
-          className="ie-toggle"
-          aria-pressed={editOn}
-          aria-label={es ? "Modo edición" : "Edit mode"}
-          title={es ? "Modo edición: editar el contenido en la página" : "Edit mode: edit content in place"}
-          onClick={() => {
-            const next = !editOn;
-            window.localStorage.setItem(EDIT_MODE_KEY, next ? "on" : "off");
-            document.cookie = editModeCookie(next);
-            setEditOn(next);
-            router.refresh(); // server pages (blog) re-read the cookie: drafts hide/show
-          }}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
-          </svg>{" "}
-          <span>{editOn ? "ON" : "OFF"}</span>
-        </button>
-      ) : null}
     </AdminContext.Provider>
   );
 }
@@ -78,4 +81,16 @@ export async function saveCopy(key: string, locale: string, value: string): Prom
   if (res.ok) return null;
   const data = (await res.json().catch(() => ({}))) as { error?: string };
   return res.status === 401 ? "session" : (data.error ?? String(res.status));
+}
+
+/** Admin panel open state (the profile menu opens it). */
+export function useAdminPanel() {
+  const { panelOpen, setPanelOpen } = useContext(AdminContext);
+  return { open: panelOpen, setOpen: setPanelOpen };
+}
+
+/** Edit-mode switch (lives in the admin panel). */
+export function useEditModeSwitch() {
+  const { editOn, setEditOn } = useContext(AdminContext);
+  return { on: editOn, set: setEditOn };
 }

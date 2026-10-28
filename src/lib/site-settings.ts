@@ -416,8 +416,11 @@ export function validateSettingsPayload(body: unknown): SettingsValidation {
     } else if (JSON.stringify(snapshot(before)) === JSON.stringify(snapshot(after)) && value.trim() !== "" && key !== "socials") {
       // Empty string clears optional fields (ens, github, tastes). A non-empty
       // value that didn't change the snapshot was rejected by the cleaner.
-      const optional = new Set(["ens", "x_handle", "contact_email", "github_href", "github_handle", "call_booking_url", "taste_letterboxd", "taste_lastfm", "taste_spotify", "tagline", "socials"]);
-      if (!optional.has(key) || value.trim() !== "") return { ok: false, error: "invalid_value", field: key };
+      // But a valid value can also equal the neutral default (no visible change): probe with
+      // a longer value, which the same cleaner accepts only if this key takes the value at all.
+      const probes = [`${value}x`, `${value}\u200b`];
+      const accepted = probes.some((p) => JSON.stringify(snapshot(settingsFromRows([{ key, value: p }]))) !== JSON.stringify(snapshot(before)));
+      if (!accepted) return { ok: false, error: "invalid_value", field: key };
     }
     entries.push({ key, value: color ? value.trim() : value });
   }
