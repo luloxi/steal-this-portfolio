@@ -107,6 +107,11 @@ export type HireDeps = {
   /** Store the lead after the email went out. Errors are logged, never shown to the visitor. */
   /** Stored pricing (same as the page). Missing = code defaults. Never taken from the request. */
   pricing?: Pricing;
+  /**
+   * Fire-and-forget copy to Serpix (inbox + push), called AFTER the email went out. It must not throw or block:
+   * the route schedules the request with ctx.waitUntil and swallows failures. Errors here never change the result.
+   */
+  forward?: (inquiry: { name: string; email: string; message: string; budget: Record<string, unknown>; refCode: string | null }) => void;
   saveLead?: (lead: { name: string; email: string; message: string; budgetJson: string; totalUsd: number; refCode: string | null; referrerId: string | null }) => Promise<unknown>;
   /** From-name on the email. Missing = a generic label. */
   fromName?: string;
@@ -203,6 +208,14 @@ ${refLine ? `<p style="margin:16px 0 0;font-size:14px;font-weight:700;color:#0F7
   } catch {
     console.error("[hire-contact] send failed");
     return { status: 502, body: { error: "send_failed" } };
+  }
+  if (deps.forward) {
+    try {
+      const r = estimateBudget(budget, pricing);
+      deps.forward({ name, email, message, budget: { ...budget, total: r.total, deposit: r.deposit }, refCode: referrer?.code ?? null });
+    } catch {
+      console.error("[hire-contact] forward failed");
+    }
   }
   if (deps.saveLead) {
     try {

@@ -12,7 +12,9 @@
     {
       "binding": "WORKER_SELF_REFERENCE",
       "service": "steal-this-portfolio"
-    }
+    },
+    // Contact form copy -> Serpix inbox (POST /api/inbound/portfolio). Secret SERPIX_INBOUND_SECRET (wrangler secret put) = Serpix's PORTFOLIO_INBOUND_SECRET.
+    { "binding": "SERPIX", "service": "serpix" }
   ],
   // Cloudflare D1: blog_posts, project_overrides and the Better Auth tables.
   // Secrets (wrangler secret put, never in this file): BETTER_AUTH_SECRET,

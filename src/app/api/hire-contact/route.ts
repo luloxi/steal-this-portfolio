@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
   }
-  const { env } = await getCloudflareContext({ async: true });
+  const { env, ctx } = await getCloudflareContext({ async: true });
   const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
   const db = await getDb();
   // Same stored amounts the page shows (code defaults if no rows); never the browser's numbers.
@@ -23,6 +23,17 @@ export async function POST(request: Request) {
   const deps: HireDeps = db
     ? { pricing, fromName: settings.name, publicUrl: settings.url, findReferrer: (code) => getActiveReferrer(db, code), saveLead: (lead) => insertLead(db, lead) }
     : { pricing, fromName: settings.name, publicUrl: settings.url };
+  // After the email is sent, a copy goes to Serpix (Service Binding SERPIX + shared secret). Failures are ignored: the visitor and the email are unaffected.
+  deps.forward = (inquiry) => {
+    const e = env as unknown as { SERPIX?: { fetch: typeof fetch }; SERPIX_INBOUND_SECRET?: string };
+    if (!e.SERPIX || !e.SERPIX_INBOUND_SECRET) return;
+    ctx.waitUntil(
+      e.SERPIX.fetch("https://erp.lulox.com.ar/api/inbound/portfolio", { method: "POST", headers: { "content-type": "application/json", "x-serpix-secret": e.SERPIX_INBOUND_SECRET }, body: JSON.stringify(inquiry) }).then(
+        (r) => { if (!r.ok) console.error("[hire-contact] serpix forward status", r.status); },
+        () => console.error("[hire-contact] serpix forward failed"),
+      ),
+    );
+  };
   const r = await handleHireContact(body, env as unknown as HireEnv, ip, deps);
   if (isForm) {
     // Plain form post: send the browser back to the page with the result in the URL.

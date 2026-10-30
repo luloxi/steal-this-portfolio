@@ -226,3 +226,34 @@ test("native form post carries budget.privateUse as a boolean", () => {
   assert.deepEqual(bodyFromForm([["budget.privateUse", "true"]]).budget, { privateUse: true });
   assert.deepEqual(bodyFromForm([["budget.privateUse", "false"]]).budget, { privateUse: false });
 });
+
+test("forward to Serpix: called once after the email went out, with the recomputed budget; never on rejects or send failure", async () => {
+  const m = mkEnv();
+  const got: unknown[] = [];
+  const r = await handleHireContact(ok, m.env as never, "1.1.1.1", { forward: (i) => void got.push(i) });
+  assert.equal(r.status, 200);
+  assert.equal(m.sent.length, 1);
+  assert.equal(got.length, 1);
+  const f = got[0] as { name: string; email: string; message: string; budget: { total: number }; refCode: string | null };
+  assert.equal(f.name, "Ana");
+  assert.equal(f.email, "ana@example.com");
+  assert.equal(typeof f.budget.total, "number");
+  assert.equal(f.refCode, null);
+
+  const bad: unknown[] = [];
+  assert.equal((await handleHireContact({ ...ok, email: "nope" }, mkEnv().env as never, "x", { forward: (i) => void bad.push(i) })).status, 400);
+  assert.equal((await handleHireContact({ ...ok, turnstileToken: "bad" }, mkEnv().env as never, "x", { forward: (i) => void bad.push(i) })).status, 403);
+  assert.equal((await handleHireContact({ ...ok, website: "bot" }, mkEnv().env as never, "x", { forward: (i) => void bad.push(i) })).status, 200);
+  const failing = mkEnv({ resend: true });
+  (failing.env as { fetch: unknown }).fetch = (async (u: string) => (u === SITEVERIFY ? Response.json({ success: true }) : new Response("no", { status: 500 }))) as unknown as typeof fetch;
+  assert.equal((await handleHireContact(ok, failing.env as never, "x", { forward: (i) => void bad.push(i) })).status, 502);
+  assert.equal(bad.length, 0);
+});
+
+test("forward to Serpix: a throwing forward never changes the visitor's success", async () => {
+  const m = mkEnv();
+  const r = await handleHireContact(ok, m.env as never, "1.1.1.1", { forward: () => { throw new Error("serpix down"); } });
+  assert.equal(r.status, 200);
+  assert.deepEqual(r.body, { ok: true });
+  assert.equal(m.sent.length, 1);
+});
