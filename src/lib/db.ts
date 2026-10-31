@@ -13,12 +13,20 @@ export type D1Database = {
   batch(statements: D1PreparedStatement[]): Promise<unknown[]>;
 };
 
+let dbOverride: { db: D1Database | null } | undefined;
+
+/** Unit tests pin the D1 binding. Production leaves this unset. */
+export function setTestDb(db: D1Database | null): void {
+  dbOverride = { db };
+}
+
 /**
  * Cloudflare D1 binding `DB` (see wrangler.jsonc). Returns null when the app
  * runs outside a Worker without bindings (e.g. plain `next build`), so pages
  * fall back to the static seed content instead of crashing.
  */
 export async function getDb(): Promise<D1Database | null> {
+  if (dbOverride) return dbOverride.db;
   try {
     const { env } = await getCloudflareContext({ async: true });
     return ((env as unknown as { DB?: D1Database }).DB) ?? null;

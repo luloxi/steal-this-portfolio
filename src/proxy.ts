@@ -195,5 +195,6 @@ async function route(request: NextRequest): Promise<NextResponse> {
 
 export const config = {
   // Every page (so the locale header is always set by us), not assets/API/media/_next.
+  // /api/mcp/* is under api/, so this proxy does not rewrite it or apply page checks.
   matcher: ["/((?!api/|_next/|media/|__not-found|.*\\.[a-z0-9]+$).*)"],
 };

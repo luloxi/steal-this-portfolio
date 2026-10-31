@@ -4,26 +4,30 @@ import type { Components } from "react-markdown";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { linkifyBlogTerms } from "@/lib/blog-linkify";
+import { parseSlideUrl, SLIDE_IFRAME_ALLOW } from "@/lib/slide-embed";
 import { parseVideoUrl, VIDEO_IFRAME_ALLOW } from "@/lib/video-embed";
 import { MagicHr } from "@/components/magic-hr";
 
 const components: Components = {
   h2: ({ children }) => <h2 className="blog-h2">{children}</h2>,
   h3: ({ children }) => <h3 className="blog-h3">{children}</h3>,
-  // A paragraph that is only an allowlisted YouTube/Vimeo link becomes a
-  // responsive embed; the iframe src is rebuilt from the validated id.
+  // A paragraph that is only an allowlisted YouTube/Vimeo or Google Slides
+  // link becomes a responsive embed; the iframe src is rebuilt from the validated id.
   p: ({ node, children }) => {
     const kids = (node?.children ?? []).filter((c) => !(c.type === "text" && !c.value.trim()));
     const only = kids.length === 1 && kids[0].type === "element" && kids[0].tagName === "a" ? kids[0] : null;
-    const v = only ? parseVideoUrl(String(only.properties?.href ?? "")) : null;
-    if (v && only) {
-      const title = only.children.map((c) => (c.type === "text" ? c.value : "")).join("").trim() || (v.provider === "vimeo" ? "Vimeo" : "YouTube");
+    const href = only ? String(only.properties?.href ?? "") : "";
+    const v = only ? parseVideoUrl(href) : null;
+    const s = !v && only ? parseSlideUrl(href) : null;
+    const embed = v ? { src: v.embedSrc, allow: VIDEO_IFRAME_ALLOW, fallback: v.provider === "vimeo" ? "Vimeo" : "YouTube" } : s ? { src: s.embedSrc, allow: SLIDE_IFRAME_ALLOW, fallback: "Slides" } : null;
+    if (embed && only) {
+      const title = only.children.map((c) => (c.type === "text" ? c.value : "")).join("").trim() || embed.fallback;
       return (
         <div className="blog-embed">
           <iframe
-            src={v.embedSrc}
+            src={embed.src}
             title={title}
-            allow={VIDEO_IFRAME_ALLOW}
+            allow={embed.allow}
             allowFullScreen
             loading="lazy"
             referrerPolicy="strict-origin-when-cross-origin"

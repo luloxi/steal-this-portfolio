@@ -18,7 +18,8 @@
   ],
   // Cloudflare D1: blog_posts, project_overrides and the Better Auth tables.
   // Secrets (wrangler secret put, never in this file): BETTER_AUTH_SECRET,
-  // GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET. Locally they go in .dev.vars.
+  // GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, MCP_SERVICE_TOKEN.
+  // Locally they go in .dev.vars. Never put the values in this file.
   "d1_databases": [
     {
       "binding": "DB",
@@ -27,9 +28,12 @@
       "migrations_dir": "migrations"
     }
   ],
-  // Cloudflare R2: images uploaded from the blog editor (served at /media/...).
+  // Cloudflare R2. MEDIA: editor uploads, served at /media/...
+  // BLOG_ASSETS: public bucket serpix-assets (owned by Serpix, already exists: do not create it).
+  // MCP image uploads land at blog/<year>/<uuid>.<ext> and are served from https://assets.lulox.com.ar.
   "r2_buckets": [
-    { "binding": "MEDIA", "bucket_name": "lulox-media" }
+    { "binding": "MEDIA", "bucket_name": "lulox-media" },
+    { "binding": "BLOG_ASSETS", "bucket_name": "serpix-assets" }
   ],
   // Custom domains. lulox.com.ar is canonical (www 301s to apex in worker.ts).
   // lulox.dev + www are NOT served by this Worker: they are 301'd to lulox.com.ar by a Redirect Rule on that zone.

@@ -288,6 +288,17 @@ export async function deletePost(slug: string) {
   await db.prepare("DELETE FROM blog_posts WHERE slug = ?").bind(slug).run();
 }
 
+/**
+ * Headers passed to Better Auth for an admin route. Authorization is removed
+ * so a bearer token (the MCP service token, or anything else) cannot satisfy
+ * the cookie session check. The session cookie is left as it was.
+ */
+export function adminSessionHeaders(input: Headers): Headers {
+  const h = new Headers(input);
+  h.delete("authorization");
+  return h;
+}
+
 export async function requireAdminSession() {
   const { getAuth } = await import("@/lib/auth/server");
   const { isAdminUser } = await import("@/lib/auth/admin");
@@ -298,7 +309,7 @@ export async function requireAdminSession() {
     return { ok: false as const, reason: "auth_not_configured" as const };
   }
 
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await auth.api.getSession({ headers: adminSessionHeaders(new Headers(await headers())) });
   const user = session?.user;
   if (!user || !isAdminUser(user)) {
     return { ok: false as const, reason: "unauthorized" as const, user };

@@ -22,6 +22,8 @@ test("isPrivileged matches case-insensitively and rejects empties", () => {
 
 test("isApiPath", () => {
   assert.equal(isApiPath("/api/auth/get-session"), true);
+  assert.equal(isApiPath("/api/mcp/posts"), true);
+  assert.equal(isApiPath("/api/mcp/media"), true);
   assert.equal(isApiPath("/api"), true);
   assert.equal(isApiPath("/apiary"), false);
   assert.equal(isApiPath("/proyectos"), false);

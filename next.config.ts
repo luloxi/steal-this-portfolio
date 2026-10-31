@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import path from "path";
+import { BLOG_IMAGE_REMOTE_PATTERNS } from "./src/lib/blog-image-hosts";
 
 // Cloudflare Workers (OpenNext) has no Vercel image optimizer, so images are
 // served as is there. `pnpm cf:build` sets NEXT_BUILD_TARGET=cloudflare.
@@ -34,7 +35,10 @@ const nextConfig: NextConfig = {
       r("/en/login", "/en/sign-in"),
     ];
   },
-  ...(isCloudflare ? { images: { unoptimized: true } } : {}),
+  images: {
+    remotePatterns: BLOG_IMAGE_REMOTE_PATTERNS,
+    ...(isCloudflare ? { unoptimized: true } : {}),
+  },
 };
 
 export default nextConfig;

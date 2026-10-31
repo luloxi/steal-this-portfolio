@@ -18,3 +18,8 @@ RESEND_API_KEY=
 # Cloudflare Turnstile secret for the /contratar form (Dashboard > Turnstile > widget).
 # Required: without it the form refuses to send. The public site key is in src/content/site.ts.
 TURNSTILE_SECRET_KEY=
+
+# Server-to-server token for /api/mcp/* (the lulox-mcp Worker). Name only.
+# Production: npx wrangler secret put MCP_SERVICE_TOKEN
+# A blog admin session does not replace this token.
+MCP_SERVICE_TOKEN=

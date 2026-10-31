@@ -25,6 +25,7 @@ export type RateEnv = {
   GOOGLE_CLIENT_SECRET?: string;
 };
 
+/** /api and /api/*, including /api/mcp/* (the MCP routes share the API bucket). */
 export function isApiPath(pathname: string): boolean {
   return pathname === "/api" || pathname.startsWith("/api/");
 }
