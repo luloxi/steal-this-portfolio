@@ -24,7 +24,7 @@ const nextConfig: NextConfig = {
       r("/tastes", "/sobre-mi"),
       r("/gustos", "/sobre-mi"),
       r("/projects", "/proyectos"),
-      r("/projects/:id(djtube|mochi|sami|punksociety)", "/proyectos/:id"),
+      r("/projects/:id(djtube|mochi|sami|punksociety|serpix|cuentix|steal-this-portfolio)", "/proyectos/:id"),
       r("/contact", "/contacto"),
       r("/privacy", "/privacidad"),
       r("/auth/sign-in", "/ingresar"),
