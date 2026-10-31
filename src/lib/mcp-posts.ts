@@ -232,6 +232,7 @@ export async function publishMcpPost(slug: string, payload: unknown): Promise<Mc
   const post = await getPostBySlug(slug, { includeDrafts: true });
   if (!post) return { status: 404, body: { error: "not_found" } };
 
+  const alreadyPublished = post.published;
   let slugEn = post.slugEn?.trim() || null;
   if (!slugEn) {
     const base = slugify(post.title.en) || slug;
@@ -240,5 +241,5 @@ export async function publishMcpPost(slug: string, payload: unknown): Promise<Mc
   if (!(post.published && post.slugEn)) {
     await upsertPost({ ...post, published: true, slugEn });
   }
-  return { status: 200, body: { ok: true, slug, slugEn, published: true } };
+  return { status: 200, body: { ok: true, slug, slugEn, published: true, alreadyPublished } };
 }

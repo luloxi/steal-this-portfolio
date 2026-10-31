@@ -319,6 +319,7 @@ test("list and get include drafts, publish requires boolean confirm and is idemp
   assert.equal(published.status, 200);
   const pubBody = await bodyOf(published);
   assert.equal(pubBody.published, true);
+  assert.equal(pubBody.alreadyPublished, false);
   assert.equal(pubBody.slugEn, "como-esta-el-blog");
   assert.equal(row("como-esta-el-blog")?.published, 1);
   assert.equal(row("como-esta-el-blog")?.slug_en, "como-esta-el-blog");
@@ -330,7 +331,9 @@ test("list and get include drafts, publish requires boolean confirm and is idemp
     body: JSON.stringify({ confirm: true }),
   }), { params: Promise.resolve({ slug: "como-esta-el-blog" }) });
   assert.equal(again.status, 200);
-  assert.equal((await bodyOf(again)).published, true);
+  const againBody = await bodyOf(again);
+  assert.equal(againBody.published, true);
+  assert.equal(againBody.alreadyPublished, true);
   assert.equal(row("como-esta-el-blog")?.updated_at, "2000-01-01T00:00:00.000Z");
   assert.equal(row("como-esta-el-blog")?.published, 1);
 });
