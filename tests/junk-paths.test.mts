@@ -43,6 +43,7 @@ test("real pages, assets and API routes pass", () => {
     "/projects/garpen.v8.png",
     "/projects/mailtox.v5.png",
     "/projects/malito.v5.png",
+    "/projects/tarask.v1.png",
     "/robots.txt",
     "/sitemap.xml",
     "/llms.txt",
