@@ -3074,7 +3074,7 @@
 
 :root:not(.dark) .neon-text,
 :root:not(.dark) .home-title {
-  color: #a4503f;
+  color: var(--accent);
   text-shadow:
     0 1px 0 #ffffff,
     2px 3px 0 color-mix(in oklab, #a4503f 18%, transparent),
@@ -3083,7 +3083,7 @@
 
 
 :root:not(.dark) .cp-page-title-text {
-  color: #a4503f;
+  color: var(--accent);
 }
 
 :root:not(.dark) .cp-nav-item,
@@ -3593,10 +3593,10 @@ body.ie-off .ie-row-pencil { display: none; }
   opacity: 1; transform: none;
 }
 /* Swatches are cut-corner clipped, so mark the active one with a bar below */
-.cp-theme .cp-lang-btn { position: relative; overflow: visible; clip-path: none; }
-.cp-theme .cp-lang-btn-active::after {
+.cp-theme .cp-lang-btn, .cp-lang .cp-lang-btn { position: relative; overflow: visible; clip-path: none; }
+.cp-theme .cp-lang-btn-active::after, .cp-lang .cp-lang-btn-active::after {
   content: ""; position: absolute; left: 3px; right: 3px; bottom: -6px; height: 3px; border-radius: 2px;
-  background: #a4503f; box-shadow: 0 0 8px color-mix(in oklab, #a4503f 60%, transparent);
+  background: var(--accent); box-shadow: 0 0 8px color-mix(in oklab, var(--accent) 60%, transparent);
 }
 .cp-theme .cp-lang-btn-active .cp-theme-swatch-light { box-shadow: inset 0 0 0 1px color-mix(in oklab, #1d2027 25%, transparent) !important; }
 @media (prefers-reduced-motion: reduce) { .cp-theme .cp-lang-btn .cp-theme-swatch { transition: none; } }

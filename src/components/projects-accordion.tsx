@@ -42,7 +42,6 @@ export function ProjectsAccordion({ projects: all }: { projects: PortfolioProjec
   return (
     <div className="space-y-10">
       <section>
-        <h2 className="cp-heading">{t.projects.githubHeading}</h2>
         {settings.githubHref ? (
           <CpRow
             href={settings.githubHref}
