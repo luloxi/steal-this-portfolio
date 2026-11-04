@@ -153,7 +153,7 @@ export type HireDeps = {
   /** Stored pricing (same as the page). Missing = code defaults. Never taken from the request. */
   pricing?: Pricing;
   /**
-   * Fire-and-forget copy to Serpix (inbox + push), called AFTER the email went out. It must not throw or block:
+   * Fire-and-forget copy to Garpen (inbox + push), called AFTER the email went out. It must not throw or block:
    * the route schedules the request with ctx.waitUntil and swallows failures. Errors here never change the result.
    */
   forward?: (inquiry: { name: string; email: string; message: string; budget: Record<string, unknown>; refCode: string | null }) => void;

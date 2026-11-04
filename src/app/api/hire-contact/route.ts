@@ -23,14 +23,14 @@ export async function POST(request: Request) {
   const deps: HireDeps = db
     ? { pricing, fromName: settings.name, publicUrl: settings.url, findReferrer: (code) => getActiveReferrer(db, code), saveLead: (lead) => insertLead(db, lead) }
     : { pricing, fromName: settings.name, publicUrl: settings.url };
-  // After the email is sent, a copy goes to Serpix (Service Binding SERPIX + shared secret). Failures are ignored: the visitor and the email are unaffected.
+  // After the email is sent, a copy goes to Garpen (Service Binding SERPIX + shared secret). Failures are ignored: the visitor and the email are unaffected.
   deps.forward = (inquiry) => {
     const e = env as unknown as { SERPIX?: { fetch: typeof fetch }; SERPIX_INBOUND_SECRET?: string };
     if (!e.SERPIX || !e.SERPIX_INBOUND_SECRET) return;
     ctx.waitUntil(
-      e.SERPIX.fetch("https://erp.lulox.com.ar/api/inbound/portfolio", { method: "POST", headers: { "content-type": "application/json", "x-serpix-secret": e.SERPIX_INBOUND_SECRET }, body: JSON.stringify(inquiry) }).then(
-        (r) => { if (!r.ok) console.error("[hire-contact] serpix forward status", r.status); },
-        () => console.error("[hire-contact] serpix forward failed"),
+      e.SERPIX.fetch("https://garpen.lulox.com.ar/api/inbound/portfolio", { method: "POST", headers: { "content-type": "application/json", "x-serpix-secret": e.SERPIX_INBOUND_SECRET }, body: JSON.stringify(inquiry) }).then(
+        (r) => { if (!r.ok) console.error("[hire-contact] garpen forward status", r.status); },
+        () => console.error("[hire-contact] garpen forward failed"),
       ),
     );
   };

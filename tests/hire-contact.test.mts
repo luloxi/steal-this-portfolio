@@ -271,7 +271,7 @@ test("native form post carries budget.privateUse as a boolean", () => {
   assert.deepEqual(bodyFromForm([["budget.privateUse", "false"]]).budget, { privateUse: false });
 });
 
-test("forward to Serpix: called once after the email went out, with the recomputed budget; never on rejects or send failure", async () => {
+test("forward to Garpen: called once after the email went out, with the recomputed budget; never on rejects or send failure", async () => {
   const m = mkEnv();
   const got: unknown[] = [];
   const r = await handleHireContact(ok, m.env as never, "1.1.1.1", { forward: (i) => void got.push(i) });
@@ -294,7 +294,7 @@ test("forward to Serpix: called once after the email went out, with the recomput
   assert.equal(bad.length, 0);
 });
 
-test("forward to Serpix: a throwing forward never changes the visitor's success", async () => {
+test("forward to Garpen: a throwing forward never changes the visitor's success", async () => {
   const m = mkEnv();
   const r = await handleHireContact(ok, m.env as never, "1.1.1.1", { forward: () => { throw new Error("serpix down"); } });
   assert.equal(r.status, 200);

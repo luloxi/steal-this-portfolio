@@ -12,7 +12,7 @@ export type R2Bucket = {
   get(key: string): Promise<R2ObjectBody | null>;
 };
 
-/** Public origin of the Serpix bucket bound as `BLOG_ASSETS` (`serpix-assets`). */
+/** Public origin of the Garpen bucket bound as `BLOG_ASSETS` (`serpix-assets`). */
 export const ASSETS_PUBLIC_ORIGIN = "https://assets.lulox.com.ar";
 
 export type MediaBuckets = { blogAssets: R2Bucket | null; media: R2Bucket | null };

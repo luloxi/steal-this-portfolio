@@ -13,7 +13,7 @@
       "binding": "WORKER_SELF_REFERENCE",
       "service": "steal-this-portfolio"
     },
-    // Contact form copy -> Serpix inbox (POST /api/inbound/portfolio). Secret SERPIX_INBOUND_SECRET (wrangler secret put) = Serpix's PORTFOLIO_INBOUND_SECRET.
+    // Contact form copy -> Garpen inbox (Worker serpix) (POST /api/inbound/portfolio). Secret SERPIX_INBOUND_SECRET (wrangler secret put) = Garpen's PORTFOLIO_INBOUND_SECRET.
     { "binding": "SERPIX", "service": "serpix" }
   ],
   // Cloudflare D1: blog_posts, project_overrides and the Better Auth tables.
@@ -29,7 +29,7 @@
     }
   ],
   // Cloudflare R2. MEDIA: editor uploads, served at /media/...
-  // BLOG_ASSETS: public bucket serpix-assets (owned by Serpix, already exists: do not create it).
+  // BLOG_ASSETS: public bucket serpix-assets (owned by Garpen, Worker serpix; already exists: do not create it).
   // MCP image uploads land at blog/<year>/<uuid>.<ext> and are served from https://assets.lulox.com.ar.
   "r2_buckets": [
     { "binding": "MEDIA", "bucket_name": "lulox-media" },
