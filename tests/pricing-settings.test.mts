@@ -58,7 +58,8 @@ test("fallback per field: missing, invalid or unknown stored rows keep the code 
   const q = mergeStoredPricing([{ key: "discount_s", value: 40 }, { key: "discount_m", value: 10 }]);
   assert.deepEqual(q.volumeTiers, PRICING.volumeTiers);
   // Non-editable limits always come from code.
-  assert.equal(p.maxProjectHours, PRICING.maxProjectHours);
+  assert.equal(p.maxProjectDays, PRICING.maxProjectDays);
+  assert.equal(p.maxHourlyHours, PRICING.maxHourlyHours);
   assert.deepEqual(p.sizes, PRICING.sizes);
 });
 
@@ -140,7 +141,7 @@ test("hire-contact: email and hire_leads use the stored amounts, never the brows
       email: "ana@example.com",
       message: "Hola",
       turnstileToken: "t",
-      budget: { mode: "project", hours: 20, complexity: "medium", onSite: true, days: 2, extra: false, privateUse: true, total: 1, deposit: 1, rates: { medium: 1 } },
+      budget: { mode: "project", days: 5, hoursPerDay: 4, hours: 1, complexity: "medium", onSite: true, onSiteDays: 2, extra: false, privateUse: true, total: 1, deposit: 1, rates: { medium: 1 } },
     },
     env,
     "1.1.1.1",
@@ -158,7 +159,7 @@ test("hire-contact: email and hire_leads use the stored amounts, never the brows
   const d = mkEnv();
   const leads2: { totalUsd: number }[] = [];
   await handleHireContact(
-    { name: "Ana", email: "ana@example.com", message: "Hola", turnstileToken: "t", budget: { mode: "project", hours: 20, complexity: "medium", onSite: true, days: 2, extra: false, privateUse: true } },
+    { name: "Ana", email: "ana@example.com", message: "Hola", turnstileToken: "t", budget: { mode: "project", days: 5, hoursPerDay: 4, hours: 1, complexity: "medium", onSite: true, onSiteDays: 2, extra: false, privateUse: true } },
     d.env,
     "x",
     { saveLead: async (l) => void leads2.push(l) },

@@ -10,10 +10,35 @@ test("project examples from the method doc", () => {
   assert.equal(estimate({ mode: "project", hours: 30, complexity: "low", extra: false }).total, 240); // Mediano 20%
 });
 
-test("project hours 8..40, presets Chico 20 / Mediano 30 / Grande 40", () => {
+test("project is days × hours/day: no 8h minimum, no 40h cap, client hours ignored when the split is set", () => {
+  assert.equal(PRICING.maxProjectDays, 20);
+  assert.equal(PRICING.maxHourlyHours, 6);
   assert.deepEqual(PRICING.sizes, { s: 20, m: 30, l: 40 });
-  assert.equal(estimate({ mode: "project", hours: 2, complexity: "low", extra: false }).total, 80); // min 8h
-  assert.equal(estimate({ mode: "project", hours: 80, complexity: "low", extra: false }).total, 300); // 40h, 25% off
+  // 3 days × 4 h at the low rate, no discount (12 h).
+  assert.equal(estimate({ mode: "project", days: 3, hoursPerDay: 4, complexity: "low", extra: false }).total, 120);
+  // The hours field does not override the split.
+  assert.equal(estimate({ mode: "project", hours: 40, days: 1, hoursPerDay: 1, complexity: "low", extra: false }).total, 10);
+  // 20 × 6 = 120 h, 25% off → 900. Over-range inputs clamp in the calculator (the server rejects them).
+  assert.equal(estimate({ mode: "project", days: 20, hoursPerDay: 6, complexity: "low", extra: false }).total, 900);
+  assert.equal(estimate({ mode: "project", days: 99, hoursPerDay: 99, complexity: "low", extra: false }).total, 900);
+  // Callers that only pass a total still price that many hours (the old 8..40 clamp is gone).
+  assert.equal(estimate({ mode: "project", hours: 2, complexity: "low", extra: false }).total, 20);
+  assert.equal(estimate({ mode: "project", hours: 80, complexity: "low", extra: false }).total, 600);
+});
+
+test("on-site and urgency days clamp to 1..project days, and still to their own caps", () => {
+  const tight = estimate({ mode: "project", days: 3, hoursPerDay: 4, complexity: "low", extra: true, extraDays: 9, onSite: true, onSiteDays: 9 });
+  assert.equal(tight.lines.find((l) => l.id === "onSite")?.days, 3);
+  assert.equal(tight.lines.find((l) => l.id === "travel")?.days, 3);
+  assert.equal(tight.lines.find((l) => l.id === "extra")?.days, 3);
+  assert.equal(tight.total, 120 + 75 + 75 + 300); // 12 h × 10, no volume discount
+  const wide = estimate({ mode: "project", days: 15, hoursPerDay: 1, complexity: "low", extra: true, extraDays: 99, onSite: true, onSiteDays: 99 });
+  assert.equal(wide.lines.find((l) => l.id === "onSite")?.days, 10);
+  assert.equal(wide.lines.find((l) => l.id === "extra")?.days, 10);
+  // Private use stays a flat project amount, not per day.
+  const priv = estimate({ mode: "project", days: 3, hoursPerDay: 4, complexity: "low", extra: false, privateUse: true });
+  assert.equal(priv.total, 120 + 500);
+  assert.deepEqual(priv.lines.at(-1), { id: "private", amount: 500 });
 });
 
 test("volume discount tiers (project only, highest tier)", () => {
@@ -44,10 +69,10 @@ test("project on-site: days × (25 + 25), not discounted", () => {
 test("calculator defaults: low, friendly first price, nothing extra selected", () => {
   const { mode, project, hourly } = PRICING.defaults;
   assert.equal(mode, "hourly");
-  assert.deepEqual(project, { hours: 8, complexity: "low" });
+  assert.deepEqual(project, { days: 2, hoursPerDay: 4, complexity: "low" });
   assert.equal(hourly.hours, 2);
-  const p = estimate({ mode: "project", hours: project.hours, complexity: project.complexity, extra: false, onSite: false });
-  assert.equal(p.total, 80); // 8h × US$10, no discount, no on-site, no extras
+  const p = estimate({ mode: "project", days: project.days, hoursPerDay: project.hoursPerDay, complexity: project.complexity, extra: false, onSite: false, hours: 0 });
+  assert.equal(p.total, 80); // 2 × 4 h × US$10, no discount, no on-site, no extras
   assert.deepEqual(p.lines.map((l) => l.id), ["work"]);
   assert.equal(estimate({ mode: "hourly", hours: hourly.hours, complexity: project.complexity, extra: false, onSite: false }).total, 20);
 });
@@ -62,8 +87,17 @@ test("urgency: flat US$100 (one day) in hourly mode, per day in project mode, ca
   assert.deepEqual(l, { id: "extra", amount: 100, days: 1 });
 });
 
-test("hours input: digits only, clamped 1..6 per hour, 8..40 per project", async () => {
-  const { clampHours, hoursDigits, maxHoursFor } = await import("../src/lib/pricing.ts");
+test("project breakdown line uses the estimated total, with a singular day", async () => {
+  const { projectBreakdown } = await import("../src/lib/pricing.ts");
+  assert.equal(projectBreakdown(3, 4, 120, "es"), "3 días × 4 h/día = 12 h · US$ 120");
+  assert.equal(projectBreakdown(1, 4, 40, "es"), "1 día × 4 h/día = 4 h · US$ 40");
+  assert.equal(projectBreakdown(3, 4, 120, "en"), "3 days × 4 h/day = 12 h · US$ 120");
+  assert.equal(projectBreakdown(1, 4, 40, "en"), "1 day × 4 h/day = 4 h · US$ 40");
+  assert.equal(projectBreakdown(2, 4, 1100, "en"), "2 days × 4 h/day = 8 h · US$ 1,100");
+});
+
+test("hours input: digits only; hours 1..6; project days 1..20", async () => {
+  const { clampHours, clampProjectDays, hoursDigits } = await import("../src/lib/pricing.ts");
   assert.equal(hoursDigits("2.5"), "2");
   assert.equal(hoursDigits("1e3"), "13");
   assert.equal(hoursDigits("3,9"), "3");
@@ -71,16 +105,18 @@ test("hours input: digits only, clamped 1..6 per hour, 8..40 per project", async
   assert.equal(hoursDigits("+ 7 h"), "7");
   assert.equal(hoursDigits("abc"), "");
   assert.equal(hoursDigits("007"), "7");
-  assert.equal(clampHours("hourly", 9), 6);
-  assert.equal(clampHours("hourly", 0), 1);
-  assert.equal(clampHours("hourly", Number("")), 1);
-  assert.equal(clampHours("hourly", 3.7), 3);
-  assert.equal(clampHours("project", 999), maxHoursFor("project"));
-  assert.equal(clampHours("project", 1), 8);
-  assert.equal(clampHours("project", 0), 8);
-  assert.equal(clampHours("project", Number("")), 8);
-  assert.equal(clampHours("project", 12.9), 12);
-  assert.equal(maxHoursFor("hourly"), 6);
+  assert.equal(clampHours(9), 6);
+  assert.equal(clampHours(0), 1);
+  assert.equal(clampHours(Number("")), 1);
+  assert.equal(clampHours(3.7), 3);
+  assert.equal(clampHours(1), 1);
+  assert.equal(clampProjectDays(999), 20);
+  assert.equal(clampProjectDays(0), 1);
+  assert.equal(clampProjectDays(Number("")), 1);
+  assert.equal(clampProjectDays(12.9), 12);
+  assert.equal(clampProjectDays(1), 1);
+  assert.equal(PRICING.maxHourlyHours, 6);
+  assert.equal(PRICING.maxProjectDays, 20);
 });
 
 test("private use: flat +US$ 500 per project, +US$ 200 per hour, own line, not discounted, counts toward the deposit", () => {

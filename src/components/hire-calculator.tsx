@@ -7,7 +7,7 @@ import { useSiteSettings } from "@/components/site-settings-context";
 import { useSectionShown } from "@/components/site-order-context";
 import { useLocale } from "@/i18n/locale-provider";
 import { MagicHr } from "@/components/magic-hr";
-import { clampHours, depositPct, discountSteps, estimate, hoursDigits, maxHoursFor, minHoursFor, PRICING, type Complexity, type Mode, type Pricing } from "@/lib/pricing";
+import { clampHours, clampProjectDays, depositPct, discountSteps, estimate, hoursDigits, PRICING, projectBreakdown, type Complexity, type Mode, type Pricing } from "@/lib/pricing";
 import { useEditMode } from "@/components/admin-context";
 import { PricingAdmin } from "@/components/pricing-admin";
 import { charCount, clampMessage, MAX_MESSAGE } from "@/lib/hire-limits";
@@ -16,18 +16,15 @@ import { checkCodeShape, normalizeCode, REF_PARAM, refFromCookie, CODE_MAX } fro
 
 const copy = {
   es: {
-    intro: "Tu presupuesto en segundos.",
     mode: "Modalidad",
     modes: { project: "Varios días", hourly: "Un día" } as Record<Mode, string>,
-    modeHint: {
-      project: "Un entregable cerrado: investigación, desarrollo, testing, pulido, feedback, correcciones y entrega.",
-      hourly: "Consultoría, soporte o trabajo puntual, remoto o presencial.",
-    } as Record<Mode, string>,
-    size: "Tamaño",
-    sizes: { s: "Chico", m: "Mediano", l: "Grande" },
     hours: "Horas estimadas",
     hoursInput: (min: number, max: number) => `Horas, de ${min} a ${max}`,
-    projectRange: "De 8 a 40 h. Menos de 8, elegí por hora; más de 40 lo charlamos.",
+    projectDays: "Días",
+    daysInput: (min: number, max: number) => `Días, de ${min} a ${max}`,
+    perDay: "Horas por día",
+    perDayInput: (min: number, max: number) => `Horas por día, de ${min} a ${max}`,
+    limits: (days: number, hours: number) => `De 1 a ${days} días, y de 1 a ${hours} h por día.`,
     complexity: "Complejidad",
     cx: {
       low: ["Baja", "Lo liviano: consultas, consejos y cosas que resuelvo tranqui."],
@@ -54,7 +51,7 @@ const copy = {
       `Estimación orientativa, no es un presupuesto final. Lo ajustamos juntos en la llamada. Presupuestos válidos ${days} días; ${pct >= 100 ? "100% por adelantado." : pct <= 0 ? "todo contra entrega." : `${pct}% de anticipo y ${100 - pct}% contra entrega.`}`,
     formula: "Cómo calculo",
     fProject: (steps: [number, number][]) =>
-      `(horas × complejidad${steps.length ? ` − descuento por tamaño: ${steps.map(([h, p]) => `${h} h ${p}%`).join(", ")}` : ""}) + presencial/día + viático/día + (urgencia × día) + uso privado`,
+      `(días × horas/día × complejidad${steps.length ? ` − descuento por tamaño: ${steps.map(([h, p]) => `${h} h ${p}%`).join(", ")}` : ""}) + presencial/día + viático/día + (urgencia × día) + uso privado`,
     fHourly: "(horas × complejidad) + presencial + viático + urgencia + uso privado",
     cta: "Videollamada",
     write: "Escribime",
@@ -63,18 +60,15 @@ const copy = {
     form: { name: "Nombre", email: "Tu email", message: "Mensaje", ph: "Contame qué necesitás…", budget: "Presupuesto que se envía", send: "Enviar", sending: "Enviando…", limitTitle: "Máximo 280 caracteres", limitClose: "Entendido", agents: "Formulario de contacto: nombre, email y mensaje (hasta 280 caracteres). Para enviarlo hay que pasar la verificación de Cloudflare Turnstile.",  ok: "¡Listo! Te respondo a tu email.", err: { invalid_name: "Falta tu nombre.", invalid_email: "Revisá el email.", invalid_message: "El mensaje debe tener entre 1 y 280 caracteres.", rate_limited: "Demasiados envíos. Probá en un rato.", captcha_failed: "Falta la verificación anti-bots. Esperá el tilde y probá de nuevo.", default: "No se pudo enviar. Probá de nuevo." } as Record<string, string>, yes: "sí", no: "no" },
   },
   en: {
-    intro: "Your quote in seconds.",
     mode: "Engagement",
     modes: { project: "Several days", hourly: "One day" } as Record<Mode, string>,
-    modeHint: {
-      project: "A closed deliverable: research, build, testing, polish, feedback, fixes and delivery.",
-      hourly: "Consulting, support or one-off work, remote or on-site.",
-    } as Record<Mode, string>,
-    size: "Size",
-    sizes: { s: "Small", m: "Medium", l: "Large" },
     hours: "Estimated hours",
     hoursInput: (min: number, max: number) => `Hours, ${min} to ${max}`,
-    projectRange: "8 to 40 h. Under 8, pick per hour; over 40, let's talk.",
+    projectDays: "Days",
+    daysInput: (min: number, max: number) => `Days, ${min} to ${max}`,
+    perDay: "Hours per day",
+    perDayInput: (min: number, max: number) => `Hours per day, ${min} to ${max}`,
+    limits: (days: number, hours: number) => `1 to ${days} days, and 1 to ${hours} h per day.`,
     complexity: "Complexity",
     cx: {
       low: ["Low", "The light stuff: questions, advice and things I handle calmly."],
@@ -101,7 +95,7 @@ const copy = {
       `Ballpark estimate, not a final quote. We fine-tune it together on the call. Quotes are valid for ${days} days; ${pct >= 100 ? "100% upfront." : pct <= 0 ? "everything on delivery." : `${pct}% upfront, ${100 - pct}% on delivery.`}`,
     formula: "How I calculate",
     fProject: (steps: [number, number][]) =>
-      `(hours × complexity${steps.length ? ` − size discount: ${steps.map(([h, p]) => `${h} h ${p}%`).join(", ")}` : ""}) + on-site/day + travel/day + (urgency × day) + private use`,
+      `(days × hours/day × complexity${steps.length ? ` − size discount: ${steps.map(([h, p]) => `${h} h ${p}%`).join(", ")}` : ""}) + on-site/day + travel/day + (urgency × day) + private use`,
     fHourly: "(hours × complexity) + on-site + travel + urgency + private use",
     cta: "Video call",
     write: "Write me",
@@ -134,6 +128,60 @@ function useCountUp(value: number) {
 }
 
 type RefState = "idle" | "checking" | "ok" | "unknown" | "invalid";
+
+/** Slider + number box. Digits only; over the max snaps to the max, under the min or empty becomes the min on blur. */
+function QtySlider({ min, max, value, onChange, ariaLabel, inputLabel, clamp }: {
+  min: number;
+  max: number;
+  value: number;
+  onChange: (n: number) => void;
+  ariaLabel: string;
+  inputLabel: string;
+  clamp: (n: number) => number;
+}) {
+  const [text, setText] = useState<string | null>(null);
+  const shown = Math.min(max, Math.max(min, value));
+  const onText = (raw: string) => {
+    const d = hoursDigits(raw);
+    const n = Number(d);
+    if (d && n > max) { setText(String(max)); onChange(max); return; }
+    setText(d);
+    if (n >= min) onChange(clamp(n));
+  };
+  const commit = () => {
+    if (text !== null) onChange(clamp(Number(text)));
+    setText(null);
+  };
+  return (
+    <div className="hire-hours-row">
+      <input
+        className="hire-range"
+        type="range"
+        min={min}
+        max={max}
+        step={1}
+        value={shown}
+        aria-label={ariaLabel}
+        style={{ ["--range-p" as string]: `${((shown - min) / (max - min)) * 100}%` }}
+        onChange={(e) => { setText(null); onChange(Number(e.target.value)); }}
+      />
+      <input
+        className="hire-hours-input"
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9]*"
+        enterKeyHint="done"
+        autoComplete="off"
+        aria-label={inputLabel}
+        value={text ?? String(shown)}
+        onChange={(e) => onText(e.target.value)}
+        onBlur={commit}
+        onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
+        onFocus={(e) => { const el = e.currentTarget; el.select(); const vv = window.visualViewport; const fit = () => { if (document.activeElement === el) el.scrollIntoView({ block: "center" }); }; vv?.addEventListener("resize", fit); el.addEventListener("blur", () => vv?.removeEventListener("resize", fit), { once: true }); }}
+      />
+    </div>
+  );
+}
 
 /**
  * Referral code on the quote: prefilled from the lulox-ref cookie (set by ?ref=
@@ -187,17 +235,17 @@ export function HireCalculator({ pricing = PRICING }: { pricing?: Pricing }) {
   const contactShown = useSectionShown("contact");
   const c = copy[locale === "en" ? "en" : "es"];
   const [mode, setMode] = useState<Mode>(PRICING.defaults.mode);
-  const [hours, setHours] = useState(PRICING.defaults[PRICING.defaults.mode].hours);
+  const [hourlyHours, setHourlyHours] = useState(PRICING.defaults.hourly.hours);
+  const [projectDays, setProjectDays] = useState(PRICING.defaults.project.days);
+  const [hoursPerDay, setHoursPerDay] = useState(PRICING.defaults.project.hoursPerDay);
   const [complexity, setComplexity] = useState<Complexity>(PRICING.defaults.project.complexity);
   const [onSite, setOnSite] = useState(false);
-  const [days, setDays] = useState(1);
+  const [onSiteDays, setOnSiteDays] = useState(1);
   const [extra, setExtra] = useState(false);
   const [extraDays, setExtraDays] = useState(1);
   const [privateUse, setPrivateUse] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const ref = useReferralCode();
-  // Text being typed in the hours box (null = show the committed value).
-  const [hoursText, setHoursText] = useState<string | null>(null);
   // Result of a native (no-fetch) form post comes back as ?contacto=…: reopen the form to show it.
   useEffect(() => {
     if (!new URLSearchParams(window.location.search).has("contacto")) return;
@@ -205,33 +253,46 @@ export function HireCalculator({ pricing = PRICING }: { pricing?: Pricing }) {
     return () => cancelAnimationFrame(id);
   }, []);
 
-  const r = estimate({ mode, hours, complexity, extra, onSite, onSiteDays: days, extraDays, privateUse }, P);
+  const onSiteCap = Math.min(PRICING.maxOnSiteDays, mode === "project" ? projectDays : 1);
+  const urgencyCap = Math.min(PRICING.maxUrgencyDays, mode === "project" ? projectDays : 1);
+  const shownOnSiteDays = Math.max(1, Math.min(onSiteCap, onSiteDays));
+  const shownExtraDays = Math.max(1, Math.min(urgencyCap, extraDays));
+  const hours = mode === "project" ? projectDays * hoursPerDay : hourlyHours;
+  const r = estimate({
+    mode,
+    hours,
+    days: mode === "project" ? projectDays : undefined,
+    hoursPerDay: mode === "project" ? hoursPerDay : undefined,
+    complexity,
+    extra,
+    onSite,
+    onSiteDays: shownOnSiteDays,
+    extraDays: shownExtraDays,
+    privateUse,
+  }, P);
   const depPct = depositPct(P);
   const total = useCountUp(r.total);
-  const maxH = maxHoursFor(mode);
-  const minH = minHoursFor(mode);
-  // Hours box: digits only; over the max snaps to the max right away, under the min/empty becomes the min on blur.
-  const onHoursText = (raw: string) => {
-    const d = hoursDigits(raw);
-    const n = Number(d);
-    if (d && n > maxH) { setHoursText(String(maxH)); setHours(maxH); return; }
-    setHoursText(d);
-    if (n >= minH) setHours(clampHours(mode, n));
-  };
-  const commitHoursText = () => {
-    if (hoursText !== null) setHours(clampHours(mode, Number(hoursText)));
-    setHoursText(null);
+
+  const setDays = (n: number) => {
+    const next = clampProjectDays(n, PRICING.maxProjectDays);
+    setProjectDays(next);
+    const siteCap = Math.min(PRICING.maxOnSiteDays, next);
+    const urgCap = Math.min(PRICING.maxUrgencyDays, next);
+    setOnSiteDays((d) => Math.min(Math.max(1, d), siteCap));
+    setExtraDays((d) => Math.min(Math.max(1, d), urgCap));
   };
 
   const switchMode = (m: Mode) => {
     setMode(m);
-    setHours(PRICING.defaults[m].hours);
-    setHoursText(null);
+    if (m === "hourly") setHourlyHours(PRICING.defaults.hourly.hours);
+    else {
+      setProjectDays(PRICING.defaults.project.days);
+      setHoursPerDay(PRICING.defaults.project.hoursPerDay);
+    }
   };
 
   return (
     <div className="hire" data-mode={mode} data-cx={complexity}>
-      <p className="hire-intro">{c.intro}</p>
       {editOn && mounted ? <PricingAdmin pricing={P} onSaved={setP} /> : null}
 
       <fieldset className="hire-field">
@@ -243,51 +304,56 @@ export function HireCalculator({ pricing = PRICING }: { pricing?: Pricing }) {
             </button>
           ))}
         </div>
-        <p className="hire-hint">{c.modeHint[mode]}</p>
       </fieldset>
 
-      <fieldset className="hire-field">
-        <legend className="hire-label">
-          {c.hours} <output className="hire-hours">{hours}h</output>
-        </legend>
-        {mode === "project" ? (
-          <div className="hire-chips">
-            {(Object.keys(PRICING.sizes) as (keyof typeof PRICING.sizes)[]).map((k) => (
-              <button key={k} type="button" className="hire-chip" aria-pressed={hours === PRICING.sizes[k]} onClick={() => setHours(PRICING.sizes[k])}>
-                {c.sizes[k]} <span>~{PRICING.sizes[k]}h</span>
-              </button>
-            ))}
-          </div>
-        ) : null}
-        <div className="hire-hours-row">
-        <input
-          className="hire-range"
-          type="range"
-          min={minH}
-          max={maxH}
-          step={1}
-          value={Math.min(hours, maxH)}
-          aria-label={c.hours}
-          style={{ ["--range-p" as string]: `${((Math.min(hours, maxH) - minH) / (maxH - minH)) * 100}%` }}
-          onChange={(e) => { setHoursText(null); setHours(Number(e.target.value)); }}
-        />
-        <input
-          className="hire-hours-input"
-          type="text"
-          inputMode="numeric"
-          pattern="[0-9]*"
-          enterKeyHint="done"
-          autoComplete="off"
-          aria-label={c.hoursInput(minH, maxH)}
-          value={hoursText ?? String(Math.min(hours, maxH))}
-          onChange={(e) => onHoursText(e.target.value)}
-          onBlur={commitHoursText}
-          onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
-          onFocus={(e) => { const el = e.currentTarget; el.select(); const vv = window.visualViewport; const fit = () => { if (document.activeElement === el) el.scrollIntoView({ block: "center" }); }; vv?.addEventListener("resize", fit); el.addEventListener("blur", () => vv?.removeEventListener("resize", fit), { once: true }); }}
-        />
+      {mode === "hourly" ? (
+        <fieldset className="hire-field">
+          <legend className="hire-label">
+            {c.hours} <output className="hire-hours">{hourlyHours}h</output>
+          </legend>
+          <QtySlider
+            min={1}
+            max={PRICING.maxHourlyHours}
+            value={hourlyHours}
+            onChange={setHourlyHours}
+            ariaLabel={c.hours}
+            inputLabel={c.hoursInput(1, PRICING.maxHourlyHours)}
+            clamp={(n) => clampHours(n, PRICING.maxHourlyHours)}
+          />
+        </fieldset>
+      ) : (
+        <div className="hire-split">
+          <fieldset className="hire-field">
+            <legend className="hire-label">
+              {c.projectDays} <output className="hire-hours">{projectDays}</output>
+            </legend>
+            <QtySlider
+              min={1}
+              max={PRICING.maxProjectDays}
+              value={projectDays}
+              onChange={setDays}
+              ariaLabel={c.projectDays}
+              inputLabel={c.daysInput(1, PRICING.maxProjectDays)}
+              clamp={(n) => clampProjectDays(n, PRICING.maxProjectDays)}
+            />
+          </fieldset>
+          <fieldset className="hire-field">
+            <legend className="hire-label">
+              {c.perDay} <output className="hire-hours">{hoursPerDay}h</output>
+            </legend>
+            <QtySlider
+              min={1}
+              max={PRICING.maxHourlyHours}
+              value={hoursPerDay}
+              onChange={(n) => setHoursPerDay(clampHours(n, PRICING.maxHourlyHours))}
+              ariaLabel={c.perDay}
+              inputLabel={c.perDayInput(1, PRICING.maxHourlyHours)}
+              clamp={(n) => clampHours(n, PRICING.maxHourlyHours)}
+            />
+          </fieldset>
+          <p className="hire-hint">{c.limits(PRICING.maxProjectDays, PRICING.maxHourlyHours)}</p>
         </div>
-        {mode === "project" ? <p className="hire-hint">{c.projectRange}</p> : null}
-      </fieldset>
+      )}
 
       <fieldset className="hire-field">
         <legend className="hire-label">{c.complexity}</legend>
@@ -314,18 +380,18 @@ export function HireCalculator({ pricing = PRICING }: { pricing?: Pricing }) {
           {mode === "project" && onSite ? (
             <div className="hire-stepper" role="group" aria-label={c.days}>
               <span className="hire-stepper-label">{c.days}</span>
-              <button type="button" aria-label="−" disabled={days <= 1} onClick={() => setDays((d) => Math.max(1, d - 1))}>−</button>
-              <output aria-live="polite">{days}</output>
-              <button type="button" aria-label="+" disabled={days >= PRICING.maxOnSiteDays} onClick={() => setDays((d) => Math.min(PRICING.maxOnSiteDays, d + 1))}>+</button>
+              <button type="button" aria-label="−" disabled={shownOnSiteDays <= 1} onClick={() => setOnSiteDays((d) => Math.max(1, Math.min(d, onSiteCap) - 1))}>−</button>
+              <output aria-live="polite">{shownOnSiteDays}</output>
+              <button type="button" aria-label="+" disabled={shownOnSiteDays >= onSiteCap} onClick={() => setOnSiteDays((d) => Math.min(onSiteCap, d + 1))}>+</button>
             </div>
           ) : null}
           <Toggle on={extra} set={setExtra} label={c.extra} sub={`+US$ ${P.extra}${mode === "project" ? ` × ${c.dayUnit[0]}` : ""}`} />
           {mode === "project" && extra ? (
             <div className="hire-stepper" role="group" aria-label={c.extraDays}>
               <span className="hire-stepper-label">{c.extraDays}</span>
-              <button type="button" aria-label="−" disabled={extraDays <= 1} onClick={() => setExtraDays((d) => Math.max(1, d - 1))}>−</button>
-              <output aria-live="polite">{extraDays}</output>
-              <button type="button" aria-label="+" disabled={extraDays >= PRICING.maxUrgencyDays} onClick={() => setExtraDays((d) => Math.min(PRICING.maxUrgencyDays, d + 1))}>+</button>
+              <button type="button" aria-label="−" disabled={shownExtraDays <= 1} onClick={() => setExtraDays((d) => Math.max(1, Math.min(d, urgencyCap) - 1))}>−</button>
+              <output aria-live="polite">{shownExtraDays}</output>
+              <button type="button" aria-label="+" disabled={shownExtraDays >= urgencyCap} onClick={() => setExtraDays((d) => Math.min(urgencyCap, d + 1))}>+</button>
             </div>
           ) : null}
           <Toggle on={privateUse} set={setPrivateUse} label={`${c.privateUse} (+US$ ${P.privateUse[mode]})`} sub={c.privateUseSub} testId="hire-private-use" />
@@ -337,6 +403,7 @@ export function HireCalculator({ pricing = PRICING }: { pricing?: Pricing }) {
           <h3 className="hire-receipt-title">{c.estimate}</h3>
           <span className="hire-receipt-mode">{c.modes[mode]}</span>
         </div>
+        {mode === "project" ? <p className="hire-breakdown">{projectBreakdown(projectDays, hoursPerDay, r.total, locale === "en" ? "en" : "es")}</p> : null}
         <ul className="hire-lines">
           {r.lines.map((l) => (
             <li key={l.id}>
@@ -399,14 +466,16 @@ export function HireCalculator({ pricing = PRICING }: { pricing?: Pricing }) {
         <HireForm
           open={formOpen}
           c={c}
-          budget={{ mode, hours: Math.min(hours, maxH), complexity, onSite, days, extra, extraDays: mode === "project" ? extraDays : 1, privateUse }}
+          budget={mode === "project"
+            ? { mode, hours, days: projectDays, hoursPerDay, complexity, onSite, onSiteDays: onSite ? shownOnSiteDays : 0, extra, extraDays: extra ? shownExtraDays : 0, privateUse }
+            : { mode, hours, complexity, onSite, onSiteDays: onSite ? 1 : 0, extra, extraDays: extra ? 1 : 0, privateUse }}
           refCode={ref.state === "ok" ? ref.norm : ""}
           rows={[
             [c.total, money(r.total)],
             [c.mode, c.modes[mode]],
-            [c.hours, `${Math.min(hours, maxH)}h · ${c.cx[complexity][0]} (US$ ${P.rates[complexity]}${c.perHour})`],
-            [c.onSite, onSite ? (mode === "project" ? `${c.form.yes}, ${days} ${c.dayUnit[days === 1 ? 0 : 1]}` : c.form.yes) : c.form.no],
-            [c.extra, extra ? (mode === "project" ? `${c.form.yes}, ${extraDays} ${c.dayUnit[extraDays === 1 ? 0 : 1]}` : c.form.yes) : c.form.no],
+            [c.hours, `${hours}h · ${c.cx[complexity][0]} (US$ ${P.rates[complexity]}${c.perHour})`],
+            [c.onSite, onSite ? (mode === "project" ? `${c.form.yes}, ${shownOnSiteDays} ${c.dayUnit[shownOnSiteDays === 1 ? 0 : 1]}` : c.form.yes) : c.form.no],
+            [c.extra, extra ? (mode === "project" ? `${c.form.yes}, ${shownExtraDays} ${c.dayUnit[shownExtraDays === 1 ? 0 : 1]}` : c.form.yes) : c.form.no],
             [c.privateUse, privateUse ? `${c.form.yes}, +US$ ${P.privateUse[mode]}` : c.form.no],
             ...(ref.state === "ok" ? [[c.ref.by, ref.norm] as [string, string]] : []),
           ]}

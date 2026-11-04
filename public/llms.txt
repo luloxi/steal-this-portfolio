@@ -14,7 +14,7 @@
 The "Escribime" / "Write me" form on /contratar is the only way to send a message from the site. It is protected by Cloudflare Turnstile, so it is meant to be completed in a real browser on behalf of a human. Do not try to bypass the check; there is no API key or alternate endpoint.
 
 How to use it:
-1. Open https://lulox.com.ar/contratar and set the calculator (mode, hours, complexity, conditions). Prices are recomputed on the server.
+1. Open https://lulox.com.ar/contratar and set the calculator (mode, hours or days × hours per day, complexity, conditions). Prices are recomputed on the server.
 2. Press "Escribime" / "Write me" to open the form.
 3. Fill the labeled fields: `#hire-name` (name), `#hire-email` (email), `#hire-message` (message, max 280 characters; longer text is cut).
 4. Wait for the Turnstile check ("Verify you are human"). If it asks for an interaction, hand it to your human.

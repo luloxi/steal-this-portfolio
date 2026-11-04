@@ -4096,29 +4096,29 @@ body.ie-off .ie-row-pencil { display: none; }
 /* r19: Contratar / Hire me calculator. Nick orange (#ff8a1e) × Judy cyan (#00d4ff). */
 .hire { --o: #ff8a1e; --cy: #00d4ff; --cx-low: var(--cy); --cx-medium: #ffb020; --cx-high: #ff5a2a; --ink: var(--foreground); display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.4rem; }
 :root:not(.dark) .hire { --o: #d9640a; --cy: #0090b0; --cx-medium: #9a6700; --cx-high: #c2381a; }
-.hire-intro { color: var(--muted); font-size: .95rem; line-height: 1.6; margin: 0; }
 .hire-field { border: 0; padding: 0; margin: 0; display: grid; gap: .6rem; min-width: 0; }
+.hire-split { display: grid; gap: .9rem; }
 .hire-label { font-family: var(--font-mono, monospace); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--cy); margin-bottom: .55rem; display: flex; align-items: baseline; gap: .6rem; padding: 0; }
 .hire-hours { font-size: 1.1rem; letter-spacing: 0; color: var(--o); font-weight: 800; text-shadow: 0 0 12px color-mix(in srgb, var(--o) 45%, transparent); }
-.hire-hint { margin: 0; font-size: .82rem; color: var(--muted); }
 .hire-seg { display: grid; grid-template-columns: 1fr 1fr; padding: 4px; gap: 4px; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--cy) 40%, transparent); }
 .hire-seg-btn { padding: .6rem; border-radius: 9px; font-weight: 700; color: var(--muted); transition: all .2s; }
 .hire-seg-btn[aria-checked="true"] { color: #111; background: linear-gradient(135deg, var(--cy), color-mix(in srgb, var(--cy) 60%, #fff)); box-shadow: 0 0 18px color-mix(in srgb, var(--cy) 50%, transparent); }
 :root:not(.dark) .hire-seg-btn[aria-checked="true"] { color: #fff; background: linear-gradient(135deg, var(--cy), #006b85); }
-.hire-chips { display: flex; flex-wrap: wrap; gap: .4rem; }
-.hire-chip { padding: .4rem .75rem; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--o) 45%, transparent); font-size: .85rem; transition: all .2s; }
-.hire-chip span { opacity: .6; font-size: .75rem; margin-left: .2rem; }
-.hire-chip[aria-pressed="true"] { background: color-mix(in srgb, var(--o) 18%, transparent); border-color: var(--o); color: var(--o); box-shadow: 0 0 12px color-mix(in srgb, var(--o) 35%, transparent); }
-/* Track: the fill % comes from --range-p (a plain custom property; a registered --p elsewhere broke it). */
-.hire-range { -webkit-appearance: none; appearance: none; flex: 1; min-width: 0; width: 100%; height: 6px; border-radius: 99px; background: linear-gradient(90deg, var(--cy), var(--o) var(--range-p, 0%), color-mix(in srgb, var(--muted) 30%, transparent) var(--range-p, 0%)); outline: none; }
-.hire-range::-moz-range-track { height: 6px; background: transparent; border-radius: 99px; }
+/* Track: the fill % comes from --range-p (a plain custom property; a registered --p elsewhere broke it).
+   The input is 28px tall so the thumb is a touch target; the painted track stays 6px. */
+.hire-range { -webkit-appearance: none; appearance: none; flex: 1; min-width: 0; width: 100%; height: 28px; margin: 0; background: transparent; cursor: pointer; outline: none; }
+.hire-range:disabled { cursor: not-allowed; }
+.hire-range::-webkit-slider-runnable-track { height: 6px; border-radius: 99px; background: linear-gradient(90deg, var(--cy), var(--o) var(--range-p, 0%), color-mix(in srgb, var(--muted) 30%, transparent) var(--range-p, 0%)); }
+.hire-range::-moz-range-track { height: 6px; border: 0; border-radius: 99px; background: linear-gradient(90deg, var(--cy), var(--o) var(--range-p, 0%), color-mix(in srgb, var(--muted) 30%, transparent) var(--range-p, 0%)); }
 .hire-hours-row { display: flex; align-items: center; gap: .9rem; }
 .hire-hours-input { width: 4.2rem; flex: none; font: inherit; font-family: var(--font-mono, monospace); font-size: 1rem; font-weight: 800; text-align: center;
   color: var(--o); background: transparent; border: 1px solid color-mix(in srgb, var(--o) 45%, transparent); border-radius: 10px; padding: .4rem .3rem;
   scroll-margin-top: 72px; scroll-margin-bottom: 6rem; }
 .hire-hours-input:focus-visible { outline: none; border-color: var(--o); box-shadow: 0 0 0 3px color-mix(in srgb, var(--o) 25%, transparent); }
-.hire-range::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--o); border: 3px solid var(--background); box-shadow: 0 0 0 2px var(--o), 0 0 16px var(--o); cursor: pointer; }
-.hire-range::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--o); border: 3px solid var(--background); box-shadow: 0 0 0 2px var(--o), 0 0 16px var(--o); cursor: pointer; }
+.hire-hours-input:disabled { cursor: not-allowed; }
+.hire-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; box-sizing: border-box; width: 28px; height: 28px; margin-top: -11px; border-radius: 50%; background: var(--o); border: 3px solid var(--background); box-shadow: 0 0 0 2px var(--o), 0 0 16px var(--o); cursor: pointer; }
+.hire-range::-moz-range-thumb { box-sizing: border-box; width: 28px; height: 28px; border-radius: 50%; background: var(--o); border: 3px solid var(--background); box-shadow: 0 0 0 2px var(--o), 0 0 16px var(--o); cursor: pointer; }
+.hire-range:disabled::-webkit-slider-thumb, .hire-range:disabled::-moz-range-thumb { cursor: not-allowed; }
 .hire-range:focus-visible { outline: 2px solid var(--cy); outline-offset: 6px; }
 .hire-cx { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
 .hire-cx-card { --a: var(--cx-low); text-align: left; display: grid; gap: .2rem; padding: .7rem .75rem; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--a) 35%, transparent); transition: all .2s; }
@@ -4151,6 +4151,7 @@ body.ie-off .ie-row-pencil { display: none; }
 .hire-receipt-title { margin: 0; font-family: var(--font-orbitron), var(--font-display); font-size: 1.2rem; font-weight: 800; letter-spacing: .06em; color: var(--o);
   padding-bottom: .3rem; background: linear-gradient(90deg, var(--o), transparent) bottom left / 2.2rem 2px no-repeat; text-shadow: 0 0 14px color-mix(in srgb, var(--o) 35%, transparent); }
 .hire-receipt-mode { font-size: .78rem; color: var(--muted); }
+.hire-breakdown { margin: 0 0 .7rem; font-size: .9rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 .hire-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; font-size: .88rem; }
 .hire-lines li { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px dashed color-mix(in srgb, var(--muted) 30%, transparent); padding-bottom: .3rem; }
 .hire-lines em { font-style: normal; color: var(--muted); font-size: .78rem; }

@@ -5,7 +5,7 @@
  *  - PRICING_FIELDS: the editable keys and their bounds.
  *  - validatePricingPayload: strict check for the save API (all keys, whole numbers, in bounds).
  *  - mergeStoredPricing: stored rows -> Pricing, falling back to the code default per field.
- * Hour limits, size presets (20/30/40 h), urgency/on-site day caps and validity stay in code.
+ * Hours-per-day limit, project day cap (1..20), size thresholds (20/30/40 h), urgency/on-site day caps and validity stay in code.
  */
 import { PRICING, type Pricing } from "./pricing";
 

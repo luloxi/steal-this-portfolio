@@ -1,4 +1,4 @@
-import { clampHours, depositPct, estimate, PRICING, type Complexity, type Mode, type Pricing } from "./pricing";
+import { clampHours, depositPct, estimate, PRICING, projectBreakdown, type Complexity, type Mode, type Pricing } from "./pricing";
 import { MAX_MESSAGE } from "./hire-limits";
 import { checkCodeShape } from "./referrals";
 
@@ -27,29 +27,62 @@ const EMAIL_RE = /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]{2,}$/;
 const MODES: Mode[] = ["project", "hourly"];
 const CX: Complexity[] = ["low", "medium", "high"];
 
-export type Budget = { mode: Mode; hours: number; complexity: Complexity; onSite: boolean; days: number; extra: boolean; extraDays: number; privateUse: boolean };
+export type Budget = {
+  mode: Mode;
+  /** Total hours. Project: days × hoursPerDay (client `hours` is ignored). Hourly: clamped 1..maxHourlyHours. */
+  hours: number;
+  complexity: Complexity;
+  onSite: boolean;
+  /** On-site days. 0 when remote. Project: clamped to 1..min(days, maxOnSiteDays). Hourly: 0 or 1. */
+  onSiteDays: number;
+  extra: boolean;
+  extraDays: number;
+  privateUse: boolean;
+  /** Project length (1..maxProjectDays). 0 in hourly mode. */
+  days: number;
+  /** Hours on each project day (1..maxHourlyHours). 0 in hourly mode. */
+  hoursPerDay: number;
+};
+
+/** Whole number already in range. No coercion: "3", 3.5 and 21 are rejected (project days / hours per day). */
+const intInRange = (v: unknown, min: number, max: number): v is number =>
+  typeof v === "number" && Number.isInteger(v) && v >= min && v <= max;
+
+/** On-site or urgency day count: missing/junk → 1, then clamp to 1..cap. */
+const clampSpan = (raw: unknown, cap: number) => Math.max(1, Math.min(cap, Math.round(Number(raw) || 1)));
 
 /**
  * Calculator inputs -> Budget, or null (invalid_budget). `privateUse` is a strict boolean:
  * missing/undefined is false (budgets from before the option), anything else that is not
  * true/false rejects the whole budget instead of guessing.
+ * Project mode ("Varios días") requires integer `days` 1..maxProjectDays and `hoursPerDay`
+ * 1..maxHourlyHours. Those two are not clamped: anything else is invalid_budget. Hours and
+ * the total are recomputed (days × hoursPerDay × rate); the client's hours and totals are ignored.
+ * Hourly mode ("Un día") still clamps hours to 1..maxHourlyHours.
  */
 export function parseBudget(v: unknown, p: Pricing = PRICING): Budget | null {
   if (!v || typeof v !== "object") return null;
   const b = v as Record<string, unknown>;
   const mode = MODES.find((m) => m === b.mode);
   const complexity = CX.find((c) => c === b.complexity);
-  const rawHours = Number(b.hours);
-  if (!mode || !complexity || !Number.isFinite(rawHours)) return null;
+  if (!mode || !complexity) return null;
   if (b.privateUse !== undefined && typeof b.privateUse !== "boolean") return null;
   const privateUse = b.privateUse === true;
-  // Same rule as the hours input: whole hours, clamped to 1..max for the mode.
-  const hours = clampHours(mode, rawHours);
   const onSite = b.onSite === true;
-  const days = mode === "project" && onSite ? Math.max(1, Math.min(p.maxOnSiteDays, Math.round(Number(b.days) || 1))) : onSite ? 1 : 0;
   const extra = b.extra === true;
-  const extraDays = !extra ? 0 : mode !== "project" ? 1 : Math.max(1, Math.min(p.maxUrgencyDays, Math.round(Number(b.extraDays) || 1)));
-  return { mode, hours, complexity, onSite, days, extra, extraDays, privateUse };
+  if (mode === "hourly") {
+    const rawHours = Number(b.hours);
+    if (!Number.isFinite(rawHours)) return null;
+    const hours = clampHours(rawHours, p.maxHourlyHours);
+    return { mode, hours, complexity, onSite, onSiteDays: onSite ? 1 : 0, extra, extraDays: extra ? 1 : 0, privateUse, days: 0, hoursPerDay: 0 };
+  }
+  if (!intInRange(b.days, 1, p.maxProjectDays) || !intInRange(b.hoursPerDay, 1, p.maxHourlyHours)) return null;
+  const days = b.days;
+  const hoursPerDay = b.hoursPerDay;
+  const hours = days * hoursPerDay;
+  const onSiteDays = onSite ? clampSpan(b.onSiteDays, Math.min(p.maxOnSiteDays, days)) : 0;
+  const extraDays = !extra ? 0 : clampSpan(b.extraDays, Math.min(p.maxUrgencyDays, days));
+  return { mode, hours, complexity, onSite, onSiteDays, extra, extraDays, privateUse, days, hoursPerDay };
 }
 
 const LABEL = {
@@ -67,14 +100,26 @@ const oneLine = (s: string) => s.replace(/[\r\n]+/g, " ").trim();
  * `p` is the stored pricing (D1 pricing_settings over the code defaults), the same one the page shows.
  */
 export const estimateBudget = (b: Budget, p: Pricing = PRICING) =>
-  estimate({ mode: b.mode, hours: b.hours, complexity: b.complexity, extra: b.extra, onSite: b.onSite, onSiteDays: b.days, extraDays: b.extraDays, privateUse: b.privateUse }, p);
+  estimate({
+    mode: b.mode,
+    hours: b.hours,
+    days: b.mode === "project" ? b.days : undefined,
+    hoursPerDay: b.mode === "project" ? b.hoursPerDay : undefined,
+    complexity: b.complexity,
+    extra: b.extra,
+    onSite: b.onSite,
+    onSiteDays: b.onSiteDays,
+    extraDays: b.extraDays,
+    privateUse: b.privateUse,
+  }, p);
 
 export function budgetLines(b: Budget, p: Pricing = PRICING): { summary: string[]; lines: [string, string][]; total: string; deposit: string; depositLabel: string } {
   const r = estimateBudget(b, p);
   const summary = [
     `Modalidad: ${LABEL.mode[b.mode]}`,
     `Horas: ${b.hours}h · Complejidad: ${LABEL.cx[b.complexity]} (US$ ${p.rates[b.complexity]}/h)`,
-    `Presencial: ${b.onSite ? (b.mode === "project" ? `sí, ${b.days} ${b.days === 1 ? "día" : "días"}` : "sí") : "no"}`,
+    ...(b.mode === "project" ? [`Desglose: ${projectBreakdown(b.days, b.hoursPerDay, r.total, "es")}`] : []),
+    `Presencial: ${b.onSite ? (b.mode === "project" ? `sí, ${b.onSiteDays} ${b.onSiteDays === 1 ? "día" : "días"}` : "sí") : "no"}`,
     `Urgencia: ${b.extra ? (b.mode === "project" ? `sí, ${b.extraDays} ${b.extraDays === 1 ? "día" : "días"}` : "sí") : "no"}`,
     `Uso privado: ${b.privateUse ? "sí (sin portfolio ni open source)" : "no (portfolio y open source ok)"}`,
   ];

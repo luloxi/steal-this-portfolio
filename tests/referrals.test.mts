@@ -216,7 +216,7 @@ test("hire form: valid active code is attributed, stored with the server budget 
     findReferrer: (c: string) => getActiveReferrer(db, c),
     saveLead: (l: Parameters<typeof insertLead>[1]) => insertLead(db, l),
   };
-  const base = { name: "Cliente", email: "cli@example.com", message: "Hola", turnstileToken: "t", budget: { mode: "project", hours: 20, complexity: "medium", onSite: false, days: 0, extra: false, total: 1 } };
+  const base = { name: "Cliente", email: "cli@example.com", message: "Hola", turnstileToken: "t", budget: { mode: "project", days: 5, hoursPerDay: 4, hours: 1, complexity: "medium", onSite: false, extra: false, total: 1 } };
   const r = await handleHireContact({ ...base, refCode: " ANA " }, env, "1.1.1.1", deps);
   assert.deepEqual(r, { status: 200, body: { ok: true, ref: "ana" } });
   assert.match(sent[0].text, /Referido por: ana \(Ana Pérez\)/);

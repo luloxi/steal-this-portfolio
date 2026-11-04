@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { bodyFromForm, handleHireContact, parseBudget } from "../src/lib/hire-contact.ts";
 
-const budget = { mode: "project", hours: 20, complexity: "medium", onSite: true, days: 2, extra: false };
+const budget = { mode: "project", days: 5, hoursPerDay: 4, hours: 1, complexity: "medium", onSite: true, onSiteDays: 2, extra: false };
 const ok = { name: "Ana", email: "ana@example.com", message: "Hola, quiero una web.", budget, turnstileToken: "good-token" };
 const SITEVERIFY = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
@@ -67,7 +67,9 @@ test("validation: email, name, empty message, budget", async () => {
     [{ email: "nope" }, "invalid_email"],
     [{ name: "  " }, "invalid_name"],
     [{ message: "   " }, "invalid_message"],
-    [{ budget: { ...budget, hours: "lots" } }, "invalid_budget"],
+    [{ budget: { ...budget, mode: "hourly", hours: "lots" } }, "invalid_budget"],
+    [{ budget: { ...budget, days: 21 } }, "invalid_budget"],
+    [{ budget: { ...budget, hoursPerDay: 0 } }, "invalid_budget"],
     [{ budget: { ...budget, mode: "x" } }, "invalid_budget"],
   ] as const) {
     const r = await handleHireContact({ ...ok, ...patch }, env, "x");
@@ -96,10 +98,13 @@ test("no transport → 503; send failure → 502", async () => {
   assert.equal(r.status, 502);
 });
 
-test("parseBudget clamps days and drops them when not on-site", () => {
-  assert.equal(parseBudget({ ...budget, days: 50 })?.days, 10);
-  assert.equal(parseBudget({ ...budget, onSite: false })?.days, 0);
-  assert.equal(parseBudget({ ...budget, mode: "hourly", hours: 4 })?.days, 1);
+test("parseBudget clamps on-site days to the project length and drops them when not on-site", () => {
+  assert.equal(parseBudget({ ...budget, onSiteDays: 50 })?.onSiteDays, 5);
+  assert.equal(parseBudget({ ...budget, days: 15, hoursPerDay: 1, onSiteDays: 50 })?.onSiteDays, 10);
+  assert.equal(parseBudget({ ...budget, onSite: false })?.onSiteDays, 0);
+  assert.equal(parseBudget({ ...budget, mode: "hourly", hours: 4 })?.onSiteDays, 1);
+  assert.equal(parseBudget({ ...budget, mode: "hourly", hours: 4, onSite: false })?.onSiteDays, 0);
+  assert.equal(parseBudget({ ...budget, days: 50 }), null);
 });
 
 test("Turnstile: missing or invalid token → 403, nothing sent; valid token is verified with secret + IP", async () => {
@@ -127,7 +132,7 @@ test("Turnstile: no secret configured → 503; siteverify down → 403", async (
 
 test("default calculator quote is recomputed server-side to the same totals", async () => {
   for (const [b, total] of [
-    [{ mode: "project", hours: 8, complexity: "low", onSite: false, days: 1, extra: false, total: 9999 }, "US$ 80"],
+    [{ mode: "project", days: 2, hoursPerDay: 4, complexity: "low", onSite: false, extra: false, total: 9999 }, "US$ 80"],
     [{ mode: "hourly", hours: 2, complexity: "low", onSite: false, days: 1, extra: false }, "US$ 20"],
   ] as const) {
     const { env, sent } = mkEnv({ resend: true });
@@ -142,8 +147,8 @@ test("default calculator quote is recomputed server-side to the same totals", as
 test("urgency: server forces 1 day in hourly mode, recomputes project days; client totals ignored", async () => {
   for (const [b, total, line] of [
     [{ mode: "hourly", hours: 2, complexity: "low", onSite: false, days: 0, extra: true, extraDays: 3, total: 1 }, "US$ 120", "Urgencia: sí\n"],
-    [{ mode: "project", hours: 8, complexity: "low", onSite: true, days: 2, extra: true, extraDays: 2, total: 9999 }, "US$ 380", "Urgencia: sí, 2 días"],
-    [{ mode: "project", hours: 8, complexity: "low", onSite: false, days: 1, extra: true, extraDays: 999 }, "US$ 1,080", "Urgencia: sí, 10 días"],
+    [{ mode: "project", days: 2, hoursPerDay: 4, complexity: "low", onSite: true, onSiteDays: 2, extra: true, extraDays: 2, total: 9999 }, "US$ 380", "Urgencia: sí, 2 días"],
+    [{ mode: "project", days: 10, hoursPerDay: 1, complexity: "low", onSite: false, extra: true, extraDays: 999 }, "US$ 1,100", "Urgencia: sí, 10 días"],
   ] as const) {
     const { env, sent } = mkEnv({ resend: true });
     assert.equal((await handleHireContact({ ...ok, budget: b }, env, "x")).status, 200);
@@ -158,7 +163,9 @@ test("parseBudget: urgency off → 0 days; missing days → 1", () => {
   assert.equal(parseBudget({ ...budget, extra: false, extraDays: 5 })!.extraDays, 0);
   assert.equal(parseBudget({ ...budget, extra: true })!.extraDays, 1);
   assert.equal(parseBudget({ ...budget, mode: "hourly", extra: true, extraDays: 7 })!.extraDays, 1);
-  assert.equal(parseBudget({ ...budget, mode: "project", hours: 4, extra: true, extraDays: 7 })!.extraDays, 7);
+  assert.equal(parseBudget({ ...budget, mode: "project", extra: true, extraDays: 7 })!.extraDays, 5); // clamped to the 5 project days
+  assert.equal(parseBudget({ ...budget, days: 12, hoursPerDay: 1, extra: true, extraDays: 7 })!.extraDays, 7);
+  assert.equal(parseBudget({ ...budget, days: 20, hoursPerDay: 1, extra: true, extraDays: 99 })!.extraDays, 10);
 });
 
 test("native form post: fields map to the JSON shape, Turnstile token included", () => {
@@ -181,13 +188,50 @@ test("hire_hp honeypot also pretends success; 281 chars rejected server-side", a
   assert.equal(sent.length, 1);
 });
 
-test("server clamps hours like the input: 9h per hour → 6h, 0 → 1, project over max → max, under 8 → 8", () => {
+test("server clamps hourly hours; project days × hours/day are strict and client hours are ignored", () => {
   assert.equal(parseBudget({ ...budget, mode: "hourly", hours: 9 })?.hours, 6);
   assert.equal(parseBudget({ ...budget, mode: "hourly", hours: 0 })?.hours, 1);
-  assert.equal(parseBudget({ ...budget, hours: 99 })?.hours, 40);
-  assert.equal(parseBudget({ ...budget, hours: 12.9 })?.hours, 12);
-  assert.equal(parseBudget({ ...budget, hours: 4 })?.hours, 8);
-  assert.equal(parseBudget({ ...budget, hours: 0 })?.hours, 8);
+  assert.equal(parseBudget({ ...budget, hours: 99 })?.hours, 20);
+  assert.equal(parseBudget({ ...budget, hours: "lots" })?.hours, 20);
+  assert.equal(parseBudget({ ...budget, days: 3, hoursPerDay: 4, hours: 1 })?.hours, 12);
+  for (const bad of [0, 21, 1.5, "3", null, 1.0 + 0.2]) {
+    assert.equal(parseBudget({ ...budget, days: bad }), null, JSON.stringify(bad));
+  }
+  for (const bad of [0, 7, 1.5, "4", null, true]) {
+    assert.equal(parseBudget({ ...budget, hoursPerDay: bad }), null, JSON.stringify(bad));
+  }
+  const noDays = { ...budget } as Record<string, unknown>;
+  delete noDays.days;
+  const noPer = { ...budget } as Record<string, unknown>;
+  delete noPer.hoursPerDay;
+  assert.equal(parseBudget(noDays), null);
+  assert.equal(parseBudget(noPer), null);
+});
+
+test("project email breakdown: 3 days × 4 h at the low rate, singular day, client total ignored", async () => {
+  const { env, sent } = mkEnv({ resend: true });
+  assert.equal((await handleHireContact({
+    ...ok,
+    budget: { mode: "project", days: 3, hoursPerDay: 4, hours: 99, complexity: "low", onSite: false, extra: false, total: 1 },
+  }, env, "x")).status, 200);
+  const text = String((sent[0] as { m: { text: string } }).m.text);
+  assert.match(text, /Desglose: 3 días × 4 h\/día = 12 h · US\$ 120/);
+  assert.match(text, /Total estimado: US\$ 120\n/);
+  const one = mkEnv({ resend: true });
+  assert.equal((await handleHireContact({
+    ...ok,
+    budget: { mode: "project", days: 1, hoursPerDay: 4, complexity: "low", onSite: false, extra: false, total: 9 },
+  }, one.env, "x")).status, 200);
+  assert.match(String((one.sent[0] as { m: { text: string } }).m.text), /Desglose: 1 día × 4 h\/día = 4 h · US\$ 40/);
+});
+
+test("project days or hoursPerDay out of range → 400 invalid_budget, nothing sent", async () => {
+  const { env, sent } = mkEnv({ resend: true });
+  for (const bad of [{ days: 21 }, { days: 0 }, { hoursPerDay: 7 }, { hoursPerDay: 1.2 }]) {
+    const r = await handleHireContact({ ...ok, budget: { ...budget, ...bad } }, env, "x");
+    assert.deepEqual([r.status, r.body.error], [400, "invalid_budget"], JSON.stringify(bad));
+  }
+  assert.equal(sent.length, 0);
 });
 
 test("parseBudget privateUse: strict boolean, missing (old payload) = false, anything else rejects", () => {
