@@ -24,7 +24,7 @@ const copy = {
     fields: {
       rate_low: "Baja", rate_medium: "Media", rate_high: "Alta",
       on_site: "Presencial", travel: "Viático", urgency: "Urgencia",
-      private_project: "Por proyecto", private_hourly: "Por hora",
+      private_project: "Varios días", private_hourly: "Un día",
       deposit_pct: "Anticipo",
       discount_s: `Chico ${PRICING.sizes.s} h`, discount_m: `Mediano ${PRICING.sizes.m} h`, discount_l: `Grande ${PRICING.sizes.l} h`,
     } as Record<PricingKey, string>,
@@ -51,7 +51,7 @@ const copy = {
     fields: {
       rate_low: "Low", rate_medium: "Medium", rate_high: "High",
       on_site: "On-site", travel: "Travel", urgency: "Urgency",
-      private_project: "Per project", private_hourly: "Per hour",
+      private_project: "Several days", private_hourly: "One day",
       deposit_pct: "Deposit",
       discount_s: `Small ${PRICING.sizes.s} h`, discount_m: `Medium ${PRICING.sizes.m} h`, discount_l: `Large ${PRICING.sizes.l} h`,
     } as Record<PricingKey, string>,

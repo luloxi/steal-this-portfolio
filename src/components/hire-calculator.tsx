@@ -18,7 +18,7 @@ const copy = {
   es: {
     intro: "Tu presupuesto en segundos.",
     mode: "Modalidad",
-    modes: { project: "Por proyecto", hourly: "Por hora" } as Record<Mode, string>,
+    modes: { project: "Varios días", hourly: "Un día" } as Record<Mode, string>,
     modeHint: {
       project: "Un entregable cerrado: investigación, desarrollo, testing, pulido, feedback, correcciones y entrega.",
       hourly: "Consultoría, soporte o trabajo puntual, remoto o presencial.",
@@ -65,7 +65,7 @@ const copy = {
   en: {
     intro: "Your quote in seconds.",
     mode: "Engagement",
-    modes: { project: "Per project", hourly: "Per hour" } as Record<Mode, string>,
+    modes: { project: "Several days", hourly: "One day" } as Record<Mode, string>,
     modeHint: {
       project: "A closed deliverable: research, build, testing, polish, feedback, fixes and delivery.",
       hourly: "Consulting, support or one-off work, remote or on-site.",

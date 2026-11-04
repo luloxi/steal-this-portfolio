@@ -53,7 +53,7 @@ export function parseBudget(v: unknown, p: Pricing = PRICING): Budget | null {
 }
 
 const LABEL = {
-  mode: { project: "Por proyecto", hourly: "Por hora" },
+  mode: { project: "Varios días", hourly: "Un día" },
   cx: { low: "Baja", medium: "Media", high: "Alta" },
   lines: { work: "Trabajo", discount: "Descuento por volumen", onSite: "Recargo presencial", travel: "Viático", extra: "Urgencia", private: "Uso privado" },
 } as const;

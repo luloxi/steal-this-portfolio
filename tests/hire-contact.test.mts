@@ -150,7 +150,7 @@ test("urgency: server forces 1 day in hourly mode, recomputes project days; clie
     const text = String((sent[0] as { m: { text: string } }).m.text);
     assert.match(text, new RegExp(`Total estimado: ${total.replace("$", "\\$")}\\n`));
     assert.ok(text.includes(line), text);
-    if (b.mode === "hourly") assert.ok(!/Urgencia \(|días?\b/.test(text), text);
+    if (b.mode === "hourly") assert.ok(!/Urgencia \(|días?\b/.test(text.replace(/^Modalidad: .*$/m, "")), text);
   }
 });
 
