@@ -202,7 +202,7 @@ export async function handleHireContact(raw: unknown, env: HireEnv, ip: string, 
 
   const b = budgetLines(budget, pricing);
   const refLine = referrer ? `Referido por: ${referrer.code} (${oneLine(referrer.name)})` : null;
-  const to = env.CONTACT_TO ?? "hola@lulox.com.ar";
+  const to = env.CONTACT_TO ?? "info@lulox.com.ar";
   const from = env.CONTACT_FROM ?? "no-responder@lulox.com.ar";
   const fromName = (deps.fromName ?? "Portfolio").trim() || "Portfolio";
   let publicHost = "example.com";

@@ -21,7 +21,7 @@ function mkEnv(opts: { limitOk?: boolean; resend?: boolean } = {}) {
   const env = {
     TURNSTILE_SECRET_KEY: "ts-secret",
     fetch: fetchMock,
-    CONTACT_TO: "hola@lulox.com.ar",
+    CONTACT_TO: "info@lulox.com.ar",
     CONTACT_FROM: "no-responder@lulox.com.ar",
     CONTACT_RL: { limit: async () => ({ success: opts.limitOk ?? true }) },
     CONTACT_EMAIL: { send: async (m: unknown) => void sent.push({ via: "binding", m }) },
@@ -39,7 +39,7 @@ test("valid submission sends via Resend with reply-to and server-computed budget
   assert.equal(sent.length, 1);
   const { via, m } = sent[0] as { via: string; m: Record<string, unknown> };
   assert.equal(via, "resend");
-  assert.deepEqual(m.to, ["hola@lulox.com.ar"]);
+  assert.deepEqual(m.to, ["info@lulox.com.ar"]);
   assert.equal(m.from, "Portfolio <no-responder@lulox.com.ar>");
   assert.equal(m.reply_to, "ana@example.com");
   // 20h × 18 = 360, -15% = -54, on-site 2×25 + travel 2×25 = 100 → 406
