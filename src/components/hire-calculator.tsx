@@ -54,7 +54,6 @@ const copy = {
       `(días × horas/día × complejidad${steps.length ? ` − descuento por tamaño: ${steps.map(([h, p]) => `${h} h ${p}%`).join(", ")}` : ""}) + presencial/día + viático/día + (urgencia × día) + uso privado`,
     fHourly: "(horas × complejidad) + presencial + viático + urgencia + uso privado",
     cta: "Videollamada",
-    write: "Escribime",
     contact: "Contacto",
     ref: { label: "Código de referido (opcional)", by: "Referido por", checking: "Buscando el código…", unknown: "No encontramos ese código activo.", invalid: "Letras, números y guiones, de 3 a 24." },
     form: { name: "Nombre", email: "Tu email", message: "Mensaje", ph: "Contame qué necesitás…", budget: "Presupuesto que se envía", send: "Enviar", sending: "Enviando…", limitTitle: "Máximo 280 caracteres", limitClose: "Entendido", agents: "Formulario de contacto: nombre, email y mensaje (hasta 280 caracteres). Para enviarlo hay que pasar la verificación de Cloudflare Turnstile.",  ok: "¡Listo! Te respondo a tu email.", err: { invalid_name: "Falta tu nombre.", invalid_email: "Revisá el email.", invalid_message: "El mensaje debe tener entre 1 y 280 caracteres.", rate_limited: "Demasiados envíos. Probá en un rato.", captcha_failed: "Falta la verificación anti-bots. Esperá el tilde y probá de nuevo.", default: "No se pudo enviar. Probá de nuevo." } as Record<string, string>, yes: "sí", no: "no" },
@@ -98,7 +97,6 @@ const copy = {
       `(days × hours/day × complexity${steps.length ? ` − size discount: ${steps.map(([h, p]) => `${h} h ${p}%`).join(", ")}` : ""}) + on-site/day + travel/day + (urgency × day) + private use`,
     fHourly: "(hours × complexity) + on-site + travel + urgency + private use",
     cta: "Video call",
-    write: "Write me",
     contact: "Contact",
     ref: { label: "Referral code (optional)", by: "Referred by", checking: "Looking up the code…", unknown: "We couldn't find that active code.", invalid: "Letters, numbers and hyphens, 3 to 24." },
     form: { name: "Name", email: "Your email", message: "Message", ph: "Tell me what you need…", budget: "Quote that will be sent", send: "Send", sending: "Sending…", limitTitle: "280 characters max", limitClose: "Got it", agents: "Contact form: name, email and message (up to 280 characters). Sending it requires passing the Cloudflare Turnstile check.",  ok: "Done! I'll reply to your email.", err: { invalid_name: "Your name is missing.", invalid_email: "Check the email.", invalid_message: "Message must be 1–280 characters.", rate_limited: "Too many sends. Try again later.", captcha_failed: "Anti-bot check missing. Wait for the checkmark and try again.", default: "Couldn't send. Try again." } as Record<string, string>, yes: "yes", no: "no" },
@@ -244,14 +242,7 @@ export function HireCalculator({ pricing = PRICING }: { pricing?: Pricing }) {
   const [extra, setExtra] = useState(false);
   const [extraDays, setExtraDays] = useState(1);
   const [privateUse, setPrivateUse] = useState(false);
-  const [formOpen, setFormOpen] = useState(false);
   const ref = useReferralCode();
-  // Result of a native (no-fetch) form post comes back as ?contacto=…: reopen the form to show it.
-  useEffect(() => {
-    if (!new URLSearchParams(window.location.search).has("contacto")) return;
-    const id = requestAnimationFrame(() => setFormOpen(true));
-    return () => cancelAnimationFrame(id);
-  }, []);
 
   const onSiteCap = Math.min(PRICING.maxOnSiteDays, mode === "project" ? projectDays : 1);
   const urgencyCap = Math.min(PRICING.maxUrgencyDays, mode === "project" ? projectDays : 1);
@@ -459,12 +450,7 @@ export function HireCalculator({ pricing = PRICING }: { pricing?: Pricing }) {
       </div>
 
       <div className="hire-ctas">
-        <button type="button" className="hire-btn hire-act" aria-expanded={formOpen} aria-controls="hire-form-panel" onClick={() => setFormOpen((o) => !o)} data-testid="hire-write">
-          {c.write}
-          <span className="hire-btn-rainbow" aria-hidden />
-        </button>
         <HireForm
-          open={formOpen}
           c={c}
           budget={mode === "project"
             ? { mode, hours, days: projectDays, hoursPerDay, complexity, onSite, onSiteDays: onSite ? shownOnSiteDays : 0, extra, extraDays: extra ? shownExtraDays : 0, privateUse }
@@ -480,15 +466,19 @@ export function HireCalculator({ pricing = PRICING }: { pricing?: Pricing }) {
             ...(ref.state === "ok" ? [[c.ref.by, ref.norm] as [string, string]] : []),
           ]}
         />
-        {settings.callBookingUrl ? (
-          <a className="hire-act hire-act-call" href={settings.callBookingUrl} target="_blank" rel="noopener noreferrer" data-testid="hire-call-cta">
-            {c.cta}
-          </a>
-        ) : null}
-        {contactShown ? (
-          <Link className="hire-act hire-act-contact" href={href("/contacto")}>
-            {c.contact}
-          </Link>
+        {settings.callBookingUrl || contactShown ? (
+          <div className="hire-options">
+            {settings.callBookingUrl ? (
+              <a className="hire-act hire-act-call" href={settings.callBookingUrl} target="_blank" rel="noopener noreferrer" data-testid="hire-call-cta">
+                {c.cta}
+              </a>
+            ) : null}
+            {contactShown ? (
+              <Link className="hire-act hire-act-contact" href={href("/contacto")} data-testid="hire-contact-cta">
+                {c.contact}
+              </Link>
+            ) : null}
+          </div>
         ) : null}
       </div>
 
@@ -510,49 +500,8 @@ function Toggle({ on, set, label, sub, disabled, testId }: { on: boolean; set: (
 
 type Copy = (typeof copy)["es"];
 
-function HireForm({ open, c, budget, rows, refCode }: { open: boolean; c: Copy; budget: Record<string, unknown>; rows: [string, string][]; refCode: string }) {
-  const first = useRef<HTMLInputElement>(null);
-  const panel = useRef<HTMLDivElement>(null);
+function HireForm({ c, budget, rows, refCode }: { c: Copy; budget: Record<string, unknown>; rows: [string, string][]; refCode: string }) {
   const status = useRef<HTMLParagraphElement>(null);
-  // Mobile: reveal first, then focus. Focusing a field that is still collapsed/below the fold
-  // opens the keyboard over nothing. Wait for the expand transition (instant with reduced motion),
-  // scroll the field to the top of the visual viewport, focus, and re-align once the keyboard resizes it.
-  useEffect(() => {
-    if (!open) return;
-    const el = first.current;
-    const pn = panel.current;
-    if (!el || !pn) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const vv = window.visualViewport;
-    let done = false;
-    const align = () => el.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
-    const onResize = () => {
-      if (document.activeElement === el) align();
-    };
-    const reveal = () => {
-      if (done) return;
-      done = true;
-      align();
-      el.focus({ preventScroll: true });
-      vv?.addEventListener("resize", onResize);
-    };
-    const onEnd = (e: TransitionEvent) => {
-      if (e.target === pn && e.propertyName === "grid-template-rows") reveal();
-    };
-    let t = 0;
-    if (reduce) reveal();
-    else {
-      pn.addEventListener("transitionend", onEnd);
-      t = window.setTimeout(reveal, 500);
-    }
-    const stop = window.setTimeout(() => vv?.removeEventListener("resize", onResize), 1500);
-    return () => {
-      pn.removeEventListener("transitionend", onEnd);
-      window.clearTimeout(t);
-      window.clearTimeout(stop);
-      vv?.removeEventListener("resize", onResize);
-    };
-  }, [open]);
   const f = c.form;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -568,10 +517,11 @@ function HireForm({ open, c, budget, rows, refCode }: { open: boolean; c: Copy; 
     const id = requestAnimationFrame(() => {
       if (res === "ok") setState("ok");
       else { setState("error"); setErr(f.err[res] ?? f.err.default); }
+      document.getElementById("hire-form-panel")?.scrollIntoView({ block: "start" });
     });
     return () => cancelAnimationFrame(id);
   }, [f]);
-  const { box: tsBox, token, reset: resetTs } = useTurnstile(open);
+  const { box: tsBox, token, reset: resetTs } = useTurnstile(true);
   const used = charCount(message);
   const left = Math.max(0, MAX_MESSAGE - used);
   const atLimit = used >= MAX_MESSAGE;
@@ -628,13 +578,13 @@ function HireForm({ open, c, budget, rows, refCode }: { open: boolean; c: Copy; 
   };
 
   return (
-    <div ref={panel} id="hire-form-panel" className="hire-form-panel" data-open={open} inert={!open}>
+    <div id="hire-form-panel" className="hire-form-panel" data-open="true">
     <form className="hire-form" onSubmit={submit} data-testid="hire-form" method="post" action="/api/hire-contact" aria-describedby="hire-form-agents">
       <p id="hire-form-agents" className="sr-only">{f.agents}</p>
       <div className="hire-form-row">
         <label className="hire-form-field" htmlFor="hire-name">
           <span>{f.name}</span>
-          <input ref={first} id="hire-name" name="name" type="text" required maxLength={80} autoComplete="name" autoCapitalize="words" enterKeyHint="next" value={name} onFocus={keepVisible} onChange={(e) => setName(e.target.value)} />
+          <input id="hire-name" name="name" type="text" required maxLength={80} autoComplete="name" autoCapitalize="words" enterKeyHint="next" value={name} onFocus={keepVisible} onChange={(e) => setName(e.target.value)} />
         </label>
         <label className="hire-form-field" htmlFor="hire-email">
           <span>{f.email}</span>
@@ -668,9 +618,9 @@ function HireForm({ open, c, budget, rows, refCode }: { open: boolean; c: Copy; 
       <div ref={tsBox} className="hire-turnstile" />
       <MagicHr className="hire-form-hr" />
       <div className="hire-form-actions">
-        <button type="submit" className="hire-btn hire-form-send" disabled={state === "sending" || used === 0 || !token}>
-          {state === "sending" ? f.sending : f.send}
-          <span className="hire-btn-rainbow" aria-hidden />
+        <button type="submit" className="hire-btn hire-cta hire-form-send" disabled={state === "sending" || used === 0 || !token} data-testid="hire-send">
+          <span className="hire-cta-paint" aria-hidden />
+          <span className="hire-btn-label">{state === "sending" ? f.sending : f.send}</span>
         </button>
         <p ref={status} className="hire-form-status" role="status">{state === "ok" ? f.ok : state === "error" ? err : ""}</p>
       </div>
@@ -711,7 +661,7 @@ function loadTurnstile(): Promise<TurnstileApi> {
   return tsLoad;
 }
 
-/** Cloudflare Turnstile (managed) rendered once the form opens, matching the site theme. */
+/** Cloudflare Turnstile (managed). The form is open on load, so this renders with the page. */
 function useTurnstile(active: boolean) {
   const box = useRef<HTMLDivElement>(null);
   const id = useRef<string | null>(null);

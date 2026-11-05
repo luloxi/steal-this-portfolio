@@ -1,6 +1,7 @@
 "use client";
 
 import type { ComponentType } from "react";
+import Link from "next/link";
 import { CpRow } from "@/components/cp-row";
 import {
   InstagramBrandIcon,
@@ -37,7 +38,7 @@ const socialIcons: Record<string, { Icon: ComponentType<{ className?: string }>;
 };
 
 export default function ContactPage() {
-  const { t } = useLocale();
+  const { t, href } = useLocale();
   const settings = useSiteSettings();
   const hireShown = useSectionShown("hire");
   const rows = settings.socials.filter((s) => s.id !== "github");
@@ -66,6 +67,14 @@ export default function ContactPage() {
       </div>
 
       {hireShown ? <HireButton className="contact-hire" /> : null}
+      <Link
+        href={`${href("/contratar")}#hire-form-panel`}
+        className="hire-btn hire-cta contact-cta"
+        data-testid="contact-cta"
+      >
+        <span className="hire-cta-paint" aria-hidden />
+        <span className="hire-btn-label">{t.contact.contactCta}</span>
+      </Link>
     </PageShell>
   );
 }

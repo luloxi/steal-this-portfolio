@@ -59,7 +59,7 @@ for (const theme of ["light", "dark"]) {
     await p.waitForTimeout(400);
     const a = await p.evaluate(probe);
     // open interactive panels so their contents get checked too
-    for (const sel of ['[data-testid=hire-write]', 'summary', '.md-acc-btn']) {
+    for (const sel of ['summary', '.md-acc-btn']) {
       for (const h of await p.$$(sel)) { await h.click().catch(() => {}); }
     }
     await p.waitForTimeout(600);

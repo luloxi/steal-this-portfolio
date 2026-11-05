@@ -4223,8 +4223,8 @@ body.ie-off .ie-row-pencil { display: none; }
 .home-steal-icon { width: 14px; height: 14px; flex: none; }
 @media (prefers-reduced-motion: reduce) { .home-steal { transition: none; } }
 
-/* Shared pill (Escribime, Enviar, referral submit). The Contratar link adds .hire-cta
-   and is restyled at the end of this file. */
+/* Shared pill. Contratar, Enviar and Contactar add .hire-cta and are restyled at the
+   end of this file. The referral submit keeps this fill. */
 .hire-btn { --snot: #7CFF3A; position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: center; justify-content: center; gap: .6rem;
   width: 100%; padding: .95rem 1.6rem 1.05rem; border-radius: 999px; text-decoration: none;
   background: linear-gradient(135deg, #8A3DFF, #B46CFF); color: #fff; border: 2px solid var(--snot);
@@ -4248,14 +4248,14 @@ body.ie-off .ie-row-pencil { display: none; }
   .home-sections .cp-nav:has(> :nth-child(6)) { gap: .35rem; }
   .home-sections .cp-nav:has(> :nth-child(6)) > .cp-nav-item { min-height: 3.05rem; padding-block: .4rem; }
 }
-.contact-hire { margin-top: 2rem; }
+.contact-hire, .contact-cta { margin-top: 2rem; }
+.contact-hire + .contact-cta { margin-top: .75rem; }
 /* Mobile: keep the repo link inside the first screen instead of forcing a scroll. */
 @media (max-width: 899px) { .home-main { min-height: calc(100% - 2.2rem); } }
 
 
-/* r26: /contratar action row: Escribime (HireButton style) · Videollamada · Contacto. ~48px, words only. */
-.hire-ctas { display: grid; gap: 1rem; grid-template-columns: 1fr; margin-top: 1.6rem; }
-@media (min-width: 640px) { .hire-ctas { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+/* /contratar: the form is open. Videollamada and Contacto sit under it, side by side. */
+.hire-ctas { display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr); margin-top: 1.6rem; }
 .hire-act { position: relative; display: flex; align-items: center; justify-content: center; text-align: center; box-sizing: border-box;
   height: 48px; min-height: 44px; padding: 0 1rem; border-radius: 999px; border: 2px solid; cursor: pointer; text-decoration: none;
   font-family: var(--font-orbitron), var(--font-display); font-weight: 800; font-size: .95rem; letter-spacing: .06em; line-height: 1; white-space: nowrap; text-transform: uppercase;
@@ -4269,36 +4269,22 @@ body.ie-off .ie-row-pencil { display: none; }
 :root:not(.dark) .hire-act-contact { background: #004d5c; color: #ecb180; border-color: #ecb180; }
 :root:not(.dark) .hire-act-call:focus-visible, :root:not(.dark) .hire-act-contact:focus-visible { outline-color: #004d5c; }
 @media (prefers-reduced-motion: reduce) { .hire-act { transition: none; } .hire-act:hover, .hire-act:focus-visible { transform: none; } }
-/* r27: form sits right under Escribime on mobile; after the three buttons on desktop. */
 .hire-ctas > .hire-form-panel { grid-column: 1 / -1; }
-@media (min-width: 640px) { .hire-ctas > .hire-form-panel { order: 4; } }
 .hire-form-field input, .hire-form-field textarea, .hire-form-status, .hire-form-send { scroll-margin-top: 72px; scroll-margin-bottom: 16px; }
 .hire-form-status:empty { display: none; }
-.hire-ctas > .hire-form-panel { transition: grid-template-rows .4s ease, opacity .3s ease; }
-.hire-ctas > .hire-form-panel > .hire-form { padding-top: 4px; }
-.hire-ctas > .hire-form-panel:not([data-open="true"]) > .hire-form { padding-top: 0; }
-@media (prefers-reduced-motion: reduce) { .hire-ctas > .hire-form-panel { transition: none; } }
-.hire-ctas > .hire-form-panel { align-self: start; }
-/* Row gaps via margins so the collapsed panel adds no space. */
-.hire-ctas { row-gap: 0; column-gap: 1rem; }
-.hire-ctas > .hire-act:not(:first-child) { margin-top: 1rem; }
-.hire-ctas > .hire-form-panel[data-open="true"] > .hire-form { padding-top: 1rem; }
-@media (min-width: 640px) { .hire-ctas > .hire-act:not(:first-child) { margin-top: 0; } }
-/* r27b: mobile — Escribime full width, Videollamada + Contacto side by side. */
+.hire-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: .75rem; }
+@media (min-width: 640px) { .hire-options { gap: 1rem; } }
 @media (max-width: 639.98px) {
-  .hire-ctas { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: .75rem; }
-  .hire-ctas > .hire-btn.hire-act { grid-column: 1 / -1; }
-  .hire-ctas > .hire-act-call, .hire-ctas > .hire-act-contact { padding: 0 .5rem; font-size: clamp(.7rem, 3.4vw, .9rem); letter-spacing: .03em; min-width: 0; }
+  .hire-options > .hire-act { padding: 0 .5rem; font-size: clamp(.7rem, 3.4vw, .9rem); letter-spacing: .03em; min-width: 0; }
 }
-/* r27b: keep the calculator inside 320px (grid track was sizing to min-content). */
+/* Keep the calculator inside 320px (a grid track was sizing to min-content). */
 .hire { grid-template-columns: minmax(0, 1fr); }
 .hire-total strong { white-space: nowrap; }
 
-/* Contact form: limit alert, magic divider before Enviar, Enviar uses the Contratar/Escribime button style. */
+/* Contact form: magic divider before Enviar. Enviar uses .hire-cta (same paint as Contratar). */
 .hire-form-hr { margin: .4rem 0 .2rem !important; }
 .hire-form-actions { flex-direction: column; align-items: stretch; }
-.hire-form .hire-form-send.hire-btn { cursor: pointer; width: 100%; padding: .95rem 1.6rem 1.05rem; border-radius: 999px; font-size: 1.05rem; color: #fff; }
-.hire-form .hire-form-send.hire-btn:disabled { cursor: not-allowed; opacity: .55; filter: saturate(.6); animation: none; transform: none; }
+.hire-form .hire-form-send.hire-cta { width: 100%; }
 /* Mobile: leave room for the on-screen keyboard and the alert under the message. */
 .hire-form-field input, .hire-form-field textarea { scroll-margin-bottom: 6rem; }
 
@@ -4699,8 +4685,8 @@ textarea.adm-input { resize: vertical; }
     radial-gradient(circle at 100% 35%, rgb(184 169 240 / 8%), transparent 40%);
   background-attachment: fixed;
 }
-/* Escribime, Enviar and the referral submit still share .hire-btn.
-   The Contratar link (.hire-cta) is restyled below and does not use this fill. */
+/* Referral signup still uses this .hire-btn fill.
+   Contratar, Enviar and Contactar (.hire-cta) are restyled below and do not use it. */
 .hire-btn { --snot: #ff4fd8; background: linear-gradient(135deg, #7c5cff, #ff4fd8); color: #0b0b12; border-color: transparent;
   text-shadow: none; box-shadow: 0 0 10px color-mix(in srgb, #ff4fd8 45%, transparent); animation: none; }
 :root:not(.dark) .hire-btn { --snot: #f4a99b; background: linear-gradient(135deg, #f7bcae, #f4a99b); color: #2b2a33;
@@ -4708,8 +4694,8 @@ textarea.adm-input { resize: vertical; }
 :root:not(.dark) .hire-btn-rainbow { display: none; }
 .hire-btn:focus-visible { outline-color: var(--snot); }
 
-/* Contratar only. Light is wet pastel on warm paper. Dark is a dark glass capsule
-   with a cyan/magenta rim and a short glow, not a flat fill and not a halo around the page. */
+/* hire-cta (Contratar, Enviar, Contactar). Light is the locked lulox pastel wash, no arrow chip.
+   Dark is a dark glass capsule with a cyan/magenta rim and a short glow. */
 @property --hire-spark { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
 .hire-btn.hire-cta {
   cursor: pointer;
@@ -4895,6 +4881,21 @@ textarea.adm-input { resize: vertical; }
   .hire-btn.hire-cta:active {
     transform: none;
   }
+}
+/* Enviar is disabled until Turnstile and a message exist. Keep the capsule, drop the motion. */
+.hire-form .hire-form-send.hire-cta:disabled,
+.hire-form .hire-form-send.hire-cta:disabled:hover,
+.hire-form .hire-form-send.hire-cta:disabled:focus-visible,
+.hire-form .hire-form-send.hire-cta:disabled:active {
+  cursor: not-allowed;
+  opacity: .55;
+  filter: none;
+  transform: none;
+  animation: none;
+}
+.hire-form .hire-form-send.hire-cta:disabled::before,
+.hire-form .hire-form-send.hire-cta:disabled .hire-cta-paint {
+  animation: none;
 }
 .hire { --o: #ff4fd8; --cy: #00e5ff; --cx-medium: #ffe14d; --cx-high: #ff4d6d; }
 :root:not(.dark) .hire { --o: #a4503f; --cy: #5a47ad; --cx-medium: #7a5a00; --cx-high: #a8323e; }

@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useLocale } from "@/i18n/locale-provider";
 
 /**
- * Contratar CTA (home menu and Contacto).
+ * Contratar CTA (home menu and Contacto). No arrow.
  * Light: painted pastel wash locked to the lulox suite palette. Dark: a neon filament with a short glow.
- * Other `.hire-btn` controls (Escribime, Enviar, referidos) keep their own look.
+ * Enviar and Contactar reuse `.hire-cta`. The referral submit keeps `.hire-btn`.
  */
 export function HireButton({ className = "" }: { className?: string }) {
   const { t, href } = useLocale();
