@@ -85,7 +85,7 @@ export function ProjectsAccordion({ projects: all }: { projects: PortfolioProjec
 
                   <span className="cp-row-body min-w-0">
                     <span className="cp-row-label">{copy.title}</span>
-                    <span className="cp-row-detail"><CopyMarkdown text={copy.body} inline pClass="" /></span>
+                    <span className="cp-row-detail"><CopyMarkdown text={copy.body} inline rich pClass="" /></span>
                   </span>
 
                   <span className="cp-nav-chevron cp-row-chevron" aria-hidden>

@@ -9,13 +9,14 @@ import TableRow from "@tiptap/extension-table-row";
 import StarterKit from "@tiptap/starter-kit";
 import { Markdown } from "tiptap-markdown";
 import { SlideEmbed } from "@/lib/tiptap-slide";
+import { Underline } from "@/lib/tiptap-underline";
 import { VideoEmbed } from "@/lib/tiptap-video";
 
 export { Editor } from "@tiptap/core";
 
 /** CSS classes so the editable DOM looks exactly like the published render. */
 export type MdClasses = {
-  p?: string; h2?: string; h3?: string; h4?: string; ul?: string; ol?: string; li?: string;
+  p?: string; h1?: string; h2?: string; h3?: string; h4?: string; ul?: string; ol?: string; li?: string;
   quote?: string; hr?: string; strong?: string; link?: string; code?: string; pre?: string;
   img?: string; table?: string; th?: string; td?: string;
 };
@@ -26,7 +27,7 @@ export const COPY_CLASSES: MdClasses = {
 };
 
 export const BLOG_CLASSES: MdClasses = {
-  p: "blog-p", h2: "blog-h2", h3: "blog-h3", h4: "blog-h3", ul: "blog-ul", ol: "blog-ol", li: "blog-li",
+  p: "blog-p", h1: "blog-h1", h2: "blog-h2", h3: "blog-h3", h4: "blog-h3", ul: "blog-ul", ol: "blog-ol", li: "blog-li",
   quote: "blog-quote", hr: "blog-hr", strong: "blog-strong", link: "cp-prose-link",
   code: "blog-code", pre: "blog-pre", img: "blog-img", table: "blog-table", th: "blog-th", td: "blog-td",
 };
@@ -38,10 +39,11 @@ const attrs = (cls?: string) => (cls ? { class: cls } : {});
  * Storage stays Markdown (tiptap-markdown). Site copy: single line break = hard
  * break (like remark-breaks). Blog: standard Markdown line handling.
  */
-export function mdExtensions(opts: { blog?: boolean; classes?: MdClasses } = {}): AnyExtension[] {
+export function mdExtensions(opts: { blog?: boolean; project?: boolean; classes?: MdClasses } = {}): AnyExtension[] {
+  const rich = Boolean(opts.blog || opts.project);
   const c = opts.classes ?? (opts.blog ? BLOG_CLASSES : COPY_CLASSES);
-  const levels = [2, 3, 4] as const;
-  const headingClass: Record<number, string | undefined> = { 2: c.h2, 3: c.h3, 4: c.h4 };
+  const levels = rich ? ([1, 2, 3, 4] as const) : ([2, 3, 4] as const);
+  const headingClass: Record<number, string | undefined> = { 1: c.h1, 2: c.h2, 3: c.h3, 4: c.h4 };
   const exts: AnyExtension[] = [
     StarterKit.configure({
       heading: false,
@@ -64,9 +66,14 @@ export function mdExtensions(opts: { blog?: boolean; classes?: MdClasses } = {})
     Link.configure({ openOnClick: false, autolink: false, linkOnPaste: true, HTMLAttributes: { class: c.link, rel: "noopener noreferrer", target: null } }),
     Markdown.configure({ html: false, breaks: !opts.blog, linkify: false, tightLists: true, transformPastedText: true, transformCopiedText: true }),
   ];
+  if (rich) {
+    exts.push(
+      Underline.configure({ HTMLAttributes: { class: "rte-u" } }),
+      Image.configure({ HTMLAttributes: { ...attrs(c.img ?? "rte-img"), loading: "lazy", decoding: "async" } }),
+    );
+  }
   if (opts.blog) {
     exts.push(
-      Image.configure({ HTMLAttributes: { ...attrs(c.img), loading: "lazy", decoding: "async" } }),
       VideoEmbed,
       SlideEmbed,
       Table.configure({ resizable: false, HTMLAttributes: attrs(c.table) }),

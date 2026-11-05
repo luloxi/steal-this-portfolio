@@ -11,23 +11,26 @@ import { COPY_CLASSES, prepCopyMarkdown } from "@/lib/md-editor-extensions";
  * Edit mode: a project's summary or description edited in place. Saves only
  * the current locale through the admin-only /api/projects (rest unchanged).
  */
-export function ProjectText({ project, field, className = "", pClass = "cp-prose" }: {
+export function ProjectText({ project, field, className = "", pClass = "cp-prose", roomy = false }: {
   project: PortfolioProject;
   field: "body" | "paragraphs";
   className?: string;
   pClass?: string;
+  /** Taller writing surface (the long body, not the one-line lead). */
+  roomy?: boolean;
 }) {
   const { locale } = useLocale();
   const router = useRouter();
   const L = (locale === "en" ? "en" : "es") as "es" | "en";
   const copy = project.copy[L] ?? project.copy.es;
   const source = field === "body" ? copy.body : copy.paragraphs.join("\n\n");
-  const classes = useMemo(() => ({ ...COPY_CLASSES, p: pClass }), [pClass]);
+  const classes = useMemo(() => ({ ...COPY_CLASSES, p: pClass, h1: "md-h1", img: "rte-img" }), [pClass]);
   return (
     <MdWysiwyg
       markdown={prepCopyMarkdown(source)}
+      project
       classes={classes}
-      className={`md-copy ${className}`.trim()}
+      className={`md-copy ${roomy ? "rte-roomy" : ""} ${className}`.trim()}
       onSave={async (md) => {
         const err = await saveProject(project.id, (p) => {
           if (field === "body") p.copy[L] = { ...p.copy[L], body: md.trim() };
@@ -65,6 +68,7 @@ export async function saveProject(id: string, mutate: (p: PortfolioProject) => v
     body: JSON.stringify(p),
   });
   if (put.ok) return null;
-  const data = (await put.json().catch(() => ({}))) as { error?: string };
+  const data = (await put.json().catch(() => ({}))) as { error?: string; field?: string };
+  if (data.error === "invalid_value" && (data.field === "body" || data.field === "paragraphs")) return "too_long";
   return put.status === 401 ? "session" : (data.error ?? String(put.status));
 }

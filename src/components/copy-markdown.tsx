@@ -11,6 +11,7 @@ import { saveCopy, useEditMode } from "@/components/admin-context";
 import { MdWysiwyg, ToolbarButton } from "@/components/md-wysiwyg";
 import { withLaugh } from "@/components/laugh-button";
 import { COPY_CLASSES } from "@/lib/md-editor-extensions";
+import { remarkUnderline } from "@/lib/underline-md";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 
@@ -26,10 +27,10 @@ function safeHref(href?: string): string | undefined {
   return undefined;
 }
 
-function makeComponents(pClass: string, inline: boolean): Components {
+function makeComponents(pClass: string, inline: boolean, rich: boolean): Components {
   const P = inline ? "span" : "p";
   return {
-    h1: ({ children }) => <h2 className="md-h2">{children}</h2>,
+    h1: ({ children }) => (rich ? <h1 className="md-h1">{children}</h1> : <h2 className="md-h2">{children}</h2>),
     h2: ({ children }) => <h2 className="md-h2">{children}</h2>,
     h3: ({ children }) => <h3 className="md-h3">{children}</h3>,
     h4: ({ children }) => <h4 className="md-h4">{children}</h4>,
@@ -42,7 +43,17 @@ function makeComponents(pClass: string, inline: boolean): Components {
     blockquote: ({ children }) => <blockquote className="md-quote">{children}</blockquote>,
     strong: ({ children }) => <strong className="md-strong">{children}</strong>,
     em: ({ children }) => <em>{children}</em>,
-    img: () => null,
+    u: ({ children }) => <u className="rte-u">{children}</u>,
+    img: ({ src, alt }) => {
+      if (!rich || inline || !src || typeof src !== "string" || !/^(https?:\/\/|\/)/i.test(src)) return null;
+      return (
+        <span className="rte-figure">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={src} alt={alt ?? ""} className="rte-img" loading="lazy" decoding="async" />
+          {alt ? <span className="rte-cap">{alt}</span> : null}
+        </span>
+      );
+    },
     a: ({ href, children }) => {
       const h = safeHref(href);
       if (!h || inline) return <span className={inline ? undefined : "md-link"}>{children}</span>;
@@ -71,6 +82,7 @@ export function CopyMarkdown({
   className = "",
   pClass = "cp-prose",
   inline = false,
+  rich = false,
   sections = false,
   afterSection,
 }: {
@@ -81,6 +93,8 @@ export function CopyMarkdown({
   pClass?: string;
   /** Inside a link/button: no block elements wrapper, links rendered as text. */
   inline?: boolean;
+  /** Project bodies: H1–H3, underline and images (still no raw HTML). */
+  rich?: boolean;
   /** Each "## " section becomes a collapsible accordion (intro stays visible). */
   sections?: boolean;
   /** Rendered right after section i (e.g. job cards woven into the story). */
@@ -122,10 +136,10 @@ export function CopyMarkdown({
   return (
     <Wrap className={`md-copy ${className}`.trim()}>
       <ReactMarkdown
-        remarkPlugins={[remarkGfm, remarkBreaks]}
+        remarkPlugins={rich ? [remarkGfm, remarkBreaks, remarkUnderline] : [remarkGfm, remarkBreaks]}
         skipHtml
-        components={makeComponents(pClass, inline)}
-        allowedElements={inline ? ["p", "strong", "em", "a", "br", "del", "code"] : undefined}
+        components={makeComponents(pClass, inline, rich)}
+        allowedElements={inline ? ["p", "strong", "em", "u", "a", "br", "del", "code"] : undefined}
         unwrapDisallowed
       >
         {prep(text)}
@@ -180,7 +194,7 @@ function EditableBlock({
 
 function MdBlock({ text, pClass }: { text: string; pClass: string }) {
   return (
-    <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]} skipHtml components={makeComponents(pClass, false)}>
+    <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]} skipHtml components={makeComponents(pClass, false, false)}>
       {text}
     </ReactMarkdown>
   );

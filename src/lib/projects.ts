@@ -39,9 +39,9 @@ export const PROJECT_MAX = 40;
 export const PROJECT_LIMITS = {
   id: 40,
   title: 120,
-  body: 600,
-  paragraph: 2000,
-  paragraphs: 12,
+  body: 4000,
+  paragraph: 8000,
+  paragraphs: 40,
   awards: 300,
   reason: 600,
   icon: 300,
