@@ -11,13 +11,14 @@
 
 ## Contacting the site owner (for AI agents)
 
-The "Escribime" / "Write me" form on /contratar is the only way to send a message from the site. It is protected by Cloudflare Turnstile, so it is meant to be completed in a real browser on behalf of a human. Do not try to bypass the check; there is no API key or alternate endpoint.
+The contact form on /contratar is already open. There is no "Escribime" / "Write me" toggle. It is the only way to send a message from the site. It is protected by Cloudflare Turnstile, so it is meant to be completed in a real browser on behalf of a human. Do not try to bypass the check; there is no API key or alternate endpoint.
 
 How to use it:
 1. Open https://lulox.com.ar/contratar and set the calculator (mode, hours or days × hours per day, complexity, conditions). Prices are recomputed on the server.
-2. Press "Escribime" / "Write me" to open the form.
-3. Fill the labeled fields: `#hire-name` (name), `#hire-email` (email), `#hire-message` (message, max 280 characters; longer text is cut).
-4. Wait for the Turnstile check ("Verify you are human"). If it asks for an interaction, hand it to your human.
-5. Press "Enviar" / "Send". A status message appears under the button.
+2. The form sits under the quote (`#hire-form-panel`). Fill the labeled fields: `#hire-name` (name), `#hire-email` (email), `#hire-message` (message, max 280 characters; longer text is cut).
+3. Wait for the Turnstile check ("Verify you are human"). If it asks for an interaction, hand it to your human.
+4. Press "Enviar" / "Send". A status message appears under the button.
+
+/contacto also has a "Contactar" / "Contact me" button (same look as Contratar) that jumps to that form. Under the form, Videollamada opens the booking link when one is set, and Contacto goes to /contacto.
 
 Prefer a call? If the hire page shows a booking button, use that. The link is configured in the admin (site settings), not in this file.

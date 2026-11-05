@@ -201,6 +201,7 @@ export const messages = {
       copy: "Copiar",
       copied: "Copiado",
       callTitle: "Contratar",
+      contactCta: "Contactar",
     },
   },
   en: {
@@ -403,6 +404,7 @@ export const messages = {
       copy: "Copy",
       copied: "Copied",
       callTitle: "Hire me",
+      contactCta: "Contact me",
     },
   },
 } as const;
