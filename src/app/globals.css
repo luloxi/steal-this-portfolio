@@ -4899,3 +4899,128 @@ textarea.adm-input { resize: vertical; }
 }
 .hire { --o: #ff4fd8; --cy: #00e5ff; --cx-medium: #ffe14d; --cx-high: #ff4d6d; }
 :root:not(.dark) .hire { --o: #a4503f; --cy: #5a47ad; --cx-medium: #7a5a00; --cx-high: #a8323e; }
+
+/* Rich text editor: pastel in light, neon in dark. Buttons always show a pointer. */
+.blog-h1 {
+  margin-top: 1.9rem;
+  margin-bottom: 0.7rem;
+  font-family: var(--font-orbitron), var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--foreground);
+  text-transform: none;
+}
+.md-copy .md-h1 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-top: 1.5rem;
+  color: var(--foreground);
+  letter-spacing: -0.02em;
+}
+.rte-u {
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.16em;
+}
+:root:not(.dark) .rte-u { text-decoration-color: #b8a9f0; }
+.dark .rte-u { text-decoration-color: #00e5ff; }
+.rte-figure { display: flex; flex-direction: column; align-items: flex-start; gap: 0.35rem; margin: 0.9rem 0; }
+.rte-img { max-width: 100%; height: auto; max-height: min(70vh, 36rem); border-radius: 12px; }
+.rte-cap { font-size: 0.75rem; color: var(--muted); }
+.md-edit.rte-roomy .ProseMirror { min-height: 10rem; }
+.md-edit.is-drop .ProseMirror { outline: 2px dashed var(--accent-2); outline-offset: 6px; border-radius: 8px; }
+.md-edit .ProseMirror-selectednode.rte-img { outline: 2px solid var(--accent); outline-offset: 3px; }
+.ie-floatbar { overflow: visible; }
+.ie-floatbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  max-width: 100%;
+}
+.ie-tb { cursor: pointer; min-width: 40px; height: 40px; border-radius: 10px; }
+.ie-tb:disabled { cursor: not-allowed; }
+:root:not(.dark) .ie-floatbar {
+  background: color-mix(in oklab, #fff 86%, #f4d6ea);
+  border-color: color-mix(in oklab, #b8a9f0 70%, #f4a99b);
+  box-shadow: 0 10px 28px rgb(120 90 140 / 12%);
+}
+:root:not(.dark) .ie-tb:hover,
+:root:not(.dark) .ie-tb:focus-visible {
+  background: color-mix(in oklab, #b8a9f0 35%, #fff);
+  border-color: #b8a9f0;
+  color: #2b2a33;
+}
+:root:not(.dark) .ie-tb[aria-pressed="true"] {
+  background: #f4a99b;
+  border-color: #f4a99b;
+  color: #2b2a33;
+}
+.dark .ie-floatbar {
+  background: color-mix(in oklab, #0b0b12 82%, #7c5cff);
+  border-color: color-mix(in oklab, #00e5ff 55%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, #ff4fd8 35%, transparent),
+    0 0 22px color-mix(in oklab, #00e5ff 28%, transparent);
+}
+.dark .ie-tb:hover,
+.dark .ie-tb:focus-visible {
+  border-color: #00e5ff;
+  color: #00e5ff;
+  box-shadow: 0 0 12px color-mix(in oklab, #00e5ff 45%, transparent);
+}
+.dark .ie-tb[aria-pressed="true"] {
+  background: #ff4fd8;
+  border-color: #ff4fd8;
+  color: #0b0b12;
+  box-shadow: 0 0 14px color-mix(in oklab, #ff4fd8 55%, transparent);
+}
+.ie-pop {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  top: calc(100% + 8px);
+  display: grid;
+  gap: 6px;
+  width: min(340px, 92vw);
+  padding: 10px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 28%);
+}
+.ie-pop-label { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.ie-pop-input {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--foreground);
+  font: inherit;
+  font-size: 16px;
+}
+.ie-pop-input:focus { outline: 2px solid var(--accent-2); outline-offset: 1px; }
+.ie-pop-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.ie-pop-upload { width: 100%; height: 40px; }
+:root:not(.dark) .ie-pop { background: #fffaf7; border-color: #e7d5ea; }
+.dark .ie-pop {
+  background: #12121c;
+  border-color: color-mix(in oklab, #00e5ff 40%, transparent);
+  box-shadow: 0 0 18px color-mix(in oklab, #7c5cff 35%, transparent);
+}
+@media (max-width: 699px) {
+  .ie-floatbar { overflow: visible; }
+  .ie-floatbar-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ie-floatbar .ie-tb { min-width: 44px; height: 44px; }
+  .ie-pop { top: auto; bottom: calc(100% + 8px); left: 8px; right: 8px; width: auto; }
+}

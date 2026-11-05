@@ -4,11 +4,13 @@ import type { Components } from "react-markdown";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { linkifyBlogTerms } from "@/lib/blog-linkify";
+import { remarkUnderline } from "@/lib/underline-md";
 import { parseSlideUrl, SLIDE_IFRAME_ALLOW } from "@/lib/slide-embed";
 import { parseVideoUrl, VIDEO_IFRAME_ALLOW } from "@/lib/video-embed";
 import { MagicHr } from "@/components/magic-hr";
 
 const components: Components = {
+  h1: ({ children }) => <h1 className="blog-h1">{children}</h1>,
   h2: ({ children }) => <h2 className="blog-h2">{children}</h2>,
   h3: ({ children }) => <h3 className="blog-h3">{children}</h3>,
   // A paragraph that is only an allowlisted YouTube/Vimeo or Google Slides
@@ -42,6 +44,7 @@ const components: Components = {
   ol: ({ children }) => <ol className="blog-ol">{children}</ol>,
   li: ({ children }) => <li className="blog-li">{children}</li>,
   strong: ({ children }) => <strong className="blog-strong">{children}</strong>,
+  u: ({ children }) => <u className="rte-u">{children}</u>,
   blockquote: ({ children }) => (
     <blockquote className="blog-quote">{children}</blockquote>
   ),
@@ -95,7 +98,7 @@ export function BlogMarkdown({ content }: { content: string }) {
 
   return (
     <div className="blog-md">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+      <ReactMarkdown remarkPlugins={[remarkGfm, remarkUnderline]} components={components}>
         {linked}
       </ReactMarkdown>
     </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { messages } from "@/i18n/messages";
+import { plainExcerpt } from "@/lib/md-plain";
 import { projectBody, projectTitle } from "@/lib/projects";
 import { getProject } from "@/lib/projects-db";
 import { buildPageMetadata, pageMetadata } from "@/lib/page-metadata";
@@ -23,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale = await getRequestLocale();
   return buildPageMetadata(locale, pathPair(`/proyectos/${project.id}`), {
     title: projectTitle(project, locale),
-    description: projectBody(project, locale),
+    description: plainExcerpt(projectBody(project, locale)),
   });
 }
 

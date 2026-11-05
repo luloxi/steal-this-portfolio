@@ -182,7 +182,7 @@ export const messages = {
       statusPublished: "Publicado",
       statusDraft: "Borrador",
       editorHint:
-        "Markdown: headings, listas, tablas, imágenes ![alt](/path), y links de YouTube se embeben solos.",
+        "Títulos H1 a H3, negrita, cursiva, subrayado, links e imágenes. Subí, pegá o soltá una imagen: queda en /media/....",
       authorHeading: "Sobre el autor",
       authorBio: "Textos de este sitio. La bio se edita en el modo edición.",
       authorContact: "Contactame",
@@ -385,7 +385,7 @@ export const messages = {
       statusPublished: "Published",
       statusDraft: "Draft",
       editorHint:
-        "Markdown: headings, lists, tables, images ![alt](/path), and YouTube links embed automatically.",
+        "Headings H1 to H3, bold, italic, underline, links and images. Upload, paste or drop an image: it lands at /media/....",
       authorHeading: "About the author",
       authorBio: "Writing on this site. The bio is edited in edit mode.",
       authorContact: "Contact me",

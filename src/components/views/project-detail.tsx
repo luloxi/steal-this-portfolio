@@ -72,7 +72,7 @@ export function ProjectDetail({ project }: { project: PortfolioProject }) {
               {editOn ? (
                 <ProjectText project={project} field="body" className="mt-1.5" pClass="cp-prose text-[0.9rem]" />
               ) : (
-                <CopyMarkdown text={copy.body} className="mt-1.5" pClass="cp-prose text-[0.9rem]" />
+                <CopyMarkdown text={copy.body} className="mt-1.5" pClass="cp-prose text-[0.9rem]" rich />
               )}
               <span
                 className={`project-status-pill mt-3 ${statusClass[project.status]}`}
@@ -93,9 +93,9 @@ export function ProjectDetail({ project }: { project: PortfolioProject }) {
           </span>
           <div className="cp-panel-inner space-y-3">
             {editOn ? (
-              <ProjectText project={project} field="paragraphs" />
+              <ProjectText project={project} field="paragraphs" roomy />
             ) : (
-              copy.paragraphs.map((p) => <CopyMarkdown key={p.slice(0, 48)} text={p} />)
+              copy.paragraphs.map((p, i) => <CopyMarkdown key={`${project.id}-${i}`} text={p} rich />)
             )}
           </div>
         </div>
