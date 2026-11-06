@@ -21,7 +21,7 @@ export const PRICING = {
   extra: 100,
   maxUrgencyDays: 10,
   /** Optional flat fee (both modes): by default the work can be shown and the code is open source; this keeps it private. */
-  privateUse: { project: 500, hourly: 200 } as Record<Mode, number>,
+  privateUse: { project: 100, hourly: 100 } as Record<Mode, number>,
   /** Volume-discount thresholds in total hours (days × hours/day): Chico 20, Mediano 30, Grande 40. */
   sizes: { s: 20, m: 30, l: 40 },
   /** Calculator starting values: a low, friendly first price. No on-site, no extras. */
@@ -82,7 +82,7 @@ export type Inputs = {
   onSite?: boolean;
   /** Project mode: on-site days (each adds surcharge + travel), clamped to 1..project days. */
   onSiteDays?: number;
-  /** Private use: flat PRICING.privateUse[mode] (project 500, hourly 200), never discounted. Missing = false (old budgets). */
+  /** Private use: flat PRICING.privateUse[mode] (US$ 100 either mode), never discounted. Missing = false (old budgets). */
   privateUse?: boolean;
   /** Project mode: how many days (1..maxProjectDays). */
   days?: number;

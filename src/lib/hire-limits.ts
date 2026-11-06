@@ -1,5 +1,7 @@
 /** Shared by the /contratar form (client) and the server handler. Counted in characters (code points). */
 export const MAX_MESSAGE = 280;
+/** Subsidy reason, only when that toggle is on. */
+export const MAX_SUBSIDY_REASON = 140;
 
 /** Characters as people see them for the limit: code points (an emoji counts 1, not 2 UTF-16 units). */
 export const charCount = (s: string) => [...s].length;
