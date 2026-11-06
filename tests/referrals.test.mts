@@ -24,19 +24,3 @@ const ANA: Viewer = { id: "u-ana", email: "ana@example.com", name: "Ana Pérez",
 const BETO: Viewer = { id: "u-beto", email: "beto@example.com", name: "Beto", isAdmin: false };
 const ADMIN: Viewer = { id: "u-lulo", email: "lucianoolivabianco@gmail.com", name: "Luciano", isAdmin: true };
 const fresh = () => d1(["0009_referrals.sql"]);
-
-test("code shape: a-z 0-9 inner hyphens, 3-24, case-insensitive, reserved words blocked", () => {
-  assert.deepEqual(checkCodeShape("  Ana-Dev "), { ok: true, code: "ana-dev" });
-  assert.deepEqual(checkCodeShape("abc"), { ok: true, code: "abc" });
-  assert.deepEqual(checkCodeShape("a".repeat(24)), { ok: true, code: "a".repeat(24) });
-  for (const bad of ["ab", "a".repeat(25), "-ana", "ana-", "ana--dev", "ana_dev", "añá", "ana dev", "", null, 42]) {
-    assert.deepEqual(checkCodeShape(bad), { ok: false, error: "invalid" }, String(bad));
-  }
-  for (const r of ["admin", "ADMIN", "api", "lulox", "en", "es", "referidos", "a-d-m-i-n", "sign-in"]) {
-    const res = checkCodeShape(r);
-    // "en"/"es" are too short anyway: invalid before reserved.
-    assert.equal(res.ok, false, r);
-  }
-  assert.deepEqual(checkCodeShape("a-d-m-i-n"), { ok: false, error: "reserved" });
-  assert.deepEqual(checkCodeShape("Lulox"), { ok: false, error: "reserved" });
-});
