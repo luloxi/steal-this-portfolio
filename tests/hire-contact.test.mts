@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { bodyFromForm, handleHireContact, parseBudget } from "../src/lib/hire-contact.ts";
+import { bodyFromForm, handleHireContact, parseBudget, parseSubsidy } from "../src/lib/hire-contact.ts";
 
 const budget = { mode: "project", days: 5, hoursPerDay: 4, hours: 1, complexity: "medium", onSite: true, onSiteDays: 2, extra: false };
 const ok = { name: "Ana", email: "ana@example.com", message: "Hola, quiero una web.", budget, turnstileToken: "good-token" };
@@ -242,11 +242,11 @@ test("parseBudget privateUse: strict boolean, missing (old payload) = false, any
   for (const bad of ["true", "yes", 1, 0, null, {}, []]) assert.equal(parseBudget({ ...budget, privateUse: bad }), null, JSON.stringify(bad));
 });
 
-test("private use: +US$ 500 per project / +US$ 200 per hour recomputed server-side, own line in the email, invalid flag → 400", async () => {
+test("private use: +US$ 100 either mode, recomputed server-side, own line in the email, invalid flag → 400", async () => {
   for (const [b, total, deposit, fee] of [
-    // 20h × 18 = 360, -15% = -54, on-site 2 days = 100, private 500 → 906
-    [{ ...budget, privateUse: true, total: 1 }, "US$ 906", "US$ 453", "US$ 500"],
-    [{ mode: "hourly", hours: 2, complexity: "low", onSite: false, days: 0, extra: false, privateUse: true }, "US$ 220", "US$ 110", "US$ 200"],
+    // 20h × 18 = 360, -15% = -54, on-site 2 days = 100, private 100 → 506
+    [{ ...budget, privateUse: true, total: 1 }, "US$ 506", "US$ 253", "US$ 100"],
+    [{ mode: "hourly", hours: 2, complexity: "low", onSite: false, days: 0, extra: false, privateUse: true }, "US$ 120", "US$ 60", "US$ 100"],
   ] as const) {
     const { env, sent } = mkEnv({ resend: true });
     assert.equal((await handleHireContact({ ...ok, budget: b }, env, "x")).status, 200);
@@ -269,6 +269,31 @@ test("private use: +US$ 500 per project / +US$ 200 per hour recomputed server-si
 test("native form post carries budget.privateUse as a boolean", () => {
   assert.deepEqual(bodyFromForm([["budget.privateUse", "true"]]).budget, { privateUse: true });
   assert.deepEqual(bodyFromForm([["budget.privateUse", "false"]]).budget, { privateUse: false });
+  assert.equal(bodyFromForm([["subsidy", "true"], ["subsidy_reason", "beca"]]).subsidy, true);
+  assert.equal(bodyFromForm([["subsidy", "true"], ["subsidy_reason", "beca"]]).subsidyReason, "beca");
+  assert.equal(bodyFromForm([["subsidy", "false"]]).subsidy, false);
+});
+
+test("subsidy: off by default, reason only when on, 140 code points, travels in the email and the forward", async () => {
+  assert.deepEqual(parseSubsidy({}), { on: false, reason: "" });
+  assert.deepEqual(parseSubsidy({ subsidy: false, subsidyReason: "no va" }), { on: false, reason: "" });
+  assert.equal(parseSubsidy({ subsidy: "true" }), null);
+  assert.equal(parseSubsidy({ subsidy: true, subsidyReason: "x".repeat(141) }), null);
+  assert.deepEqual(parseSubsidy({ subsidy: true, subsidyReason: "😀".repeat(140) }), { on: true, reason: "😀".repeat(140) });
+  const { env, sent } = mkEnv({ resend: true });
+  const got: { subsidy?: boolean; subsidyReason?: string; budget: { subsidy?: boolean; subsidyReason?: string } }[] = [];
+  const r = await handleHireContact({ ...ok, subsidy: true, subsidyReason: "No me alcanza este mes" }, env, "x", { forward: (i) => void got.push(i) });
+  assert.equal(r.status, 200);
+  const text = (sent[0] as { m: { text: string; html: string } }).m.text;
+  const html = (sent[0] as { m: { text: string; html: string } }).m.html;
+  assert.match(text, /Subsidio: sí\nMotivo: No me alcanza este mes\n/);
+  assert.match(html, /Motivo:.*No me alcanza este mes/);
+  assert.equal(got[0].subsidy, true);
+  assert.equal(got[0].subsidyReason, "No me alcanza este mes");
+  assert.equal(got[0].budget.subsidyReason, "No me alcanza este mes");
+  const off = mkEnv({ resend: true });
+  assert.equal((await handleHireContact(ok, off.env, "x")).status, 200);
+  assert.match((off.sent[0] as { m: { text: string } }).m.text, /Subsidio: no\n/);
 });
 
 test("forward to Garpen: called once after the email went out, with the recomputed budget; never on rejects or send failure", async () => {
