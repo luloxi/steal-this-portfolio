@@ -1,8 +1,8 @@
 import { clampHours, depositPct, estimate, PRICING, projectBreakdown, type Complexity, type Mode, type Pricing } from "./pricing";
-import { MAX_MESSAGE } from "./hire-limits";
+import { charCount, MAX_MESSAGE, MAX_SUBSIDY_REASON } from "./hire-limits";
 import { checkCodeShape } from "./referrals";
 
-export { MAX_MESSAGE };
+export { MAX_MESSAGE, MAX_SUBSIDY_REASON };
 
 /**
  * /contratar contact form: validates the submission, recomputes the budget
@@ -85,6 +85,17 @@ export function parseBudget(v: unknown, p: Pricing = PRICING): Budget | null {
   return { mode, hours, complexity, onSite, onSiteDays, extra, extraDays, privateUse, days, hoursPerDay };
 }
 
+/** Subsidy toggle. Missing = off. A non-boolean rejects. The reason is kept only while it is on, and only up to 140 code points. */
+export function parseSubsidy(body: Record<string, unknown>): { on: boolean; reason: string } | null {
+  if (body.subsidy !== undefined && typeof body.subsidy !== "boolean") return null;
+  const on = body.subsidy === true;
+  if (body.subsidyReason !== undefined && typeof body.subsidyReason !== "string") return null;
+  if (!on) return { on: false, reason: "" };
+  const reason = typeof body.subsidyReason === "string" ? oneLine(body.subsidyReason) : "";
+  if (charCount(reason) > MAX_SUBSIDY_REASON) return null;
+  return { on: true, reason };
+}
+
 const LABEL = {
   mode: { project: "Varios días", hourly: "Un día" },
   cx: { low: "Baja", medium: "Media", high: "Alta" },
@@ -156,7 +167,7 @@ export type HireDeps = {
    * Fire-and-forget copy to Garpen (inbox + push), called AFTER the email went out. It must not throw or block:
    * the route schedules the request with ctx.waitUntil and swallows failures. Errors here never change the result.
    */
-  forward?: (inquiry: { name: string; email: string; message: string; budget: Record<string, unknown>; refCode: string | null }) => void;
+  forward?: (inquiry: { name: string; email: string; message: string; budget: Record<string, unknown>; refCode: string | null; subsidy: boolean; subsidyReason: string }) => void;
   saveLead?: (lead: { name: string; email: string; message: string; budgetJson: string; totalUsd: number; refCode: string | null; referrerId: string | null }) => Promise<unknown>;
   /** From-name on the email. Missing = a generic label. */
   fromName?: string;
@@ -180,6 +191,8 @@ export async function handleHireContact(raw: unknown, env: HireEnv, ip: string, 
   const pricing = deps.pricing ?? PRICING;
   const budget = parseBudget(body.budget, pricing);
   if (!budget) return { status: 400, body: { error: "invalid_budget" } };
+  const subsidy = parseSubsidy(body);
+  if (!subsidy) return { status: 400, body: { error: "invalid_subsidy" } };
 
   if (env.CONTACT_RL) {
     const { success } = await env.CONTACT_RL.limit({ key: `hire:${ip}` });
@@ -217,6 +230,8 @@ export async function handleHireContact(raw: unknown, env: HireEnv, ip: string, 
     "",
     message,
     "",
+    subsidy.on ? `Subsidio: sí${subsidy.reason ? `\nMotivo: ${subsidy.reason}` : ""}` : "Subsidio: no",
+    "",
     "— Presupuesto calculado —",
     ...b.summary,
     ...b.lines.map(([k, v]) => `${k}: ${v}`),
@@ -232,6 +247,7 @@ export async function handleHireContact(raw: unknown, env: HireEnv, ip: string, 
   const html = `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(subject)}</title></head><body><div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#1a1a1a;max-width:560px">
 <p style="margin:0 0 4px;font-weight:700">${esc(name)} &lt;${esc(email)}&gt;</p>
 <p style="font-size:17px;line-height:1.5;white-space:pre-wrap;margin:12px 0 24px">${esc(message)}</p>
+<p style="margin:0 0 16px;font-size:14px"><strong>Subsidio:</strong> ${subsidy.on ? "sí" : "no"}${subsidy.on && subsidy.reason ? `<br><strong>Motivo:</strong> ${esc(subsidy.reason)}` : ""}</p>
 <h3 style="margin:0 0 8px;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#7A2FE0">Presupuesto calculado</h3>
 <p style="margin:0 0 8px;font-size:14px;line-height:1.6">${b.summary.map(esc).join("<br>")}</p>
 <table role="presentation" style="border-collapse:collapse;width:100%;font-size:14px">${b.lines.map(([k, v]) => row(k, v)).join("")}${row("Total estimado", b.total, true)}${row(b.depositLabel, b.deposit)}</table>
@@ -257,7 +273,7 @@ ${refLine ? `<p style="margin:16px 0 0;font-size:14px;font-weight:700;color:#0F7
   if (deps.forward) {
     try {
       const r = estimateBudget(budget, pricing);
-      deps.forward({ name, email, message, budget: { ...budget, total: r.total, deposit: r.deposit }, refCode: referrer?.code ?? null });
+      deps.forward({ name, email, message, budget: { ...budget, total: r.total, deposit: r.deposit, subsidy: subsidy.on, subsidyReason: subsidy.reason }, refCode: referrer?.code ?? null, subsidy: subsidy.on, subsidyReason: subsidy.reason });
     } catch {
       console.error("[hire-contact] forward failed");
     }
@@ -269,7 +285,7 @@ ${refLine ? `<p style="margin:16px 0 0;font-size:14px;font-weight:700;color:#0F7
         name,
         email,
         message,
-        budgetJson: JSON.stringify({ ...budget, total: r.total, deposit: r.deposit }),
+        budgetJson: JSON.stringify({ ...budget, total: r.total, deposit: r.deposit, subsidy: subsidy.on, subsidyReason: subsidy.reason }),
         totalUsd: r.total,
         refCode: referrer?.code ?? null,
         referrerId: referrer?.id ?? null,
@@ -295,6 +311,8 @@ export function bodyFromForm(entries: Iterable<[string, unknown]>): Record<strin
       budget[key] = raw === "true" ? true : raw === "false" ? false : /^\d+$/.test(raw) ? Number(raw) : raw;
     } else if (k === "cf-turnstile-response") out.turnstileToken = raw;
     else if (k === "ref_code") out.refCode = raw;
+    else if (k === "subsidy") out.subsidy = raw === "true";
+    else if (k === "subsidy_reason") out.subsidyReason = raw;
     else if (["name", "email", "message", "hire_hp", "turnstileToken"].includes(k)) out[k] = raw;
   }
   out.budget = budget;
