@@ -37,8 +37,8 @@ test("on-site and urgency days clamp to 1..project days, and still to their own 
   assert.equal(wide.lines.find((l) => l.id === "extra")?.days, 10);
   // Private use stays a flat project amount, not per day.
   const priv = estimate({ mode: "project", days: 3, hoursPerDay: 4, complexity: "low", extra: false, privateUse: true });
-  assert.equal(priv.total, 120 + 500);
-  assert.deepEqual(priv.lines.at(-1), { id: "private", amount: 500 });
+  assert.equal(priv.total, 120 + 100);
+  assert.deepEqual(priv.lines.at(-1), { id: "private", amount: 100 });
 });
 
 test("volume discount tiers (project only, highest tier)", () => {
@@ -119,17 +119,17 @@ test("hours input: digits only; hours 1..6; project days 1..20", async () => {
   assert.equal(PRICING.maxProjectDays, 20);
 });
 
-test("private use: flat +US$ 500 per project, +US$ 200 per hour, own line, not discounted, counts toward the deposit", () => {
+test("private use: flat +US$ 100 in both modes, own line, not discounted, counts toward the deposit", () => {
   const off = estimate({ mode: "project", hours: 20, complexity: "low", extra: false });
   const on = estimate({ mode: "project", hours: 20, complexity: "low", extra: false, privateUse: true });
-  assert.deepEqual(PRICING.privateUse, { project: 500, hourly: 200 });
-  assert.equal(on.total, off.total + 500); // 170 + 500: the 15% volume discount stays on hours × rate only
-  assert.equal(on.deposit, Math.round((off.total + 500) / 2));
-  assert.deepEqual(on.lines.at(-1), { id: "private", amount: 500 });
+  assert.deepEqual(PRICING.privateUse, { project: 100, hourly: 100 });
+  assert.equal(on.total, off.total + 100); // 170 + 100: the 15% volume discount stays on hours × rate only
+  assert.equal(on.deposit, Math.round((off.total + 100) / 2));
+  assert.deepEqual(on.lines.at(-1), { id: "private", amount: 100 });
   assert.ok(!off.lines.some((l) => l.id === "private"));
   const h = estimate({ mode: "hourly", hours: 2, complexity: "low", extra: true, onSite: true, privateUse: true });
-  assert.equal(h.total, 20 + 25 + 25 + 100 + 200);
-  assert.equal(h.deposit, 185);
+  assert.equal(h.total, 20 + 25 + 25 + 100 + 100);
+  assert.equal(h.deposit, 135);
   // Old callers without the field: no line, same totals as before.
   assert.equal(estimate({ mode: "hourly", hours: 2, complexity: "low", extra: false }).total, 20);
 });
