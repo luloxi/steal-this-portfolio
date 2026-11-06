@@ -1,0 +1,54 @@
+/* Light Contratar / Enviar / Contactar. Loaded after globals.css so it replaces the washed pastel.
+   Dark .hire-cta is unchanged. */
+:root:not(.dark) .hire-btn.hire-cta {
+  --wash-accent: #FF5CA8;
+  --wash-a2: #B57CFF;
+  --wash-a3: #3DDC97;
+  --wash-sky: #4DB8FF;
+  --wash-lemon: #FFE03A;
+  --wash-orange: #FF8A2A;
+  --wash-ink: #2B2A33;
+  color: var(--wash-ink);
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-shadow: 0 1px 0 rgb(255 255 255 / .45);
+  border-color: color-mix(in srgb, var(--wash-a2) 70%, var(--wash-accent));
+  background:
+    radial-gradient(ellipse 42% 130% at 0% 100%, var(--wash-accent), transparent 68%),
+    radial-gradient(ellipse 34% 120% at 34% 115%, var(--wash-orange), transparent 70%),
+    radial-gradient(ellipse 36% 110% at 52% -18%, var(--wash-lemon), transparent 66%),
+    radial-gradient(ellipse 46% 140% at 100% 0%, var(--wash-a2), transparent 68%),
+    radial-gradient(ellipse 36% 120% at 78% 118%, var(--wash-a3), transparent 66%),
+    radial-gradient(ellipse 32% 100% at 18% -10%, var(--wash-sky), transparent 64%),
+    linear-gradient(102deg,
+      var(--wash-accent) 0%,
+      var(--wash-orange) 20%,
+      var(--wash-lemon) 40%,
+      var(--wash-a3) 60%,
+      var(--wash-sky) 78%,
+      var(--wash-a2) 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / .75),
+    inset 0 -14px 16px color-mix(in srgb, var(--wash-accent) 28%, transparent),
+    0 10px 20px -10px color-mix(in srgb, var(--wash-a2) 85%, transparent);
+}
+:root:not(.dark) .hire-cta-paint {
+  background:
+    radial-gradient(circle at 14% 72%, var(--wash-accent) 0 11%, transparent 26%),
+    radial-gradient(circle at 36% 84%, var(--wash-orange) 0 10%, transparent 24%),
+    radial-gradient(circle at 54% 18%, var(--wash-lemon) 0 12%, transparent 28%),
+    radial-gradient(circle at 86% 24%, var(--wash-a2) 0 13%, transparent 30%),
+    radial-gradient(circle at 70% 86%, var(--wash-a3) 0 10%, transparent 24%),
+    radial-gradient(circle at 24% 14%, var(--wash-sky) 0 11%, transparent 26%);
+  filter: blur(2px);
+  opacity: 0.9;
+  mix-blend-mode: normal;
+}
+:root:not(.dark) .hire-btn.hire-cta::after {
+  opacity: 1;
+  mix-blend-mode: normal;
+  background-image: none;
+  background: linear-gradient(180deg, rgb(255 255 255 / .42), transparent 38%);
+}

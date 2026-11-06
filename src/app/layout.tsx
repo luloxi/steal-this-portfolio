@@ -18,6 +18,7 @@ import { pathPair } from "@/lib/routes";
 import { descriptionFor, themeCss } from "@/lib/site-settings";
 import { getSiteSettings } from "@/lib/site-settings-db";
 import "./globals.css";
+import "./hire-candy.css";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
