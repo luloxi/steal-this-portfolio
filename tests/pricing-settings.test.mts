@@ -13,7 +13,7 @@ const ALL_MIGRATIONS = ["0001_init.sql", "0002_better_auth.sql", "0009_referrals
 test("defaults: the editable values are today's numbers and round-trip to PRICING exactly", () => {
   assert.deepEqual(DEFAULTS, {
     rate_low: 10, rate_medium: 18, rate_high: 25, on_site: 25, travel: 25, urgency: 100,
-    private_project: 500, private_hourly: 200, deposit_pct: 50, discount_s: 15, discount_m: 20, discount_l: 25,
+    private_project: 100, private_hourly: 100, deposit_pct: 50, discount_s: 15, discount_m: 20, discount_l: 25,
   });
   assert.deepEqual(applyValues(DEFAULTS), PRICING);
   assert.deepEqual(mergeStoredPricing([]), PRICING);
@@ -164,6 +164,6 @@ test("hire-contact: email and hire_leads use the stored amounts, never the brows
     "x",
     { saveLead: async (l) => void leads2.push(l) },
   );
-  assert.equal(leads2[0].totalUsd, 406 + 500);
+  assert.equal(leads2[0].totalUsd, 406 + 100);
   assert.match(d.sent[0].text, /Anticipo \(50%\)/);
 });
