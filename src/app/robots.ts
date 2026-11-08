@@ -8,7 +8,7 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/rothko", "/blog/nuevo", "/api/", "/auth/", "/admin/"],
+        disallow: ["/rothko", "/blog/nuevo", "/en/blog/nuevo", "/api/", "/auth/", "/admin/"],
       },
     ],
     sitemap: `${settings.url}/sitemap.xml`,

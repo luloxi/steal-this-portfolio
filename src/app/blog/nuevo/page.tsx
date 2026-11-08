@@ -1,15 +1,18 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { putPost } from "@/components/blog-post-edit";
 import { PageShell } from "@/components/page-shell";
 import { useLocale } from "@/i18n/locale-provider";
+import { EDIT_MODE_KEY, editModeCookie } from "@/lib/edit-mode";
+import { blogPostPath, localizePath } from "@/lib/routes";
 
 /** Creates an empty draft and opens it in place at /blog/<slug> (admin only). */
 export default function NewPostPage() {
   const { t, locale } = useLocale();
   const router = useRouter();
+  const pathname = usePathname() ?? "/blog/nuevo";
   const started = useRef(false);
   const [error, setError] = useState("");
   useEffect(() => {
@@ -28,11 +31,22 @@ export default function NewPostPage() {
       summary: { es: "", en: "" },
       body: { es: "", en: "" },
     }).then((r) => {
-      if (r.error === "session" || r.error === "unauthorized") router.replace("/ingresar");
-      else if (r.error) setError(r.error);
-      else router.replace(`/blog/${r.slug}`);
+      if (r.error === "session" || r.error === "unauthorized") {
+        const signIn = localizePath(locale, "/ingresar");
+        router.replace(`${signIn}?next=${encodeURIComponent(pathname)}`);
+      } else if (r.error) setError(r.error);
+      else {
+        // Drafts only render with edit mode ON; creating a post turns it on so the editor opens.
+        try {
+          window.localStorage.setItem(EDIT_MODE_KEY, "on");
+          document.cookie = editModeCookie(true);
+        } catch {
+          /* ignore */
+        }
+        router.replace(blogPostPath(locale, { slug: r.slug ?? slug }));
+      }
     });
-  }, [router]);
+  }, [locale, pathname, router]);
   return (
     <PageShell title={t.blog.title} backHref="/blog" backLabel={t.blog.title}>
       <p className="cp-prose">

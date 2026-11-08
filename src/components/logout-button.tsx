@@ -1,14 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useLocale } from "@/i18n/locale-provider";
+import { isSignInPath } from "@/lib/routes";
 
 /** Visitors: minimalist link to the admin sign-in, same look as Salir. */
 export function LoginLink() {
   const { locale, href } = useLocale();
+  const pathname = usePathname() ?? "/";
   const label = locale === "es" ? "Entrar" : "Log in";
+  const signIn = href("/ingresar");
+  const next = pathname && !isSignInPath(pathname) ? `?next=${encodeURIComponent(pathname)}` : "";
   return (
-    <Link href={href("/ingresar")} className="cp-logout" data-inline-editor="skip" aria-label={label} title={label}>
+    <Link href={`${signIn}${next}`} className="cp-logout" data-inline-editor="skip" aria-label={label} title={label}>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
         <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
         <path d="M10 17l5-5-5-5" />

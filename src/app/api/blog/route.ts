@@ -10,7 +10,7 @@ import {
   takenSlugsEn,
   upsertPost,
 } from "@/lib/blog";
-import { isValidSlug, slugify, uniqueSlug } from "@/lib/routes";
+import { isReservedBlogSlug, isValidSlug, slugify, uniqueSlug } from "@/lib/routes";
 
 export const dynamic = "force-dynamic";
 
@@ -47,7 +47,7 @@ export async function PUT(request: Request) {
     .replace(/[^a-z0-9-]+/g, "-")
     .replace(/^-|-$/g, "");
 
-  if (!slug) {
+  if (!slug || isReservedBlogSlug(slug)) {
     return NextResponse.json({ error: "invalid_slug" }, { status: 400 });
   }
 
@@ -63,7 +63,7 @@ export async function PUT(request: Request) {
   let slugEn: string | null = null;
   const rawEn = typeof post.slugEn === "string" ? post.slugEn.trim() : "";
   if (rawEn) {
-    if (!isValidSlug(rawEn)) {
+    if (!isValidSlug(rawEn) || isReservedBlogSlug(rawEn)) {
       return NextResponse.json({ error: "invalid_slug_en" }, { status: 400 });
     }
     if (!(await isSlugEnAvailable(rawEn, slug, previousSlug))) {
