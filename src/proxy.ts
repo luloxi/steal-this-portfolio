@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
 import { listProjectIds } from "@/lib/projects-db";
 import { getPostBySlug, getPostBySlugEn } from "@/lib/blog";
-import { EN_PREFIX, LOCALE_HEADER, enToEsPath, localeFromPath } from "@/lib/routes";
+import { EN_PREFIX, LOCALE_HEADER, enToEsPath, isNewPostPath, localeFromPath } from "@/lib/routes";
 import type { Locale } from "@/i18n/types";
 import { editModeFromCookie, mayLookUpDrafts } from "@/lib/edit-mode";
 import { isPathHidden, sectionForPath } from "@/lib/site-sections";
@@ -131,12 +131,16 @@ async function route(request: NextRequest): Promise<NextResponse> {
     return NextResponse.redirect(url, 301);
   }
 
-  if (pathname === "/blog/nuevo") {
-    // Cheap cookie check; /api/blog does the real admin check on create.
-    if (getSessionCookie(request)) return next(request, "es");
+  // Create-post URL: not an article slug. /en/blog/nuevo rewrites to the same page.
+  // No session: sign-in, then back here (?next=). 302, not 301: it depends on the cookie.
+  if (isNewPostPath(pathname)) {
+    if (getSessionCookie(request)) {
+      return locale === "en" ? rewrite(request, "en", "/blog/nuevo") : next(request, "es");
+    }
     const url = request.nextUrl.clone();
-    url.pathname = "/ingresar";
-    url.search = "";
+    url.pathname = locale === "en" ? `${EN_PREFIX}/sign-in` : "/ingresar";
+    const nextPath = pathname.replace(/\/$/, "") || pathname;
+    url.search = `?next=${encodeURIComponent(nextPath)}`;
     return NextResponse.redirect(url);
   }
 

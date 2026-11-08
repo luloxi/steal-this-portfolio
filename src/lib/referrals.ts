@@ -3,6 +3,7 @@
  * cookie, payouts. Whoever brings a client earns REFERRAL_PCT of what that
  * client pays. Used by proxy.ts, the API routes, the pages and tests.
  */
+import { isSignInPath } from "@/lib/routes";
 import { DEFAULT_SITE } from "@/lib/site-settings";
 
 export const REFERRAL_PCT = 15;
@@ -148,5 +149,23 @@ export function payoutTotals(payouts: readonly PayoutLike[]): Totals {
 /** Internal path to come back to after sign-in (open redirects refused). */
 export function safeNext(raw: unknown, fallback = "/blog"): string {
   if (typeof raw !== "string" || !raw.startsWith("/") || raw.startsWith("//") || raw.includes("\\") || raw.length > 200) return fallback;
+  const path = (raw.split(/[?#]/)[0] ?? "") || "/";
+  if (isSignInPath(path) || path === "/login" || path === "/en/login" || path === "/auth/sign-in") return fallback;
   return raw;
+}
+
+/**
+ * Same-host Referer path, for when /ingresar was opened without ?next=.
+ * `hostHeader` is the request Host / x-forwarded-host (no scheme).
+ */
+export function nextFromReferer(referer: unknown, hostHeader: string | null | undefined, fallback = "/blog"): string {
+  if (typeof referer !== "string" || !hostHeader) return fallback;
+  try {
+    const u = new URL(referer);
+    const host = hostHeader.split(",")[0]?.trim().toLowerCase();
+    if (!host || u.host.toLowerCase() !== host) return fallback;
+    return safeNext(`${u.pathname}${u.search}`, fallback);
+  } catch {
+    return fallback;
+  }
 }

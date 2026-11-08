@@ -100,6 +100,30 @@ export function switchLocalePath(pathname: string, to: Locale): string {
 export const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export const SLUG_MAX = 120;
 
+/** Create-post URL segment. Not a real article slug (reserved so /blog/nuevo never 404s as a missing post). */
+export const NEW_POST_SLUG = "nuevo";
+
+function pathOnly(pathname: string): string {
+  const clean = (pathname.split(/[?#]/)[0] ?? "") || "/";
+  return clean.length > 1 && clean.endsWith("/") ? clean.slice(0, -1) : clean;
+}
+
+/** /blog/nuevo and /en/blog/nuevo (trailing slash ignored). */
+export function isNewPostPath(pathname: string): boolean {
+  const p = pathOnly(pathname);
+  return p === `/blog/${NEW_POST_SLUG}` || p === `${EN_PREFIX}/blog/${NEW_POST_SLUG}`;
+}
+
+/** /ingresar and /en/sign-in (trailing slash ignored). */
+export function isSignInPath(pathname: string): boolean {
+  const p = pathOnly(pathname);
+  return p === "/ingresar" || p === `${EN_PREFIX}/sign-in`;
+}
+
+export function isReservedBlogSlug(slug: string): boolean {
+  return slug === NEW_POST_SLUG;
+}
+
 /**
  * Title -> kebab-case slug: lowercase, accents/diacritics stripped (NFD),
  * apostrophes dropped ("I'm" -> "im"), anything else non-alphanumeric -> "-",

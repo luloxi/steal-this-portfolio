@@ -28,7 +28,7 @@ function formatDate(iso: string, locale: string) {
 
 /** Blog index: newest first, search, 10 per page. Admin also sees drafts (muted). */
 export function BlogList({ posts, error }: { posts: BlogPost[]; error?: boolean }) {
-  const { t, locale } = useLocale();
+  const { t, locale, href } = useLocale();
   const isAdmin = useIsAdmin();
   const editOn = useEditMode();
   const es = locale === "es";
@@ -54,7 +54,7 @@ export function BlogList({ posts, error }: { posts: BlogPost[]; error?: boolean 
     <PageShell title={t.blog.title}>
       {isAdmin ? (
         <Link
-          href="/blog/nuevo"
+          href={href("/blog/nuevo")}
           prefetch={false}
           className="blog-fab"
           title={es ? "Crear nuevo artículo" : "New article"}

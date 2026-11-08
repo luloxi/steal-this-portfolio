@@ -3,6 +3,7 @@
 import { PageShell } from "@/components/page-shell";
 import { authClient } from "@/lib/auth/client";
 import { useLocale } from "@/i18n/locale-provider";
+import { localeFromPath, localizePath } from "@/lib/routes";
 
 function GoogleMark({ className }: { className?: string }) {
   return (
@@ -37,11 +38,16 @@ function GoogleMark({ className }: { className?: string }) {
 export function GoogleSignInButton({ next, label, testId }: { next: string; label: string; testId?: string }) {
   async function signInGoogle() {
     const origin = window.location.origin;
+    const signIn = localizePath(localeFromPath(window.location.pathname), "/ingresar");
+    const nextQ = `next=${encodeURIComponent(next)}`;
+    const fail = (kind: "oauth" | "domain") => {
+      window.location.href = `${signIn}?error=${kind}&${nextQ}`;
+    };
     try {
       const result = await authClient.signIn.social({
         provider: "google",
         callbackURL: `${origin}${next}`,
-        errorCallbackURL: `${origin}/ingresar?error=oauth`,
+        errorCallbackURL: `${origin}${signIn}?error=oauth&${nextQ}`,
       });
 
       const err =
@@ -55,19 +61,19 @@ export function GoogleSignInButton({ next, label, testId }: { next: string; labe
           code === "INVALID_CALLBACKURL" ||
           /callbackurl|trusted|domain/i.test(err.message ?? "")
         ) {
-          window.location.href = `/ingresar?error=domain`;
+          fail("domain");
           return;
         }
-        window.location.href = `/ingresar?error=oauth`;
+        fail("oauth");
       }
     } catch (err) {
       console.error("[auth] Google sign-in failed", err);
       const msg = err instanceof Error ? err.message : String(err);
       if (/callbackurl|trusted|domain|INVALID_CALLBACKURL/i.test(msg)) {
-        window.location.href = `/ingresar?error=domain`;
+        fail("domain");
         return;
       }
-      window.location.href = `/ingresar?error=oauth`;
+      fail("oauth");
     }
   }
 

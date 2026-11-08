@@ -10,7 +10,7 @@ import {
 import { getDb } from "@/lib/db";
 import { isAllowedBlogImageUrl, isMediaKey } from "@/lib/media";
 import type { McpResult } from "@/lib/mcp-route";
-import { isValidSlug, slugify, uniqueSlug } from "@/lib/routes";
+import { NEW_POST_SLUG, isReservedBlogSlug, isValidSlug, slugify, uniqueSlug } from "@/lib/routes";
 import { parseSlideUrl } from "@/lib/slide-embed";
 
 type LocaleText = { es: string; en: string; copied: boolean };
@@ -187,8 +187,8 @@ export async function createMcpDraft(payload: unknown): Promise<McpResult> {
   let slug: string;
   if (body.slug === undefined || body.slug === null || body.slug === "") {
     const base = slugify(title.es) || "post";
-    slug = uniqueSlug(base, await takenSlugsEn([]));
-  } else if (typeof body.slug !== "string" || !isValidSlug(body.slug)) {
+    slug = uniqueSlug(base, [...(await takenSlugsEn([])), NEW_POST_SLUG]);
+  } else if (typeof body.slug !== "string" || !isValidSlug(body.slug) || isReservedBlogSlug(body.slug)) {
     return { status: 400, body: { error: "invalid_slug" } };
   } else if (await slugExists(body.slug) || (await takenSlugsEn([body.slug])).includes(body.slug)) {
     // Primary key, or another post's slug_en (that would shadow /blog/<slug_en>).

@@ -7,6 +7,9 @@ import {
   blogPostPath,
   enToEsPath,
   esToEnPath,
+  isNewPostPath,
+  isReservedBlogSlug,
+  isSignInPath,
   isValidSlug,
   localeFromPath,
   localizePath,
@@ -69,6 +72,19 @@ test("blog post URLs: slug_en under /en, Spanish slug fallback when missing", ()
   assert.equal(blogPostPath("en", p), "/en/blog/what-tokenization-is");
   assert.equal(blogPostPath("en", { slug: "x", slugEn: null }), "/en/blog/x");
   assert.equal(blogPostPath("en", { slug: "x" }), "/en/blog/x");
+});
+
+test("create-post and sign-in paths are reserved, not article slugs", () => {
+  assert.ok(isNewPostPath("/blog/nuevo"));
+  assert.ok(isNewPostPath("/blog/nuevo/"));
+  assert.ok(isNewPostPath("/en/blog/nuevo"));
+  assert.equal(isNewPostPath("/blog/otro"), false);
+  assert.ok(isSignInPath("/ingresar"));
+  assert.ok(isSignInPath("/en/sign-in/"));
+  assert.equal(isSignInPath("/blog"), false);
+  assert.ok(isReservedBlogSlug("nuevo"));
+  assert.equal(isReservedBlogSlug("borrador-2026-11-08-abc"), false);
+  assert.equal(localizePath("en", "/blog/nuevo"), "/en/blog/nuevo");
 });
 
 test("language selector fallback maps the current URL", () => {

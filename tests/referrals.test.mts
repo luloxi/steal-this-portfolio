@@ -10,6 +10,7 @@ import {
   payoutCents,
   payoutTotals,
   refCookie,
+  nextFromReferer,
   refFromCookie,
   safeNext,
   shareLinks,
@@ -78,7 +79,16 @@ test("whatsapp, wa.me and sign-in ?next (no open redirect)", () => {
   assert.equal(waLink(null), null);
   assert.equal(safeNext("/referidos"), "/referidos");
   assert.equal(safeNext("/en/referrals"), "/en/referrals");
+  assert.equal(safeNext("/contratar"), "/contratar");
+  assert.equal(safeNext("/ingresar"), "/blog");
+  assert.equal(safeNext("/en/sign-in"), "/blog");
+  assert.equal(safeNext("/blog/nuevo"), "/blog/nuevo");
+  assert.equal(safeNext(undefined, ""), "");
   for (const bad of ["//evil.com", "https://evil.com", "/\\evil.com", undefined]) assert.equal(safeNext(bad), "/blog", String(bad));
+  assert.equal(nextFromReferer("https://lulox.com.ar/contratar", "lulox.com.ar"), "/contratar");
+  assert.equal(nextFromReferer("https://lulox.com.ar/en/hire", "lulox.com.ar"), "/en/hire");
+  assert.equal(nextFromReferer("https://evil.com/contratar", "lulox.com.ar"), "/blog");
+  assert.equal(nextFromReferer("https://lulox.com.ar/ingresar", "lulox.com.ar"), "/blog");
 });
 
 test("migration 0009 is additive, idempotent and enforces its constraints", () => {
