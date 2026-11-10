@@ -1,6 +1,8 @@
 # Steal this portfolio
 
 > Bilingual (ES/EN) portfolio skeleton. The site name, about text, projects and colors come from the database and are edited in admin mode. Spanish is the default; switch with the language control.
+>
+> `/` and `/en` open a windowed desktop (DjTube, Garpen, Tarask, Malito, Portfolio, and a tasks board). The portfolio landing is the Portfolio window. The hire form is still at /contratar.
 
 - [Home](https://lulox.com.ar/)
 - [Hire / Contratar](https://lulox.com.ar/contratar): price calculator and contact form
