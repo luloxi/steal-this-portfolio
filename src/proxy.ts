@@ -24,9 +24,6 @@ import { getActiveReferrer } from "@/lib/referrals-db";
 function withLocale(request: NextRequest, locale: Locale) {
   const headers = new Headers(request.headers);
   headers.set(LOCALE_HEADER, locale);
-  headers.set("x-lulox-path", request.nextUrl.pathname);
-  const framed = request.headers.get("sec-fetch-dest") === "iframe" || request.nextUrl.searchParams.get("win") === "portfolio";
-  headers.set("x-lulox-embed", framed ? "1" : "0");
   return headers;
 }
 

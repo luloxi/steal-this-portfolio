@@ -17,10 +17,8 @@ import { buildPageMetadata } from "@/lib/page-metadata";
 import { pathPair } from "@/lib/routes";
 import { descriptionFor, themeCss } from "@/lib/site-settings";
 import { getSiteSettings } from "@/lib/site-settings-db";
-import { headers } from "next/headers";
 import "./globals.css";
 import "./hire-candy.css";
-import "./desktop.css";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -113,10 +111,6 @@ export default async function RootLayout({
   ]);
   // Admin = allowlisted Google account; any other session is a plain user (referrals only).
   const isAdmin = viewer?.isAdmin === true;
-  const hdrs = await headers();
-  const path = hdrs.get("x-lulox-path") ?? "/";
-  // The desktop shell keeps only the theme switcher. The portfolio window (iframe or ?win=portfolio) still has the site chrome.
-  const deskHome = hdrs.get("x-lulox-embed") !== "1" && (path === "/" || path === "/en");
   // Project titles for the admin panel (admin only: visitors never pay for this read).
   let projectLabels: Record<string, { es: string; en: string }> = {};
   if (isAdmin) {
@@ -146,10 +140,10 @@ export default async function RootLayout({
             <LocaleProvider initialLocale={locale} overrides={overrides}>
               <CosmicBg />
               <AdminProvider isAdmin={isAdmin} signedIn={Boolean(viewer)}>
-                {deskHome ? null : <SiteControls signedIn={Boolean(viewer)} image={viewer?.image} name={viewer?.name} />}
+                <SiteControls signedIn={Boolean(viewer)} image={viewer?.image} name={viewer?.name} />
                 <SiteOrderProvider initial={order}>
                   <div className="relative z-10">{children}</div>
-                  {isAdmin && !deskHome ? <AdminPanel projectLabels={projectLabels} /> : null}
+                  {isAdmin ? <AdminPanel projectLabels={projectLabels} /> : null}
                 </SiteOrderProvider>
               </AdminProvider>
             </LocaleProvider>
