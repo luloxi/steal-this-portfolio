@@ -85,6 +85,10 @@ export function CopyMarkdown({
   rich = false,
   sections = false,
   afterSection,
+  onInsertSection,
+  onDeleteSection,
+  onBodyChange,
+  revealSection,
 }: {
   text: string;
   /** site_copy key: when set, the admin can edit this block in place (edit mode). */
@@ -99,6 +103,14 @@ export function CopyMarkdown({
   sections?: boolean;
   /** Rendered right after section i (e.g. job cards woven into the story). */
   afterSection?: (i: number, sec: { title: string; body: string }) => ReactNode;
+  /** About page: insert a story and keep the layout in step. `at` is the new index (past the end appends). */
+  onInsertSection?: (at: number, title: string, text: string) => Promise<string | null>;
+  /** About page: remove story `index` from the body and the layout. */
+  onDeleteSection?: (index: number) => Promise<string | null>;
+  /** Full markdown after an in-place intro or section save, so the page can show it before refresh. */
+  onBodyChange?: (markdown: string) => void;
+  /** Open this story once (id changes on every insert). */
+  revealSection?: { id: number; index: number } | null;
 }) {
   const editOn = useEditMode() && Boolean(copyKey) && !inline;
   const { locale } = useLocale();
@@ -112,12 +124,27 @@ export function CopyMarkdown({
             <EditableBlock
               markdown={prep(introBody(raw))}
               pClass={pClass}
-              save={(md) => saveCopy(copyKey!, locale, replaceIntro(raw, md))}
+              save={async (md) => {
+                const next = replaceIntro(raw, md);
+                const err = await saveCopy(copyKey!, locale, next);
+                if (!err) onBodyChange?.(next);
+                return err;
+              }}
             />
           ) : parts.intro.trim() ? (
             <MdBlock text={parts.intro} pClass={pClass} />
           ) : null}
-          <Accordion sections={parts.sections} pClass={pClass} raw={raw} copyKey={editOn ? copyKey : undefined} afterSection={afterSection} />
+          <Accordion
+            sections={parts.sections}
+            pClass={pClass}
+            raw={raw}
+            copyKey={editOn ? copyKey : undefined}
+            afterSection={afterSection}
+            onInsertSection={editOn ? onInsertSection : undefined}
+            onDeleteSection={editOn ? onDeleteSection : undefined}
+            onBodyChange={editOn ? onBodyChange : undefined}
+            revealSection={revealSection}
+          />
         </div>
       );
     }
@@ -213,9 +240,30 @@ function toSections(md: string): { intro: string; sections: Section[] } {
   };
 }
 
-function Accordion({ sections, pClass, raw, copyKey, afterSection }: { sections: Section[]; pClass: string; raw: string; copyKey?: string; afterSection?: (i: number, sec: { title: string; body: string }) => ReactNode }) {
+function Accordion({ sections, pClass, raw, copyKey, afterSection, onInsertSection, onDeleteSection, onBodyChange, revealSection }: {
+  sections: Section[];
+  pClass: string;
+  raw: string;
+  copyKey?: string;
+  afterSection?: (i: number, sec: { title: string; body: string }) => ReactNode;
+  onInsertSection?: (at: number, title: string, text: string) => Promise<string | null>;
+  onDeleteSection?: (index: number) => Promise<string | null>;
+  onBodyChange?: (markdown: string) => void;
+  revealSection?: { id: number; index: number } | null;
+}) {
   const base = useId();
   const [open, setOpen] = useState<boolean[]>(() => sections.map(() => false));
+  const seenReveal = useRef<number | null>(null);
+  useEffect(() => {
+    if (!revealSection || seenReveal.current === revealSection.id) return;
+    seenReveal.current = revealSection.id;
+    const at = revealSection.index;
+    setOpen((prev) => Array.from({ length: sections.length }, (_, i) => {
+      if (i === at) return true;
+      if (i > at) return prev[i - 1] ?? false;
+      return prev[i] ?? false;
+    }));
+  }, [revealSection, sections.length]);
   let last = -1;
   open.forEach((o, i) => {
     if (o) last = i;
@@ -289,7 +337,7 @@ function Accordion({ sections, pClass, raw, copyKey, afterSection }: { sections:
         const isOpen = open[i] ?? false;
         const id = `${base}-s${i}`;
         return (
-          <Fragment key={id}>
+          <Fragment key={`${id}:${sec.title}`}>
           <section data-acc-index={i} className={`md-acc-item${isOpen ? " is-open" : ""}${offscreen.has(i) ? " is-offscreen" : ""}${peek && i === 0 && !anyOpen ? " md-acc-peek" : ""}`}>
             {copyKey ? (
               <EditableSection
@@ -303,6 +351,9 @@ function Accordion({ sections, pClass, raw, copyKey, afterSection }: { sections:
                 panelId={`${id}-panel`}
                 onToggle={() => toggle(i)}
                 onAdded={() => setOpen((prev) => [...sections.map((_, j) => prev[j] ?? false), true])}
+                onInsertSection={onInsertSection}
+                onDeleteSection={onDeleteSection}
+                onBodyChange={onBodyChange}
               />
             ) : (
               <>
@@ -346,9 +397,12 @@ function Chevron() {
 }
 
 /** Edit mode: title editable in place, body edited in place, same look as published. */
-function EditableSection({ index, raw, copyKey, pClass, title, isOpen, hint, panelId, onToggle, onAdded }: {
+function EditableSection({ index, raw, copyKey, pClass, title, isOpen, hint, panelId, onToggle, onAdded, onInsertSection, onDeleteSection, onBodyChange }: {
   index: number; raw: string; copyKey: string; pClass: string; title: string; isOpen: boolean; hint: boolean;
   panelId: string; onToggle: () => void; onAdded: () => void;
+  onInsertSection?: (at: number, title: string, text: string) => Promise<string | null>;
+  onDeleteSection?: (index: number) => Promise<string | null>;
+  onBodyChange?: (markdown: string) => void;
 }) {
   const { locale } = useLocale();
   const router = useRouter();
@@ -359,6 +413,14 @@ function EditableSection({ index, raw, copyKey, pClass, title, isOpen, hint, pan
   const split = splitSections(raw);
   const rawSec = split.sections[index];
   const body = rawSec ? sectionBody(rawSec) : "";
+  // The title node is contentEditable: React will not replace its text when the
+  // section at this index changes (insert or delete). Write it when unfocused.
+  useEffect(() => {
+    setTitleDraft(title); // eslint-disable-line react-hooks/set-state-in-effect -- keep the draft aligned when the section at this index is replaced
+    const el = titleRef.current;
+    if (!el || document.activeElement === el) return;
+    if (el.textContent !== title) el.textContent = title;
+  }, [title]);
   const resetTitle = () => {
     setTitleDraft(title);
     if (titleRef.current) titleRef.current.textContent = title;
@@ -366,18 +428,23 @@ function EditableSection({ index, raw, copyKey, pClass, title, isOpen, hint, pan
   const add = async () => {
     const t = window.prompt(es ? "Título de la nueva sección" : "New section title", es ? "Nueva sección" : "New section");
     if (!t?.trim()) return;
-    const err = await saveCopy(copyKey, locale, upsertSection(raw, Number.MAX_SAFE_INTEGER, t, es ? "Texto de la sección." : "Section text."));
+    const text = es ? "Texto de la sección." : "Section text.";
+    const err = onInsertSection
+      ? await onInsertSection(Number.MAX_SAFE_INTEGER, t.trim(), text)
+      : await saveCopy(copyKey, locale, upsertSection(raw, Number.MAX_SAFE_INTEGER, t.trim(), text));
     if (err) window.alert(es ? `No se pudo agregar (${err})` : `Couldn't add (${err})`);
-    else {
+    else if (!onInsertSection) {
       onAdded();
       router.refresh();
     }
   };
   const del = async () => {
     if (!window.confirm(es ? `¿Borrar la sección "${title}"? No se puede deshacer.` : `Delete section "${title}"? This can't be undone.`)) return;
-    const err = await saveCopy(copyKey, locale, deleteSection(raw, index));
+    const err = onDeleteSection
+      ? await onDeleteSection(index)
+      : await saveCopy(copyKey, locale, deleteSection(raw, index));
     if (err) window.alert(es ? `No se pudo borrar (${err})` : `Couldn't delete (${err})`);
-    else router.refresh();
+    else if (!onDeleteSection) router.refresh();
   };
   return (
     <>
@@ -408,6 +475,15 @@ function EditableSection({ index, raw, copyKey, pClass, title, isOpen, hint, pan
           </span>
           <button
             type="button"
+            className="md-acc-del"
+            aria-label={es ? `Borrar sección ${title}` : `Delete section ${title}`}
+            title={es ? "Borrar sección" : "Delete section"}
+            onClick={() => void del()}
+          >
+            {es ? "Borrar" : "Delete"}
+          </button>
+          <button
+            type="button"
             className="md-acc-chev-btn"
             aria-expanded={isOpen}
             aria-controls={panelId}
@@ -428,7 +504,12 @@ function EditableSection({ index, raw, copyKey, pClass, title, isOpen, hint, pan
               extraDirty={titleDraft.trim() !== title.trim()}
               forceActive={titleFocus}
               onCancelExtra={resetTitle}
-              save={(md) => saveCopy(copyKey, locale, upsertSection(raw, index, titleDraft.trim() || title, md))}
+              save={async (md) => {
+                const next = upsertSection(raw, index, titleDraft.trim() || title, md);
+                const err = await saveCopy(copyKey, locale, next);
+                if (!err) onBodyChange?.(next);
+                return err;
+              }}
               extraTools={
                 <>
                   <ToolbarButton label="+§" title={es ? "Agregar sección al final" : "Add section at the end"} onClick={() => void add()} />

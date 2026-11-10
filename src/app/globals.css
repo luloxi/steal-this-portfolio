@@ -3411,6 +3411,22 @@ body.ie-off .ie-row-pencil { display: none; }
 .md-acc-btn-edit { cursor: default; }
 .md-acc-title-edit { outline: none; cursor: text; flex: 1 1 auto; min-width: 0; }
 .md-acc-chev-btn { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; margin: -6px -6px -6px 0; border: 0; background: transparent; color: inherit; cursor: pointer; border-radius: 6px; }
+.md-acc-del {
+  flex: 0 0 auto;
+  min-height: 32px;
+  padding: 0 8px;
+  border-radius: 6px;
+  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.md-acc-del:hover, .md-acc-del:focus-visible { background: color-mix(in srgb, currentColor 12%, transparent); }
 .ie-floatbar {
   position: fixed; z-index: 80; left: 50%; top: 10px; transform: translateX(-50%);
   display: flex; flex-wrap: wrap; align-items: center; gap: 2px; max-width: min(96vw, 900px); flex-wrap: nowrap;

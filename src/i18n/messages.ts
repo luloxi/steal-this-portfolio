@@ -39,6 +39,7 @@ export const messages = {
           title: "Research & Development",
           org: "Input Output Global",
           accent: "#e71b00",
+          hidden: "",
           description:
             "Investigación económica y técnica en blockchain, finanzas y AI. Desarrollo de automatizaciones, agentes y webapps.",
         },
@@ -47,6 +48,7 @@ export const messages = {
           title: "Fullstack Web3 developer",
           org: "BuidlGuidl",
           accent: "",
+          hidden: "",
           description:
             "Desarrollo de aplicaciones web3 con Scaffold-ETH 2 y Solidity para el ecosistema Ethereum como bien público.",
         },
@@ -55,6 +57,7 @@ export const messages = {
           title: "Community Manager",
           org: "FEDUN",
           accent: "#009c4e",
+          hidden: "",
           description:
             "Multimedia y marketing digital para prensa: web (LAMP, Moodle, WordPress, SEO, accesibilidad ARIA), redes sociales, fotografía y video de eventos, newsletters con Mailchimp.",
         },
@@ -242,6 +245,7 @@ export const messages = {
           title: "Research & Development",
           org: "Input Output Global",
           accent: "#e71b00",
+          hidden: "",
           description:
             "Economic and technical research on blockchain, finance, and AI. Development of automations, agents, and webapps.",
         },
@@ -250,6 +254,7 @@ export const messages = {
           title: "Fullstack Web3 developer",
           org: "BuidlGuidl",
           accent: "",
+          hidden: "",
           description:
             "Development of web3 applications with Scaffold-ETH 2 and Solidity for the Ethereum ecosystem as a public good.",
         },
@@ -258,6 +263,7 @@ export const messages = {
           title: "Community Manager",
           org: "FEDUN",
           accent: "#009c4e",
+          hidden: "",
           description:
             "Multimedia and digital marketing for the press office: web (LAMP, Moodle, WordPress, SEO, ARIA accessibility), social media, event photography and video, Mailchimp newsletters.",
         },
