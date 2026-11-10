@@ -84,3 +84,14 @@ export function insertJob(items: LayoutItem[], after: number, jobIndex: number):
   out.splice(pos, 0, { kind: "job", index: jobIndex });
   return out;
 }
+
+/** Drop story `index` and shift later story indexes down by one. Jobs and publications stay put. */
+export function removeStory(items: LayoutItem[], index: number): LayoutItem[] {
+  const out: LayoutItem[] = [];
+  for (const it of items) {
+    if (it.kind === "story" && it.index === index) continue;
+    if (it.kind === "story" && it.index > index) out.push({ ...it, index: it.index - 1 });
+    else out.push(it);
+  }
+  return out;
+}
