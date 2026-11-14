@@ -1,6 +1,7 @@
 /**
  * Static ambient background.
- * No continuous animations — keeps scroll/navigation smooth on low-end mobile GPUs.
+ * Rothko colour fields: two feathered, glowing rectangles that breathe very slowly
+ * (opacity/brightness only, off under prefers-reduced-motion).
  */
 export function CosmicBg() {
   return (
@@ -10,6 +11,8 @@ export function CosmicBg() {
     >
       <div className="cosmic-base absolute inset-0" />
       <div className="cosmic-grid absolute inset-0" />
+      <div className="rothko-field rothko-field-a absolute" />
+      <div className="rothko-field rothko-field-b absolute" />
       <div className="cosmic-vignette absolute inset-0" />
     </div>
   );
