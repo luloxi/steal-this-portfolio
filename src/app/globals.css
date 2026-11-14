@@ -5024,3 +5024,88 @@ textarea.adm-input { resize: vertical; }
   .ie-floatbar .ie-tb { min-width: 44px; height: 44px; }
   .ie-pop { top: auto; bottom: calc(100% + 8px); left: 8px; right: 8px; width: auto; }
 }
+
+
+/* ── Rothko: luminous colour fields (maroon / burnt orange / ochre / plum) ─────
+   Stacked feathered rectangles behind everything; text keeps AA contrast because
+   the fields stay low in opacity and the surfaces above are near-opaque. */
+.dark {
+  --background: #131011;
+  --surface: color-mix(in oklab, #1d1819 86%, transparent);
+  --rk-1: #6b1d2a;
+  --rk-2: #b8461f;
+  --rk-3: #c28a2c;
+  --rk-4: #4a1f45;
+  --rk-a: 0.5;
+  --rk-b: 0.4;
+}
+
+:root:not(.dark) {
+  --background: #f8f4ef;
+  --surface: #fffdfa;
+  --rk-1: #b0505a;
+  --rk-2: #d98a52;
+  --rk-3: #dcb25e;
+  --rk-4: #9a6a98;
+  --rk-a: 0.3;
+  --rk-b: 0.24;
+}
+
+.cosmic-grid {
+  display: none;
+}
+
+.cosmic-base,
+:root:not(.dark) .cosmic-base {
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 0%, color-mix(in oklab, var(--rk-4) 38%, transparent), transparent 70%),
+    radial-gradient(ellipse 70% 40% at 50% 100%, color-mix(in oklab, var(--rk-1) 30%, transparent), transparent 70%),
+    var(--background);
+}
+
+.rothko-field {
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+  animation: rothko-breathe 18s ease-in-out infinite alternate;
+}
+
+.rothko-field-a {
+  inset: 6% 7% 8% 7%;
+  opacity: var(--rk-a);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--rk-1) 7%,
+    color-mix(in oklab, var(--rk-1) 75%, var(--rk-2)) 38%,
+    transparent 46%,
+    transparent 50%,
+    var(--rk-2) 57%,
+    color-mix(in oklab, var(--rk-2) 70%, var(--rk-3)) 88%,
+    transparent 100%
+  );
+}
+
+.rothko-field-b {
+  inset: 15% 17% 27% 17%;
+  opacity: var(--rk-b);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in oklab, var(--rk-4) 80%, var(--rk-1)) 20%,
+    transparent 48%,
+    color-mix(in oklab, var(--rk-3) 80%, var(--rk-2)) 72%,
+    transparent 100%
+  );
+  animation-duration: 24s;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes rothko-breathe {
+  from { filter: brightness(0.88); }
+  to { filter: brightness(1.12); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rothko-field { animation: none !important; }
+}
