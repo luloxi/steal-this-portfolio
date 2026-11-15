@@ -18,11 +18,12 @@ It's copyleft on purpose: take it, make it better, and keep it open for the next
 - 🎛️ "Customize" panel (profile photo in the header, admin only): sections, colors, personal info and projects, all saved to D1.
 - 🔐 Google sign-in for anyone; admin only for the emails you allow.
 - 🤝 **Referrals**: anyone with a Google account creates a code and earns 15% of what the client they bring pays; payout register for the admin.
+- 📊 **Visits**: Cloudflare Web Analytics (cookieless) plus a first-party D1 counter, also cookieless and with no IP. The admin sees them at `/admin/visitas` (profile photo menu), with visits per day, per source, and ready-to-paste UTM links for Instagram, LinkedIn, X and email.
 
 ## 🧰 Stack
 
 - [Next.js](https://nextjs.org) (App Router) built for Cloudflare with [OpenNext](https://opennext.js.org/cloudflare)
-- [Cloudflare Workers](https://developers.cloudflare.com/workers/) + **D1** (SQLite) + **R2** (media) + Rate Limiting
+- [Cloudflare Workers](https://developers.cloudflare.com/workers/) + **D1** (SQLite) + **R2** (media) + Rate Limiting + [Web Analytics](https://developers.cloudflare.com/web-analytics/)
 - [Better Auth](https://www.better-auth.com) with Google sign-in
 - [Resend](https://resend.com) for the contact form email (Cloudflare Email Routing `send_email` as fallback)
 - Tailwind CSS 4, TypeScript, `tsx --test` for tests
@@ -63,6 +64,7 @@ pnpm dev                     # or: npm run dev  → http://localhost:3000
 | `CONTACT_RL`, `REF_CHECK_RL` | `ratelimits` in `wrangler.jsonc` | Rate limit for the form and referral signup (5/min per IP) and for the live code check (60/min per IP) |
 | `SITE_RL`, `API_RL`, `EXEMPT_RL` | `ratelimits` in `wrangler.jsonc` | Per-IP cap in `worker.ts` (`src/lib/rate-limit.ts`): 100 requests / 10 s for pages, 40 / 10 s for `/api/*`; past the cap, `429` with `Retry-After: 10` before Next runs. The owner (`ADMIN_EMAILS`) and the emails under **Customize → Personal info → No request limit** (`site_settings.privileged_emails`, `/api/admin/privileged`) are never cut off; the session is only looked up once a cap is hit (`EXEMPT_RL`, 5 / 10 s). Approximate and per Cloudflare location. Static assets never reach the Worker. |
 | `CONTACT_TO`, `CONTACT_FROM`, `CONTACT_INBOX` | `vars` in `wrangler.jsonc` | Where the form email goes, the sender (a domain verified in Resend) and the inbox for your copy |
+| `CF_WEB_ANALYTICS_TOKEN` | optional `vars` (not a secret) | Public Cloudflare Web Analytics site token. When set, `worker.ts` appends the official beacon to HTML. Create the site in the dashboard: [Web Analytics](https://dash.cloudflare.com/124b4210ff80c15610ed109083a5cf95/web-analytics) → Add a site → `lulox.com.ar`. Then `npx wrangler vars set CF_WEB_ANALYTICS_TOKEN` and deploy. If the hostname is orange-clouded (proxied) and you turn on automatic setup, Cloudflare can inject it for you |
 
 Locally they live in `.dev.vars`. In production: `npx wrangler secret put <NAME>`.
 
@@ -150,12 +152,12 @@ Everything clickable shows `cursor: pointer` and anything disabled shows `cursor
 │   ├── components/     # UI pieces (calculator, editor, nav, icons...)
 │   ├── content/        # site.ts (sections, Turnstile), projects.ts (topics), blog seed
 │   ├── i18n/           # messages.ts (ES/EN), locale provider
-│   └── lib/            # pricing, blog, auth, MCP (/api/mcp, McpRpc), slide-embed, db, junk-paths.ts
+│   └── lib/            # pricing, blog, auth, MCP (/api/mcp, McpRpc), visits (page-visits.ts), slide-embed, db, junk-paths.ts
 ├── migrations/         # D1 SQL migrations
 ├── scripts/            # seed and maintenance scripts (scripts/sql: manual SQL, not migrations)
 ├── tests/              # unit tests (pnpm test)
 ├── public/             # images, audio
-├── worker.ts           # Worker entry (www to apex, cheap 404 for scanner probes, per-IP 429, then OpenNext) and the McpRpc class
+├── worker.ts           # Worker entry (www to apex, cheap 404 for scanner probes, per-IP 429, visit counter, Web Analytics beacon, then OpenNext) and the McpRpc class
 └── wrangler.jsonc      # Cloudflare config: D1, R2 (MEDIA and BLOG_ASSETS), email, rate limit, vars
 ```
 
@@ -166,6 +168,10 @@ The name, description, socials, booking link, avatar and palette are not in the 
 ### 💼 Hire
 
 The calculator is at `/contratar`. Default amounts live in `PRICING` and the admin changes them on the page. The booking button comes from `site_settings` (`call_booking_url`); if it is empty, it is not shown.
+
+### 📊 Visits
+
+`/admin/visitas` (only `lucianoolivabianco@gmail.com`, like the rest of the admin) shows visits per day and per source, plus a cut of `/contratar` and `/en/hire`. The Worker stores in D1 (migration `0016_page_visits.sql`) the day (Argentina time), the path, `utm_*`, the referrer host and the country (`CF-IPCountry`). It does not store IP addresses, cookies or user agents. The Cloudflare dashboard is at [Analytics & logs → Web Analytics](https://dash.cloudflare.com/124b4210ff80c15610ed109083a5cf95/web-analytics).
 
 ## 🤝 Contributing
 

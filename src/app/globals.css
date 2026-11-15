@@ -4568,7 +4568,7 @@ select.ie-field { cursor: pointer; }
 }
 .pm-item {
   display: block; width: 100%; padding: 0.55rem 0.75rem; border: 0; border-radius: 8px; background: transparent; color: var(--foreground);
-  font: inherit; font-size: 0.9rem; text-align: left; cursor: pointer;
+  font: inherit; font-size: 0.9rem; text-align: left; cursor: pointer; text-decoration: none;
 }
 .pm-item:hover:not(:disabled) { background: color-mix(in oklab, var(--accent) 14%, transparent); }
 .pm-item:disabled { cursor: not-allowed; opacity: 0.5; }
@@ -5108,4 +5108,20 @@ textarea.adm-input { resize: vertical; }
 
 @media (prefers-reduced-motion: reduce) {
   .rothko-field { animation: none !important; }
+}
+
+/* /admin/visitas */
+.vist { display: grid; gap: 1.1rem; min-width: 0; }
+.vist-card { display: grid; gap: .7rem; padding: 1rem; border-radius: 16px; min-width: 0; border: 1px solid var(--border); overflow: auto; }
+.vist-h { margin: 0; font-size: 1.05rem; }
+.vist-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.vist-table th, .vist-table td { text-align: left; padding: .4rem 0; border-bottom: 1px solid var(--border); }
+.vist-table td { text-align: right; font-family: var(--font-mono, monospace); font-variant-numeric: tabular-nums; }
+.vist-table tbody th { font-weight: 500; overflow-wrap: anywhere; }
+.vist-links { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem; }
+.vist-link { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .7rem; align-items: center; }
+.vist-link-meta { min-width: 0; display: grid; gap: .2rem; }
+.vist-link-meta code { font-size: .78rem; overflow-wrap: anywhere; color: var(--muted); }
+@media (max-width: 640px) {
+  .vist-link { grid-template-columns: 1fr; }
 }
