@@ -9,7 +9,7 @@ const BASE = process.env.AUDIT_URL ?? "http://localhost:3000";
 const WAIT = process.env.AUDIT_WAIT ?? "networkidle"; // "load" for sites with long-polling scripts
 // Spanish at the root, English under /en (the URL decides the language, see src/lib/routes.ts).
 const ROUTES = process.env.AUDIT_ROUTES ? process.env.AUDIT_ROUTES.split(",") : [
-  "/", "/blog", "/contratar", "/sobre-mi", "/proyectos", "/proyectos/mochi", "/contacto", "/tastes", "/privacidad", "/ingresar", "/referidos", "/admin/referidos", "/rothko", "/no-existe",
+  "/", "/blog", "/contratar", "/sobre-mi", "/proyectos", "/proyectos/mochi", "/contacto", "/tastes", "/privacidad", "/ingresar", "/referidos", "/admin/referidos", "/admin/visitas", "/rothko", "/no-existe",
   "/en", "/en/blog", "/en/hire", "/en/about", "/en/projects", "/en/projects/mochi", "/en/contact", "/en/privacy", "/en/sign-in", "/en/referrals", "/en/no-existe",
 ];
 

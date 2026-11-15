@@ -18,7 +18,8 @@
     "cf:build": "NEXT_BUILD_TARGET=cloudflare opennextjs-cloudflare build",
     "preview": "pnpm cf:build && opennextjs-cloudflare preview",
     "deploy": "pnpm cf:build && opennextjs-cloudflare deploy",
-    "audit:cursor": "node scripts/audit-cursor.mjs"
+    "audit:cursor": "node scripts/audit-cursor.mjs",
+    "visits:playwright": "tsx scripts/visits-playwright.mts"
   },
   "dependencies": {
     "@tiptap/core": "^2.27.3",

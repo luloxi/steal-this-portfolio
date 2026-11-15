@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useAdminPanel, useIsAdmin } from "@/components/admin-context";
 import { authClient } from "@/lib/auth/client";
@@ -59,17 +60,27 @@ export function ProfileMenu({ image, name }: { image?: string; name?: string }) 
       {open ? (
         <div className="pm-menu" role="menu" aria-label={label}>
           {isAdmin ? (
-            <button
-              type="button"
-              role="menuitem"
-              className="pm-item"
-              onClick={() => {
-                setOpen(false);
-                setPanelOpen(true);
-              }}
-            >
-              {es ? "Personalizar" : "Customize"}
-            </button>
+            <>
+              <button
+                type="button"
+                role="menuitem"
+                className="pm-item"
+                onClick={() => {
+                  setOpen(false);
+                  setPanelOpen(true);
+                }}
+              >
+                {es ? "Personalizar" : "Customize"}
+              </button>
+              <Link
+                href="/admin/visitas"
+                role="menuitem"
+                className="pm-item"
+                onClick={() => setOpen(false)}
+              >
+                {es ? "Visitas" : "Visits"}
+              </Link>
+            </>
           ) : null}
           <button
             type="button"

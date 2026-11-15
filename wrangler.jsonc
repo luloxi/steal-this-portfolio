@@ -58,6 +58,8 @@
     { "name": "EXEMPT_RL", "namespace_id": "1005", "simple": { "limit": 5, "period": 10 } }
   ],
   // TURNSTILE_SECRET is a Worker secret (never in this file).
+  // Optional public Web Analytics site token: wrangler vars set CF_WEB_ANALYTICS_TOKEN
+  // (not a secret). worker.ts appends the official beacon when this var is present.
   "vars": {
     "CONTACT_TO": "info@lulox.com.ar",
     "CONTACT_FROM": "no-responder@lulox.com.ar",
