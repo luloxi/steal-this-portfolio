@@ -59,10 +59,10 @@ export async function buildPageMetadata(
   locale: Locale,
   paths: Record<Locale, string>,
   copy: { title: string | null; description: string },
-  extra?: { type?: "website" | "article"; images?: string[] },
+  extra?: { type?: "website" | "article"; images?: string[]; fullTitle?: string },
 ): Promise<Metadata> {
   const s = await getSiteSettings();
-  const full = shareTitle(copy.title, s.name);
+  const full = extra?.fullTitle ?? shareTitle(copy.title, s.name);
   const url = new URL(paths[locale], s.url).href;
   const images = extra?.images ?? [new URL(s.ogImage, s.url).href];
   return {
