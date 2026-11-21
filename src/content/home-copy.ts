@@ -12,7 +12,9 @@ export const homeCopy: Record<Locale, {
   custom: { title: string; body: string };
   built: { title: string };
   process: { title: string; steps: string[] };
+  faq: { title: string; items: { q: string; a: string }[] };
   closing: string;
+  footer: { services: string };
 }> = {
   es: {
     meta: {
@@ -55,7 +57,33 @@ export const homeCopy: Record<Locale, {
         "50% de anticipo y 50% al entregar.",
       ],
     },
+    faq: {
+      title: "Preguntas frecuentes",
+      items: [
+        {
+          q: "¿Qué se puede automatizar con agentes de IA y n8n?",
+          a: "Casi todo lo que se repite y sigue más o menos las mismas reglas: clasificar y responder mails, pasar datos entre Excel, formularios, CRMs y agendas, leer tickets y facturas desde una foto o un PDF, armar reportes y mandar avisos. Si alguien de tu equipo lo hace a mano una y otra vez, probablemente se pueda automatizar.",
+        },
+        {
+          q: "¿Cuánto cuesta automatizar un proceso?",
+          a: "Depende de qué tan grande sea el proceso. En la página Contratar hay una calculadora que da un presupuesto orientativo en segundos, y después lo ajustamos a tu caso en una llamada.",
+        },
+        {
+          q: "¿Cómo es el proceso de trabajo?",
+          a: "Me contás qué hace tu equipo a mano, lo vemos en una llamada y sale una estimación orientativa. Se paga 50% de anticipo y 50% al entregar.",
+        },
+        {
+          q: "¿Hacés CRMs y sistemas a medida?",
+          a: "Sí. Armo CRMs y herramientas internas pensadas para cómo trabaja tu equipo. Por ejemplo Garpen, mi propio sistema con contactos, agenda, finanzas y temporizador facturable.",
+        },
+        {
+          q: "¿Trabajás de forma remota?",
+          a: "Sí. Trabajo remoto desde Argentina, en español o en inglés.",
+        },
+      ],
+    },
     closing: "Si tenés un proceso que hoy depende de que alguien lo haga a mano, escribime y lo vemos.",
+    footer: { services: "Servicios" },
   },
   en: {
     meta: {
@@ -98,6 +126,32 @@ export const homeCopy: Record<Locale, {
         "50% upfront and 50% on delivery.",
       ],
     },
+    faq: {
+      title: "Frequently asked questions",
+      items: [
+        {
+          q: "What can be automated with AI agents and n8n?",
+          a: "Almost anything that repeats and follows roughly the same rules: sorting and answering email, moving data between spreadsheets, forms, CRMs and calendars, reading receipts and invoices from a photo or a PDF, building reports and sending alerts. If someone on your team does it by hand over and over, it can probably be automated.",
+        },
+        {
+          q: "How much does it cost to automate a process?",
+          a: "It depends on how big the process is. The Hire page has a calculator that gives you a rough quote in seconds, and then we adjust it to your case on a call.",
+        },
+        {
+          q: "How does the work go?",
+          a: "You tell me what your team does by hand, we go over it on a call and you get a rough estimate. Payment is 50% upfront and 50% on delivery.",
+        },
+        {
+          q: "Do you build custom CRMs and systems?",
+          a: "Yes. I build CRMs and internal tools made for the way your team works. For example Garpen, my own system with contacts, calendar, finances and a billable timer.",
+        },
+        {
+          q: "Do you work remotely?",
+          a: "Yes. I work remotely from Argentina, in Spanish or English.",
+        },
+      ],
+    },
     closing: "If you have a process that depends on someone doing it by hand, write to me and we'll look at it.",
+    footer: { services: "Services" },
   },
 };

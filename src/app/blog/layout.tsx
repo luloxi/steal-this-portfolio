@@ -2,8 +2,8 @@ import { pageMetadata } from "@/lib/page-metadata";
 
 export function generateMetadata() {
   return pageMetadata("/blog", {
-    es: { title: "Blog", description: "Artículos sobre AI, blockchain, tokenización y comercio agéntico." },
-    en: { title: "Blog", description: "Articles on AI, blockchain, tokenization and agentic commerce." },
+    es: { title: "Blog", description: "Artículos sobre agentes de IA, automatización, lo que voy construyendo y lo que aprendí en el camino." },
+    en: { title: "Blog", description: "Articles on AI agents, automation, what I'm building and what I learned along the way." },
   });
 }
 

@@ -3,6 +3,7 @@ import type { Locale } from "@/i18n/types";
 import { getRequestLocale } from "@/lib/prefs";
 import { pathPair } from "@/lib/routes";
 import { getSiteSettings } from "@/lib/site-settings-db";
+import { localizedOgImage } from "@/lib/seo";
 
 /**
  * Per-route share metadata (og:* + twitter:* + canonical + hreflang) in the
@@ -64,7 +65,7 @@ export async function buildPageMetadata(
   const s = await getSiteSettings();
   const full = extra?.fullTitle ?? shareTitle(copy.title, s.name);
   const url = new URL(paths[locale], s.url).href;
-  const images = extra?.images ?? [new URL(s.ogImage, s.url).href];
+  const images = extra?.images ?? [new URL(localizedOgImage(s.ogImage, locale), s.url).href];
   return {
     title: { absolute: full },
     description: copy.description,

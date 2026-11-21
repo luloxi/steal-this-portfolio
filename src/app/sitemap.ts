@@ -23,11 +23,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Hidden sections and projects (admin strip) are out of the sitemap, both languages.
   const [order, settings, stored] = await Promise.all([getSiteOrder(), getSiteSettings(), getProjects()]);
   const shown = (esPath: string) => !isPathHidden(esPath, order.sections, order.projects);
-  const pages = ["/", "/sobre-mi", "/proyectos", "/blog", "/contacto", "/contratar", "/referidos", "/privacidad"].filter(shown).flatMap((path) =>
+  const pages = ["/", "/servicios", "/sobre-mi", "/proyectos", "/blog", "/contacto", "/contratar", "/referidos", "/privacidad"].filter(shown).flatMap((path) =>
     both(settings.url, pathPair(path), {
       lastModified: now,
       changeFrequency: path === "/blog" ? "weekly" : "monthly",
-      priority: path === "/" ? 1 : 0.7,
+      priority: path === "/" ? 1 : path === "/servicios" || path === "/contratar" ? 0.9 : 0.7,
     }),
   );
   const projects = orderRecords(stored, order.projects).filter((p) => p.visible && shown(`/proyectos/${p.id}`)).flatMap((p) =>

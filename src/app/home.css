@@ -74,3 +74,15 @@
 .hm-steal-icon { width: 14px; height: 14px; }
 .hm a:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: 6px; }
 @media (prefers-reduced-motion: reduce) { .hm-social { transition: none; } }
+
+/* FAQ: always visible (no hidden answers), mirrors the FAQPage JSON-LD */
+.hm-faq { margin: .25rem 0 0; display: flex; flex-direction: column; gap: .7rem; }
+.hm-faq-item { padding: 1rem 1.15rem; border-radius: 14px; background: color-mix(in oklab, var(--surface) 45%, transparent); border: 1px solid color-mix(in oklab, var(--border) 70%, transparent); }
+.hm-faq-q { margin: 0 0 .35rem; font-weight: 600; font-size: 1rem; color: var(--foreground); }
+.hm-faq-a { margin: 0; font-size: .95rem; line-height: 1.6; color: color-mix(in oklab, var(--foreground) 75%, transparent); }
+
+/* /servicios reuses the home blocks inside the narrow PageShell column */
+.hm-page { display: flex; flex-direction: column; gap: 3rem; }
+.hm-page > .hm-cta { margin-top: -1.5rem; }
+.hm-text { margin: 0; font-size: 1rem; line-height: 1.65; color: color-mix(in oklab, var(--foreground) 82%, transparent); }
+@media (min-width: 760px) { .hm-cards.hm-cards-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .hm-steps.hm-steps-stack { grid-template-columns: 1fr; } }

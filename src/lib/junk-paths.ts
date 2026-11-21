@@ -12,7 +12,7 @@ const PROBE_EXT = /\.(?:php\d?|aspx?|jspx?|cgi|env|ini|ya?ml|bak|old|orig|sql|sq
 
 // Generic data/script extensions: junk too, except the few real ones below.
 const DATA_EXT = /\.(?:json|js|mjs|map|xml|txt)$/i;
-const REAL_FILES = new Set(["/robots.txt", "/sitemap.xml", "/llms.txt", "/manifest.json"]);
+const REAL_FILES = new Set(["/robots.txt", "/sitemap.xml", "/llms.txt", "/llms-full.txt", "/manifest.json"]);
 
 // Paths where user content or build output lives: never judged by extension.
 const SKIP_PREFIXES = ["/.well-known/", "/_next/", "/media/", "/projects/", "/orgs/", "/audio/"];

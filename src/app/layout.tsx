@@ -17,6 +17,7 @@ import { buildPageMetadata } from "@/lib/page-metadata";
 import { pathPair } from "@/lib/routes";
 import { descriptionFor, themeCss } from "@/lib/site-settings";
 import { getSiteSettings } from "@/lib/site-settings-db";
+import { localizedOgImage } from "@/lib/seo";
 import "./globals.css";
 import "./hire-candy.css";
 
@@ -68,17 +69,22 @@ export async function generateMetadata(): Promise<Metadata> {
       title: settings.name,
       description,
       url: "/",
-      images: [{ url: new URL(settings.ogImage, settings.url).href, width: 1200, height: 630, alt: settings.name }],
+      images: [{ url: new URL(localizedOgImage(settings.ogImage, locale), settings.url).href, width: 1200, height: 630, alt: settings.name }],
     },
     twitter: {
       card: "summary_large_image",
       title: settings.name,
       description,
-      images: [new URL(settings.ogImage, settings.url).href],
+      images: [new URL(localizedOgImage(settings.ogImage, locale), settings.url).href],
       creator: settings.xHandle,
       site: settings.xHandle,
     },
-    robots: { index: true, follow: true },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 } },
+    // Search Console / Bing Webmaster HTML-tag verification: plain Worker vars (not secrets), set only when used.
+    verification: {
+      ...(process.env.GOOGLE_SITE_VERIFICATION ? { google: process.env.GOOGLE_SITE_VERIFICATION } : {}),
+      ...(process.env.BING_SITE_VERIFICATION ? { other: { "msvalidate.01": process.env.BING_SITE_VERIFICATION } } : {}),
+    },
   };
   const home = await buildPageMetadata(locale, pathPair("/"), { title: null, description });
   return { ...base, ...home, title: base.title };

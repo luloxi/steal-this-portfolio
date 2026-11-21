@@ -47,6 +47,7 @@ test("real pages, assets and API routes pass", () => {
     "/robots.txt",
     "/sitemap.xml",
     "/llms.txt",
+    "/llms-full.txt",
     "/.well-known/security.txt",
     "/_next/static/chunks/main-app.js",
     "/media/uploads/photo.webp",
