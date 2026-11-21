@@ -1,0 +1,76 @@
+/* Home landing (src/components/views/home-view.tsx). Scrolls normally.
+   Rothko spirit: soft feathered colour fields, quiet type, one neon accent. */
+.hm { position: relative; z-index: 10; min-height: 100dvh; display: flex; flex-direction: column; }
+.hm-main { width: 100%; max-width: 46rem; margin: 0 auto; padding: 5.5rem 1.25rem 2rem; display: flex; flex-direction: column; gap: 4.25rem; }
+@media (min-width: 900px) { .hm-main { padding-top: 7.5rem; gap: 5.5rem; } }
+
+/* Hero */
+.hm-hero { display: flex; flex-direction: column; gap: 1.25rem; }
+.hm-id { display: flex; align-items: center; gap: .9rem; }
+.hm-photo { flex: none; width: 64px; height: 64px; overflow: hidden; touch-action: manipulation; user-select: none; -webkit-user-select: none;
+  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+  background: radial-gradient(circle at 50% 40%, color-mix(in oklab, var(--accent) 45%, transparent), transparent 70%), var(--surface);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent) 40%, transparent); }
+.hm-photo img { width: 100%; height: 100%; object-fit: cover; }
+@media (min-width: 900px) { .hm-photo { width: 76px; height: 76px; } }
+.hm-intro { margin: 0; font-family: var(--font-orbitron), var(--font-display); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); line-height: 1.5; }
+.hm-title { margin: 0; font-size: clamp(1.85rem, 6.4vw, 3.1rem); line-height: 1.12; font-weight: 600; letter-spacing: -.01em; color: var(--foreground); text-wrap: balance;
+  text-shadow: 0 0 22px var(--glow-crimson); }
+.hm-lead { margin: 0; max-width: 36rem; font-size: clamp(1.05rem, 2.6vw, 1.25rem); line-height: 1.55; color: color-mix(in oklab, var(--foreground) 78%, transparent); }
+.hm-cta { width: 100%; max-width: 18rem; margin-top: .5rem; }
+
+/* Sections */
+.hm-section { display: flex; flex-direction: column; gap: 1rem; }
+.hm-h2 { margin: 0; display: flex; align-items: center; gap: .8rem; font-family: var(--font-orbitron), var(--font-display); font-size: clamp(.95rem, 2.4vw, 1.1rem); font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--foreground); }
+.hm-h2::after { content: ""; flex: 1; height: 1px; min-width: 2rem; background: linear-gradient(90deg, color-mix(in oklab, var(--accent) 60%, transparent), transparent); }
+.hm-note { margin: -.4rem 0 0; font-size: .8rem; color: var(--muted); }
+
+/* Example cards: three soft colour fields */
+.hm-cards { list-style: none; margin: .25rem 0 0; padding: 0; display: grid; gap: .85rem; }
+@media (min-width: 760px) { .hm-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.hm-card { --hm-accent: var(--accent); position: relative; padding: 1.15rem 1.15rem 1.25rem; border-radius: 14px; overflow: hidden;
+  background: radial-gradient(120% 90% at 0% 0%, color-mix(in oklab, var(--hm-accent) 16%, transparent), transparent 70%),
+              color-mix(in oklab, var(--surface) 55%, transparent);
+  border: 1px solid color-mix(in oklab, var(--hm-accent) 22%, transparent); backdrop-filter: blur(6px); }
+.hm-card::before { content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 2px; background: var(--hm-accent); opacity: .7; border-radius: 2px; }
+.hm-card-title { margin: 0 0 .4rem; font-size: 1.02rem; font-weight: 600; color: var(--foreground); }
+.hm-card-body { margin: 0; font-size: .95rem; line-height: 1.55; color: color-mix(in oklab, var(--foreground) 75%, transparent); }
+
+.hm-field { margin: 0; padding: 1.35rem 1.4rem; border-radius: 16px; font-size: 1.05rem; line-height: 1.65; color: color-mix(in oklab, var(--foreground) 85%, transparent);
+  background: radial-gradient(90% 120% at 100% 0%, color-mix(in oklab, var(--accent-2) 14%, transparent), transparent 65%),
+              radial-gradient(90% 120% at 0% 100%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 65%),
+              color-mix(in oklab, var(--surface) 50%, transparent);
+  border: 1px solid color-mix(in oklab, var(--border) 80%, transparent); backdrop-filter: blur(6px); }
+
+/* Built projects reuse the Proyectos .cp-row look */
+.hm-projects { list-style: none; margin: .25rem 0 0; padding: 0; display: flex; flex-direction: column; gap: .7rem; }
+.hm-project { cursor: pointer; }
+.hm-project-icon { width: 48px; height: 48px; flex: none; object-fit: contain; }
+
+/* Steps */
+.hm-steps { list-style: none; margin: .25rem 0 0; padding: 0; display: grid; gap: .85rem; counter-reset: none; }
+@media (min-width: 760px) { .hm-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.hm-step { display: flex; gap: .85rem; align-items: flex-start; padding: 1rem 1.1rem; border-radius: 14px; font-size: .98rem; line-height: 1.5;
+  background: color-mix(in oklab, var(--surface) 45%, transparent); border: 1px solid color-mix(in oklab, var(--border) 70%, transparent); }
+.hm-step-n { flex: none; display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 999px;
+  font-family: var(--font-orbitron), var(--font-display); font-weight: 700; font-size: .9rem; color: var(--accent);
+  border: 1px solid color-mix(in oklab, var(--accent) 55%, transparent); box-shadow: 0 0 12px color-mix(in oklab, var(--accent) 25%, transparent); }
+
+/* Closing */
+.hm-closing { display: flex; flex-direction: column; align-items: center; gap: 1.1rem; text-align: center; padding: 2rem 1.25rem; border-radius: 20px;
+  background: radial-gradient(70% 100% at 50% 0%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 75%); }
+.hm-closing p { margin: 0; max-width: 32rem; font-size: clamp(1.1rem, 2.8vw, 1.35rem); line-height: 1.5; font-weight: 500; text-wrap: balance; }
+
+/* Footer */
+.hm-footer { margin-top: auto; padding: 1.5rem 1.25rem max(1.25rem, env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: center; gap: .9rem; }
+.hm-footer-links { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .35rem .9rem; }
+.hm-footer-blog { cursor: pointer; font-family: var(--font-orbitron), var(--font-display); font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--foreground); text-decoration: none; padding: .5rem .25rem; }
+.hm-social { cursor: pointer; display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 999px; color: var(--muted); transition: color .2s ease, background .2s ease; }
+.hm-social-icon { width: 18px; height: 18px; }
+.hm-footer-blog:hover, .hm-social:hover { color: var(--accent); }
+.hm-social:hover { background: color-mix(in oklab, var(--accent) 10%, transparent); }
+.hm-steal { cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; font-family: var(--font-mono, monospace); font-size: .72rem; letter-spacing: .05em; color: var(--muted); text-decoration: none; opacity: .8; }
+.hm-steal:hover { opacity: 1; color: var(--accent-2); }
+.hm-steal-icon { width: 14px; height: 14px; }
+.hm a:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: 6px; }
+@media (prefers-reduced-motion: reduce) { .hm-social { transition: none; } }

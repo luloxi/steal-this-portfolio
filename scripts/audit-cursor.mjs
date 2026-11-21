@@ -25,7 +25,7 @@ const probe = () => {
     const tag = el.tagName.toLowerCase();
     if (tag === "textarea" || (tag === "input" && TEXTY.has(el.getAttribute("type") ?? ""))) continue; // text fields keep the I-beam
     if (tag === "label" && !el.htmlFor && !el.querySelector("input:not([type=text]):not([type=email]):not([type=search]), select")) continue; // wraps a text field
-    if (el.matches("[contenteditable], .sec-reorder-handle, .avatar-hud")) continue; // drag handles / easter egg: intentional
+    if (el.matches("[contenteditable], .sec-reorder-handle, .hm-photo")) continue; // drag handles / easter egg: intentional
     if (el.closest("iframe")) continue;
     checked++;
     const disabled = el.matches(":disabled, [aria-disabled=true]");
