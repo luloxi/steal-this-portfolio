@@ -2,8 +2,8 @@ import { pageMetadata } from "@/lib/page-metadata";
 
 export function generateMetadata() {
   return pageMetadata("/sobre-mi", {
-    es: { title: "Sobre mí", description: "Mi historia y experiencia en AI, blockchain y desarrollo." },
-    en: { title: "About", description: "My story and experience in AI, blockchain and software." },
+    es: { title: "Sobre mí", description: "Quién soy: desarrollador que automatiza con agentes de IA y n8n y arma sistemas a medida. Mi historia y experiencia." },
+    en: { title: "About", description: "Who I am: a developer who automates with AI agents and n8n and builds custom systems. My story and experience." },
   });
 }
 

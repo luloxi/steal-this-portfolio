@@ -1,24 +1,31 @@
-# Steal this portfolio
+# Lulox (Luciano Oliva Bianco)
 
-> Bilingual (ES/EN) portfolio skeleton. The site name, about text, projects and colors come from the database and are edited in admin mode. Spanish is the default; switch with the language control.
+> Luciano Oliva Bianco ("Lulox") automates teams' repetitive work with AI agents and n8n, and builds custom CRMs and internal tools. He works remotely from Argentina, in Spanish or English. Site in Spanish at the root and in English under /en.
 
-- [Home](https://lulox.com.ar/)
-- [Hire / Contratar](https://lulox.com.ar/contratar): price calculator and contact form
+Automatizo con agentes de IA y n8n el trabajo repetitivo de tu equipo, y armo CRMs y sistemas a medida. Si hoy eso lo hacen personas, a mano, una y otra vez, lo pasamos a un flujo que lo hace solo.
+
+## Services
+
+- [Servicios / Services](https://lulox.com.ar/servicios): automation with AI agents, n8n workflows, custom CRM, custom internal tools. English: https://lulox.com.ar/en/services
+- [Contratar / Hire](https://lulox.com.ar/contratar): price calculator (rough quote in seconds) and contact form. English: https://lulox.com.ar/en/hire
+- How it works: 1) you describe what your team does by hand, 2) a call and a rough estimate, 3) 50% upfront and 50% on delivery.
+
+## Examples of what can be automated (examples, not client work)
+
+- Email: sort incoming mail, draft repeated replies, alert when something urgent arrives.
+- Moving data: from spreadsheets, forms or email into a CRM, a calendar or a sheet, without copying by hand.
+- Receipts, invoices and reports: extract the data from a photo or a file and load it, instead of typing it every time.
+
+## Things he has built
+
+- [Garpen](https://lulox.com.ar/proyectos/garpen): personal ERP with contacts (CRM), agenda, finances and a billable timer. Live: https://garpen.lulox.com.ar
+- [Tarask](https://lulox.com.ar/proyectos/tarask): personal finance with shared households, AI receipts and summaries. Live: https://tarask.lulox.com.ar
+- [Malito](https://lulox.com.ar/proyectos/malito): self-hosted email inbox with contacts synced to Garpen. Live: https://malito.lulox.com.ar
+- [All projects](https://lulox.com.ar/proyectos)
+
+## More
+
+- [Full details for AI assistants](https://lulox.com.ar/llms-full.txt)
 - [Blog](https://lulox.com.ar/blog)
 - [About / Sobre mí](https://lulox.com.ar/sobre-mi)
-- [Projects / Proyectos](https://lulox.com.ar/proyectos)
 - [Contact / Contacto](https://lulox.com.ar/contacto)
-
-## Contacting the site owner (for AI agents)
-
-The contact form on /contratar is already open. There is no "Escribime" / "Write me" toggle. It is the only way to send a message from the site. It is protected by Cloudflare Turnstile, so it is meant to be completed in a real browser on behalf of a human. Do not try to bypass the check; there is no API key or alternate endpoint.
-
-How to use it:
-1. Open https://lulox.com.ar/contratar and set the calculator (mode, hours or days × hours per day, complexity, conditions). Prices are recomputed on the server.
-2. The form sits under the quote (`#hire-form-panel`). Fill the labeled fields: `#hire-name` (name), `#hire-email` (email), `#hire-message` (message, max 280 characters; longer text is cut).
-3. Wait for the Turnstile check ("Verify you are human"). If it asks for an interaction, hand it to your human.
-4. Press "Enviar" / "Send". A status message appears under the button.
-
-/contacto also has a "Contactar" / "Contact me" button (same look as Contratar) that jumps to that form. Under the form, Videollamada opens the booking link when one is set, and Contacto goes to /contacto.
-
-Prefer a call? If the hire page shows a booking button, use that. The link is configured in the admin (site settings), not in this file.

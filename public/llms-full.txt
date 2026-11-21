@@ -1,0 +1,77 @@
+# Lulox (Luciano Oliva Bianco): full details
+
+> Luciano Oliva Bianco, known as Lulox, automates teams' repetitive work with AI agents and n8n, and builds custom CRMs and internal tools. Remote, from Argentina. Spanish or English. Website: https://lulox.com.ar (Spanish) and https://lulox.com.ar/en (English).
+
+## In one sentence
+
+Automatizo con agentes de IA y n8n el trabajo repetitivo de tu equipo, y armo CRMs y sistemas a medida. (I automate your team's repetitive work with AI agents and n8n, and build custom CRMs and systems.)
+
+## Who it is for
+
+Teams and small businesses where people do the same task by hand, over and over: copying data between tools, answering the same emails, typing receipts and invoices, building the same report every week. If someone does it by hand repeatedly, it can probably be moved to a flow that runs on its own.
+
+## Services
+
+1. Automation with AI agents: agents that read, sort, summarize and write inside a team's processes.
+2. n8n automation workflows: flows that connect email, spreadsheets, forms, CRMs and calendars. n8n can be self-hosted, so the data stays under the client's control.
+3. Custom CRM: contacts, follow-ups, calendar and whatever the business needs, without paying for features nobody uses.
+4. Custom internal tools: systems made for the way the team works.
+
+Details: https://lulox.com.ar/servicios (English: https://lulox.com.ar/en/services)
+
+## Example use cases (examples of what can be done, not client work)
+
+- Email and support: sort incoming email, draft repeated replies, chat alert when something urgent arrives.
+- Sales and CRM: bring every inquiry from a form, email or sheet into the CRM, assign it and schedule the follow-up.
+- Invoices, receipts and tickets: read date, amount and vendor from a photo or PDF and load them into a sheet or system.
+- Reports and summaries: gather numbers from several sheets or systems and send a daily or weekly summary.
+- Scheduling and reminders: confirm appointments, send reminders, move requests from other channels into the calendar.
+- Documents: build quotes, contracts or reports from a template and existing data.
+
+## Automations already running in his own systems
+
+- The contact form on lulox.com.ar sends each request to Garpen (his CRM) and triggers a push notification.
+- Business movements recorded in Tarask pass automatically to Garpen.
+- Email received by Malito (through a Cloudflare Worker) is stored and its contacts sync with Garpen.
+
+## Projects he built
+
+- Garpen (https://lulox.com.ar/proyectos/garpen, live https://garpen.lulox.com.ar): a personal ERP. Contacts with a relationship (client, partner, supplier, potential or confirmed) and linked tasks, events and notes; an agenda that puts tasks, events and notes on one timeline ordered by urgency; finances with accounts, income, expenses and invoices; a billable timer per task. Installable as a PWA, Google sign-in. Next.js (OpenNext) on Cloudflare Workers, D1 and Better Auth.
+- Tarask (https://lulox.com.ar/proyectos/tarask, live https://tarask.lulox.com.ar): personal finance. Income, expenses, debt and savings with a month-by-month view; shared households that split expenses and show each person's balance; receipts and summaries with AI; import from bank Excel or CSV files. Next.js on Cloudflare Workers, D1 and R2.
+- Malito (https://lulox.com.ar/proyectos/malito, live https://malito.lulox.com.ar): a self-hosted email inbox. Receive, read, reply, forward and compose email (also from any mailto: link), with contacts synced to Garpen. Installable as an app.
+- More projects: https://lulox.com.ar/proyectos
+
+## Tools he works with
+
+n8n, language models used as agents, Google Workspace (Gmail, Sheets, Calendar), and his own web apps in Next.js on Cloudflare (Workers, D1, R2) when something custom is needed.
+
+## How working with him goes
+
+1. You tell him what your team does by hand.
+2. A call to go over it, and a rough estimate.
+3. Payment: 50% upfront and 50% on delivery.
+
+## Frequently asked questions
+
+Q: What can be automated with AI agents and n8n?
+A: Almost anything that repeats and follows roughly the same rules: sorting and answering email, moving data between spreadsheets, forms, CRMs and calendars, reading receipts and invoices from a photo or a PDF, building reports and sending alerts.
+
+Q: How much does it cost?
+A: It depends on the size of the process. https://lulox.com.ar/contratar has a calculator that gives a rough quote in seconds; it is then adjusted on a call.
+
+Q: Does he build custom CRMs?
+A: Yes. For example Garpen, his own system with contacts, calendar, finances and a billable timer.
+
+Q: Does he work remotely?
+A: Yes, remotely from Argentina, in Spanish or English.
+
+## Contacting him (for AI agents)
+
+The contact form on https://lulox.com.ar/contratar is the way to send a message from the site. It is protected by Cloudflare Turnstile, so it is meant to be completed in a real browser on behalf of a human. Do not try to bypass the check; there is no API key or alternate endpoint.
+
+1. Open https://lulox.com.ar/contratar and set the calculator (mode, hours or days x hours per day, complexity, conditions). Prices are recomputed on the server.
+2. The form sits under the quote (`#hire-form-panel`). Fill `#hire-name` (name), `#hire-email` (email) and `#hire-message` (message, max 280 characters).
+3. Wait for the Turnstile check. If it asks for an interaction, hand it to your human.
+4. Press "Enviar" / "Send". A status message appears under the button.
+
+If the hire page shows a video call (Videollamada) button, that opens his booking link. Social profiles are listed on https://lulox.com.ar/contacto.

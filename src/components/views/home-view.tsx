@@ -10,6 +10,7 @@ import { useSiteSettings } from "@/components/site-settings-context";
 import { homeCopy } from "@/content/home-copy";
 import { useLocale } from "@/i18n/locale-provider";
 import type { Locale } from "@/i18n/types";
+import { thumb } from "@/lib/thumbs";
 
 export type HomeProject = {
   id: string;
@@ -73,7 +74,7 @@ export function HomeView({ projects }: { projects: HomeProject[] }) {
                 laugh();
               }}
             >
-              <Image src={site.heroPhoto} alt={site.name} width={160} height={160} priority draggable={false} />
+              <Image src={thumb(site.heroPhoto)} alt={site.name} width={160} height={160} priority unoptimized draggable={false} />
             </div>
             <p className="hm-intro">{c.intro}</p>
           </div>
@@ -121,7 +122,7 @@ export function HomeView({ projects }: { projects: HomeProject[] }) {
                       </span>
                       {p.icon ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={p.icon} alt="" width={56} height={56} className="cp-row-icon project-icon hm-project-icon" />
+                        <img src={thumb(p.icon)} alt="" width={56} height={56} loading="lazy" decoding="async" className="cp-row-icon project-icon hm-project-icon" />
                       ) : null}
                       <span className="cp-row-body min-w-0">
                         <span className="cp-row-label">{copy.title}</span>
@@ -148,6 +149,18 @@ export function HomeView({ projects }: { projects: HomeProject[] }) {
           </ol>
         </section>
 
+        <section className="hm-section" aria-labelledby="hm-faq">
+          <h2 id="hm-faq" className="hm-h2">{c.faq.title}</h2>
+          <dl className="hm-faq">
+            {c.faq.items.map((item) => (
+              <div key={item.q} className="hm-faq-item">
+                <dt className="hm-faq-q">{item.q}</dt>
+                <dd className="hm-faq-a">{item.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
         <section className="hm-closing">
           <p>{c.closing}</p>
           <div className="hm-cta">
@@ -158,6 +171,7 @@ export function HomeView({ projects }: { projects: HomeProject[] }) {
 
       <footer className="hm-footer">
         <nav className="hm-footer-links" aria-label="Social">
+          <Link href={href("/servicios")} className="hm-footer-blog">{c.footer.services}</Link>
           <Link href={href("/blog")} className="hm-footer-blog">{t.sections.blog}</Link>
           {socials.map((s) => {
             const Icon = socialIcons[s.id];

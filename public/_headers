@@ -6,3 +6,12 @@
 
 /manifest.v5.webmanifest
   Cache-Control: public,max-age=0,must-revalidate
+
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+
+/llms-full.txt
+  Content-Type: text/plain; charset=utf-8
+
+/og-automation-*
+  Cache-Control: public,max-age=86400
