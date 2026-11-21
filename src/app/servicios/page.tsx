@@ -82,11 +82,6 @@ export default async function ServicesPage() {
             ) : null}
           </section>
 
-          <section className="hm-section" aria-labelledby="sv-n8n">
-            <h2 id="sv-n8n" className="hm-h2">{c.n8n.title}</h2>
-            <p className="hm-text">{c.n8n.body}</p>
-          </section>
-
           <section className="hm-section" aria-labelledby="sv-stack">
             <h2 id="sv-stack" className="hm-h2">{c.stack.title}</h2>
             <p className="hm-text">{c.stack.body}</p>

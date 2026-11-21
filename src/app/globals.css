@@ -4288,33 +4288,6 @@ body.ie-off .ie-row-pencil { display: none; }
 /* Mobile: leave room for the on-screen keyboard and the alert under the message. */
 .hire-form-field input, .hire-form-field textarea { scroll-margin-bottom: 6rem; }
 
-/* /contratar: 280-character limit modal. Crimson card, rotating CTA-rainbow border, 5 s countdown ring.
-   Same crimson in both themes; text is white/pale pink (≥ 7:1 on #8f001c). */
-@property --limit-ang { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
-@property --limit-p { syntax: "<number>"; inherits: true; initial-value: 1; }
-.limit-modal-backdrop { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; padding: 1rem;
-  background: rgb(10 2 4 / .55); backdrop-filter: blur(2px); }
-.limit-modal { --crimson: #8f001c; position: relative; width: min(22rem, 100%); padding: 3px; border-radius: 18px; outline: none;
-  background: conic-gradient(from var(--limit-ang), var(--cta-rainbow)); animation: limit-spin 3s linear infinite;
-  box-shadow: 0 18px 50px -12px rgb(143 0 28 / .7); }
-.limit-modal:focus-visible { box-shadow: 0 0 0 3px #ffe14d, 0 18px 50px -12px rgb(143 0 28 / .7); }
-.limit-modal-inner { display: grid; justify-items: center; gap: .9rem; padding: 1.4rem 1.2rem 1.2rem; text-align: center;
-  border-radius: 15px; background: linear-gradient(160deg, #a4503f, var(--crimson)); color: #fff; }
-.limit-modal-inner h2 { margin: 0; font-family: var(--font-orbitron), var(--font-display); font-size: 1.15rem; letter-spacing: .04em; line-height: 1.25; color: #fff; }
-.limit-modal-ring { position: relative; width: 3.6rem; height: 3.6rem; border-radius: 50%; display: grid; place-items: center;
-  background: rgb(255 255 255 / .16); transition: --limit-p 1s linear; }
-.limit-modal-ring-fill { position: absolute; inset: 0; border-radius: 50%;
-  background: conic-gradient(#fff calc(var(--limit-p) * 360deg), transparent 0);
-  -webkit-mask: radial-gradient(circle, transparent 58%, #000 60%); mask: radial-gradient(circle, transparent 58%, #000 60%); }
-.limit-modal-num { position: relative; font-family: var(--font-orbitron), var(--font-display); font-weight: 800; font-size: 1.25rem; color: #fff; }
-.limit-modal-close { min-width: 8.5rem; font: inherit; font-weight: 800; letter-spacing: .04em;
-  padding: .6rem 1.3rem; border-radius: 999px; border: 2px solid #fff; background: #fff; color: #8f001c; }
-.limit-modal-close:disabled { background: transparent; color: #fff; opacity: .85; font-family: var(--font-orbitron), var(--font-display); }
-.limit-modal-close:hover:not(:disabled) { background: #ffe9ee; }
-.limit-modal-close:focus-visible { outline: 3px solid #ffe14d; outline-offset: 3px; }
-@keyframes limit-spin { to { --limit-ang: 360deg; } }
-@media (prefers-reduced-motion: reduce) { .limit-modal { animation: none; } .limit-modal-ring { transition: none; } }
-
 /* Convention: everything clickable shows a pointer; disabled shows not-allowed.
    Checked site-wide by `pnpm audit:cursor` (scripts/audit-cursor.mjs). */
 a[href], button, [role="button"], [role="radio"], [role="switch"], [role="tab"], [role="checkbox"], [role="menuitem"], [role="option"],
@@ -4431,43 +4404,6 @@ fieldset:disabled :is(button, input, select, textarea, label) { cursor: not-allo
 .radm-status[data-status="pending"] { color: var(--neon-orange); }
 .radm-note { font-size: .8rem; color: var(--muted); }
 .ref-admin-link { justify-self: start; }
-
-/* /contratar amounts panel (admin + edit mode only, src/components/pricing-admin.tsx).
-   Compact, collapsed by default: a dashed card in the calculator colors. Same layout at every
-   width (the calculator column is narrow on desktop too). */
-.price-admin { border: 1px dashed color-mix(in srgb, var(--o) 55%, transparent); border-radius: 14px; padding: .15rem .9rem; min-width: 0;
-  background: color-mix(in srgb, var(--o) 5%, transparent); }
-.price-admin[open] { padding-bottom: .9rem; }
-.price-admin > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: .55rem; padding: .6rem 0; user-select: none; }
-.price-admin > summary::-webkit-details-marker { display: none; }
-.price-admin > summary::after { content: ""; margin-left: auto; width: .5rem; height: .5rem; border-right: 2px solid var(--o); border-bottom: 2px solid var(--o); transform: rotate(45deg); transition: transform .2s; }
-.price-admin[open] > summary::after { transform: rotate(-135deg); }
-.price-admin > summary:focus-visible { outline: 2px solid var(--cy); outline-offset: 2px; border-radius: 8px; }
-.price-admin-title { font-family: var(--font-mono, monospace); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--o); font-weight: 700; }
-.price-admin-badge { font-size: .72rem; color: var(--muted); border: 1px solid color-mix(in srgb, var(--muted) 35%, transparent); border-radius: 999px; padding: .05rem .5rem; }
-.price-admin-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--o); box-shadow: 0 0 8px var(--o); }
-.price-admin-hint { margin: 0 0 .8rem; font-size: .8rem; color: var(--muted); line-height: 1.5; }
-.price-admin-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem .8rem; }
-.price-admin-group { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: .35rem; align-content: start; }
-.price-admin-group[data-group="rates"], .price-admin-group[data-group="conditions"], .price-admin-group[data-group="discounts"] { grid-column: span 2; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: .5rem; }
-.price-admin-group legend { padding: 0; margin-bottom: .35rem; font-family: var(--font-mono, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--cy); }
-.price-admin-field { display: grid; gap: .2rem; min-width: 0; cursor: text; }
-.price-admin-name { font-size: .78rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.price-admin-box { display: flex; align-items: center; gap: .2rem; min-width: 0; border: 1px solid color-mix(in srgb, var(--cy) 40%, transparent); border-radius: 9px; padding: .3rem .45rem; }
-.price-admin-box:focus-within { border-color: var(--cy); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cy) 22%, transparent); }
-.price-admin-field[data-bad] .price-admin-box { border-color: #e5484d; box-shadow: 0 0 0 3px rgb(229 72 77 / .2); }
-.price-admin-box i { font-style: normal; font-size: .72rem; color: var(--muted); flex: none; }
-.price-admin-box input { width: 100%; min-width: 0; font: inherit; font-family: var(--font-mono, monospace); font-size: 1rem; font-weight: 700; color: var(--foreground); background: transparent; border: 0; outline: none; padding: 0; text-align: right; }
-.price-admin-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: .5rem; margin-top: .9rem; }
-.price-admin-status { scroll-margin-bottom: calc(var(--as-h, 0px) + 1.5rem); margin: 0 auto 0 0; font-size: .8rem; color: var(--muted); min-width: 0; flex: 1 1 12rem; }
-.price-admin-status[data-state="ok"] { color: var(--cy); font-weight: 600; }
-.price-admin-status[data-state="error"] { color: #e5484d; font-weight: 600; }
-.price-admin-btn { cursor: pointer; padding: .45rem .9rem; border-radius: 999px; font-size: .85rem; font-weight: 700; border: 1px solid color-mix(in srgb, var(--muted) 40%, transparent); color: var(--foreground); transition: all .2s; }
-.price-admin-btn:hover { border-color: var(--cy); color: var(--cy); }
-.price-admin-btn.is-primary { border-color: var(--o); background: color-mix(in srgb, var(--o) 18%, transparent); color: var(--o); }
-.price-admin-btn.is-primary:hover { background: color-mix(in srgb, var(--o) 28%, transparent); }
-.price-admin-btn:disabled { cursor: not-allowed; opacity: .5; }
-.price-admin-btn:focus-visible { outline: 2px solid var(--cy); outline-offset: 2px; }
 
 /* Sobre mí "Publicaciones" block (src/components/publications.tsx), right below the story
    that mentions the articles. A reference list, not a milestone: solid hairline card,

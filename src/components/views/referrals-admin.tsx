@@ -145,7 +145,7 @@ function LeadRow({ l }: { l: Lead }) {
       <div className="radm-lead-head">
         <strong>{l.name}</strong>
         <span className="radm-meta">
-          {l.email} · {fmtDate(l.created_at)} · presupuesto US$ {l.total_usd.toLocaleString("en-US")}
+          {l.email} · {fmtDate(l.created_at)}{l.total_usd > 0 ? ` · presupuesto US$ ${l.total_usd.toLocaleString("en-US")}` : ""}
         </span>
         {l.message ? <p className="radm-msg">{l.message}</p> : null}
       </div>

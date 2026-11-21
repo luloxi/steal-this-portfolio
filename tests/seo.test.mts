@@ -4,8 +4,8 @@ import { faqLd, ldScript, localizedOgImage } from "../src/lib/seo.ts";
 import { homeCopy } from "../src/content/home-copy.ts";
 
 test("share image follows the URL language", () => {
-  assert.equal(localizedOgImage("/og-automation-es.jpg", "en"), "/og-automation-en.jpg");
-  assert.equal(localizedOgImage("/og-automation-es.jpg", "es"), "/og-automation-es.jpg");
+  assert.equal(localizedOgImage("/og-agents-es.jpg", "en"), "/og-agents-en.jpg");
+  assert.equal(localizedOgImage("/og-agents-es.jpg", "es"), "/og-agents-es.jpg");
   assert.equal(localizedOgImage("/og.png", "en"), "/og.png");
 });
 

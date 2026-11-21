@@ -25,12 +25,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const JOB_TITLE = {
-  es: "Desarrollador de automatizaciones con agentes de IA y n8n",
-  en: "Automation developer with AI agents and n8n",
+  es: "Desarrollador de automatizaciones con agentes de IA",
+  en: "Automation developer with AI agents",
 } as const;
 const KNOWS_ABOUT = {
-  es: ["Automatización de procesos", "Agentes de IA", "n8n", "CRM a medida", "Herramientas internas", "Next.js", "Cloudflare"],
-  en: ["Process automation", "AI agents", "n8n", "Custom CRM", "Internal tools", "Next.js", "Cloudflare"],
+  es: ["Automatización de procesos", "Agentes de IA", "Grok", "Grok Bot", "Hermes", "n8n", "CRM a medida", "Herramientas internas", "Next.js", "Cloudflare"],
+  en: ["Process automation", "AI agents", "Grok", "Grok Bot", "Hermes", "n8n", "Custom CRM", "Internal tools", "Next.js", "Cloudflare"],
 } as const;
 
 /** Landing: hero, examples, custom work, three built projects (from D1), process, FAQ, closing CTA. */

@@ -19,7 +19,7 @@ const COPY = {
     sub: "Creá tu código, compartí tu link y listo: cada cliente que llegue con tu código suma para vos.",
     steps: [
       ["Creá tu código", "Uno corto y fácil de recordar, que sea tuyo."],
-      ["Compartilo", "Pasá tu link, o armá el presupuesto en Contratar con tu código y mandáselo a tu cliente."],
+      ["Compartilo", "Pasá tu link: lleva a Contratar con tu código ya puesto."],
       [`Ganá el ${PCT}`, `Cuando tu cliente abona, te llevás el ${PCT} de lo que pagó.`],
     ],
     signIn: "Entrar con Google",
@@ -53,15 +53,15 @@ const COPY = {
     pending: "Por cobrar",
     paid: "Ya cobrado",
     paused: "Tu código está en pausa por ahora. Si querés reactivarlo, escribime.",
-    quoteTip: "Tip: en Contratar podés armar el presupuesto con tu código y pasárselo a tu cliente.",
-    quoteCta: "Armar un presupuesto",
+    quoteTip: "Tip: tu link abre Contratar con tu código ya puesto, listo para que tu cliente escriba.",
+    quoteCta: "Abrir Contratar con mi código",
   },
   en: {
     lead: `Bring a client and keep ${PCT} of what they pay.`,
     sub: "Create your code, share your link and that's it: every client who comes with your code adds up for you.",
     steps: [
       ["Create your code", "Short, easy to remember, and yours."],
-      ["Share it", "Send your link, or build the quote on Hire me with your code and send it to your client."],
+      ["Share it", "Send your link: it opens Hire me with your code already set."],
       [`Earn ${PCT}`, `When your client pays, you get ${PCT} of what they paid.`],
     ],
     signIn: "Sign in with Google",
@@ -95,8 +95,8 @@ const COPY = {
     pending: "To collect",
     paid: "Collected",
     paused: "Your code is paused for now. Write me if you want it back on.",
-    quoteTip: "Tip: on Hire me you can build the quote with your code and send it to your client.",
-    quoteCta: "Build a quote",
+    quoteTip: "Tip: your link opens Hire me with your code already set, ready for your client to write.",
+    quoteCta: "Open Hire me with my code",
   },
 };
 

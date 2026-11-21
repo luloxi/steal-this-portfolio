@@ -1,22 +1,21 @@
-import { clampHours, depositPct, estimate, PRICING, projectBreakdown, type Complexity, type Mode, type Pricing } from "./pricing";
-import { charCount, MAX_MESSAGE, MAX_SUBSIDY_REASON } from "./hire-limits";
+import { charCount, MAX_MESSAGE } from "./hire-limits";
 import { checkCodeShape } from "./referrals";
 
-export { MAX_MESSAGE, MAX_SUBSIDY_REASON };
+export { MAX_MESSAGE };
 
 /**
- * /contratar contact form: validates the submission, recomputes the budget
- * server-side from the calculator inputs (never trusts client totals) and
- * sends one email via Resend (RESEND_API_KEY), falling back to the
- * Email Routing `send_email` binding. Every send needs a valid Cloudflare
- * Turnstile token, checked server-side via siteverify (TURNSTILE_SECRET_KEY).
+ * /contratar contact form: name, email and message (max MAX_MESSAGE characters).
+ * Sends one email via Resend (RESEND_API_KEY), falling back to the Email Routing
+ * `send_email` binding, then forwards a copy to Garpen. Every send needs a valid
+ * Cloudflare Turnstile token, checked server-side via siteverify (TURNSTILE_SECRET_KEY).
+ * The visit's utm_* tags (if any) travel with the message.
  */
 export type HireEnv = {
   CONTACT_EMAIL?: { send: (msg: unknown) => Promise<unknown> };
   CONTACT_RL?: { limit: (o: { key: string }) => Promise<{ success: boolean }> };
   CONTACT_TO?: string;
   CONTACT_FROM?: string;
-  /** Preferred transport (Worker secret, already used by the old contact form). */
+  /** Preferred transport (Worker secret). */
   RESEND_API_KEY?: string;
   /** Turnstile secret (Worker secret). Without it the form refuses to send. */
   TURNSTILE_SECRET_KEY?: string;
@@ -24,118 +23,21 @@ export type HireEnv = {
 };
 
 const EMAIL_RE = /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]{2,}$/;
-const MODES: Mode[] = ["project", "hourly"];
-const CX: Complexity[] = ["low", "medium", "high"];
-
-export type Budget = {
-  mode: Mode;
-  /** Total hours. Project: days × hoursPerDay (client `hours` is ignored). Hourly: clamped 1..maxHourlyHours. */
-  hours: number;
-  complexity: Complexity;
-  onSite: boolean;
-  /** On-site days. 0 when remote. Project: clamped to 1..min(days, maxOnSiteDays). Hourly: 0 or 1. */
-  onSiteDays: number;
-  extra: boolean;
-  extraDays: number;
-  privateUse: boolean;
-  /** Project length (1..maxProjectDays). 0 in hourly mode. */
-  days: number;
-  /** Hours on each project day (1..maxHourlyHours). 0 in hourly mode. */
-  hoursPerDay: number;
-};
-
-/** Whole number already in range. No coercion: "3", 3.5 and 21 are rejected (project days / hours per day). */
-const intInRange = (v: unknown, min: number, max: number): v is number =>
-  typeof v === "number" && Number.isInteger(v) && v >= min && v <= max;
-
-/** On-site or urgency day count: missing/junk → 1, then clamp to 1..cap. */
-const clampSpan = (raw: unknown, cap: number) => Math.max(1, Math.min(cap, Math.round(Number(raw) || 1)));
-
-/**
- * Calculator inputs -> Budget, or null (invalid_budget). `privateUse` is a strict boolean:
- * missing/undefined is false (budgets from before the option), anything else that is not
- * true/false rejects the whole budget instead of guessing.
- * Project mode ("Varios días") requires integer `days` 1..maxProjectDays and `hoursPerDay`
- * 1..maxHourlyHours. Those two are not clamped: anything else is invalid_budget. Hours and
- * the total are recomputed (days × hoursPerDay × rate); the client's hours and totals are ignored.
- * Hourly mode ("Un día") still clamps hours to 1..maxHourlyHours.
- */
-export function parseBudget(v: unknown, p: Pricing = PRICING): Budget | null {
-  if (!v || typeof v !== "object") return null;
-  const b = v as Record<string, unknown>;
-  const mode = MODES.find((m) => m === b.mode);
-  const complexity = CX.find((c) => c === b.complexity);
-  if (!mode || !complexity) return null;
-  if (b.privateUse !== undefined && typeof b.privateUse !== "boolean") return null;
-  const privateUse = b.privateUse === true;
-  const onSite = b.onSite === true;
-  const extra = b.extra === true;
-  if (mode === "hourly") {
-    const rawHours = Number(b.hours);
-    if (!Number.isFinite(rawHours)) return null;
-    const hours = clampHours(rawHours, p.maxHourlyHours);
-    return { mode, hours, complexity, onSite, onSiteDays: onSite ? 1 : 0, extra, extraDays: extra ? 1 : 0, privateUse, days: 0, hoursPerDay: 0 };
-  }
-  if (!intInRange(b.days, 1, p.maxProjectDays) || !intInRange(b.hoursPerDay, 1, p.maxHourlyHours)) return null;
-  const days = b.days;
-  const hoursPerDay = b.hoursPerDay;
-  const hours = days * hoursPerDay;
-  const onSiteDays = onSite ? clampSpan(b.onSiteDays, Math.min(p.maxOnSiteDays, days)) : 0;
-  const extraDays = !extra ? 0 : clampSpan(b.extraDays, Math.min(p.maxUrgencyDays, days));
-  return { mode, hours, complexity, onSite, onSiteDays, extra, extraDays, privateUse, days, hoursPerDay };
-}
-
-/** Subsidy toggle. Missing = off. A non-boolean rejects. The reason is kept only while it is on, and only up to 140 code points. */
-export function parseSubsidy(body: Record<string, unknown>): { on: boolean; reason: string } | null {
-  if (body.subsidy !== undefined && typeof body.subsidy !== "boolean") return null;
-  const on = body.subsidy === true;
-  if (body.subsidyReason !== undefined && typeof body.subsidyReason !== "string") return null;
-  if (!on) return { on: false, reason: "" };
-  const reason = typeof body.subsidyReason === "string" ? oneLine(body.subsidyReason) : "";
-  if (charCount(reason) > MAX_SUBSIDY_REASON) return null;
-  return { on: true, reason };
-}
-
-const LABEL = {
-  mode: { project: "Varios días", hourly: "Un día" },
-  cx: { low: "Baja", medium: "Media", high: "Alta" },
-  lines: { work: "Trabajo", discount: "Descuento por volumen", onSite: "Recargo presencial", travel: "Viático", extra: "Urgencia", private: "Uso privado" },
-} as const;
-
-const usd = (n: number) => `${n < 0 ? "-" : ""}US$ ${Math.abs(Math.round(n)).toLocaleString("en-US")}`;
+const UTM_KEY = /^utm_[a-z0-9_]{1,40}$/;
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 const oneLine = (s: string) => s.replace(/[\r\n]+/g, " ").trim();
 
-/**
- * Same estimate the calculator shows, from a parsed Budget (email and hire_leads use this).
- * `p` is the stored pricing (D1 pricing_settings over the code defaults), the same one the page shows.
- */
-export const estimateBudget = (b: Budget, p: Pricing = PRICING) =>
-  estimate({
-    mode: b.mode,
-    hours: b.hours,
-    days: b.mode === "project" ? b.days : undefined,
-    hoursPerDay: b.mode === "project" ? b.hoursPerDay : undefined,
-    complexity: b.complexity,
-    extra: b.extra,
-    onSite: b.onSite,
-    onSiteDays: b.onSiteDays,
-    extraDays: b.extraDays,
-    privateUse: b.privateUse,
-  }, p);
-
-export function budgetLines(b: Budget, p: Pricing = PRICING): { summary: string[]; lines: [string, string][]; total: string; deposit: string; depositLabel: string } {
-  const r = estimateBudget(b, p);
-  const summary = [
-    `Modalidad: ${LABEL.mode[b.mode]}`,
-    `Horas: ${b.hours}h · Complejidad: ${LABEL.cx[b.complexity]} (US$ ${p.rates[b.complexity]}/h)`,
-    ...(b.mode === "project" ? [`Desglose: ${projectBreakdown(b.days, b.hoursPerDay, r.total, "es")}`] : []),
-    `Presencial: ${b.onSite ? (b.mode === "project" ? `sí, ${b.onSiteDays} ${b.onSiteDays === 1 ? "día" : "días"}` : "sí") : "no"}`,
-    `Urgencia: ${b.extra ? (b.mode === "project" ? `sí, ${b.extraDays} ${b.extraDays === 1 ? "día" : "días"}` : "sí") : "no"}`,
-    `Uso privado: ${b.privateUse ? "sí (sin portfolio ni open source)" : "no (portfolio y open source ok)"}`,
-  ];
-  const lines = r.lines.map((l): [string, string] => [`${LABEL.lines[l.id]}${l.id === "discount" ? ` (-${l.pct}%)` : ""}${l.days && b.mode === "project" ? ` (${l.days} ${l.days === 1 ? "día" : "días"})` : ""}`, usd(l.amount)]);
-  return { summary, lines, total: usd(r.total), deposit: usd(r.deposit), depositLabel: `Anticipo (${depositPct(p)}%)` };
+/** utm_* tags from the request: only utm_ keys, string values up to 120 chars, max 8 keys. Anything else is dropped. */
+export function parseUtm(v: unknown): Record<string, string> {
+  if (!v || typeof v !== "object" || Array.isArray(v)) return {};
+  const out: Record<string, string> = {};
+  for (const [k, raw] of Object.entries(v as Record<string, unknown>)) {
+    if (Object.keys(out).length >= 8) break;
+    if (!UTM_KEY.test(k) || typeof raw !== "string") continue;
+    const val = oneLine(raw);
+    if (val && val.length <= 120) out[k] = val;
+  }
+  return out;
 }
 
 const SITEVERIFY = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
@@ -156,18 +58,15 @@ export async function verifyTurnstile(token: unknown, env: HireEnv, ip: string):
 
 export type Result = { status: number; body: Record<string, unknown> };
 
-/** Referral + lead storage (D1 in the route, fakes in tests). Both optional: without them nothing is stored. */
 export type HireDeps = {
   /** Active referrer for a normalized code, or null. */
   findReferrer?: (code: string) => Promise<{ id: string; code: string; name: string } | null>;
-  /** Store the lead after the email went out. Errors are logged, never shown to the visitor. */
-  /** Stored pricing (same as the page). Missing = code defaults. Never taken from the request. */
-  pricing?: Pricing;
   /**
    * Fire-and-forget copy to Garpen (inbox + push), called AFTER the email went out. It must not throw or block:
-   * the route schedules the request with ctx.waitUntil and swallows failures. Errors here never change the result.
+   * the route schedules the request with ctx.waitUntil and swallows failures. `budget` carries only { utm } now.
    */
-  forward?: (inquiry: { name: string; email: string; message: string; budget: Record<string, unknown>; refCode: string | null; subsidy: boolean; subsidyReason: string }) => void;
+  forward?: (inquiry: { name: string; email: string; message: string; budget: { utm: Record<string, string> } | null; refCode: string | null }) => void;
+  /** Store the lead after the email went out (referrals). Errors are logged, never shown to the visitor. */
   saveLead?: (lead: { name: string; email: string; message: string; budgetJson: string; totalUsd: number; refCode: string | null; referrerId: string | null }) => Promise<unknown>;
   /** From-name on the email. Missing = a generic label. */
   fromName?: string;
@@ -186,13 +85,8 @@ export async function handleHireContact(raw: unknown, env: HireEnv, ip: string, 
   const message = typeof body.message === "string" ? body.message.trim() : "";
   if (!name) return { status: 400, body: { error: "invalid_name" } };
   if (!EMAIL_RE.test(email) || email.length > 254) return { status: 400, body: { error: "invalid_email" } };
-  if (!message || [...message].length > MAX_MESSAGE) return { status: 400, body: { error: "invalid_message" } };
-  // Amounts always come from the server's pricing; the browser only sends the calculator choices.
-  const pricing = deps.pricing ?? PRICING;
-  const budget = parseBudget(body.budget, pricing);
-  if (!budget) return { status: 400, body: { error: "invalid_budget" } };
-  const subsidy = parseSubsidy(body);
-  if (!subsidy) return { status: 400, body: { error: "invalid_subsidy" } };
+  if (!message || charCount(message) > MAX_MESSAGE) return { status: 400, body: { error: "invalid_message" } };
+  const utm = parseUtm(body.utm);
 
   if (env.CONTACT_RL) {
     const { success } = await env.CONTACT_RL.limit({ key: `hire:${ip}` });
@@ -201,7 +95,7 @@ export async function handleHireContact(raw: unknown, env: HireEnv, ip: string, 
   if (!env.TURNSTILE_SECRET_KEY || (!env.RESEND_API_KEY && !env.CONTACT_EMAIL)) return { status: 503, body: { error: "not_configured" } };
   if (!(await verifyTurnstile(body.turnstileToken, env, ip))) return { status: 403, body: { error: "captcha_failed" } };
 
-  // Referral code typed or prefilled from the lulox-ref cookie: only an active referrer counts.
+  // Referral code prefilled from the lulox-ref cookie or ?ref=: only an active referrer counts.
   // An unknown or paused code never blocks the message; it is just not attributed.
   let referrer: { id: string; code: string; name: string } | null = null;
   const shape = checkCodeShape(body.refCode);
@@ -213,8 +107,8 @@ export async function handleHireContact(raw: unknown, env: HireEnv, ip: string, 
     }
   }
 
-  const b = budgetLines(budget, pricing);
   const refLine = referrer ? `Referido por: ${referrer.code} (${oneLine(referrer.name)})` : null;
+  const utmLine = Object.keys(utm).length ? `Campaña: ${Object.entries(utm).map(([k, v]) => `${k}=${v}`).join(", ")}` : null;
   const to = env.CONTACT_TO ?? "info@lulox.com.ar";
   const from = env.CONTACT_FROM ?? "no-responder@lulox.com.ar";
   const fromName = (deps.fromName ?? "Portfolio").trim() || "Portfolio";
@@ -224,34 +118,21 @@ export async function handleHireContact(raw: unknown, env: HireEnv, ip: string, 
   } catch {
     publicHost = "example.com";
   }
-  const subject = `Contratar: ${name} · ${b.total} (${LABEL.mode[budget.mode]})`;
+  const subject = `Contratar: ${name}`;
+  const extra = [refLine, utmLine].filter(Boolean) as string[];
   const text = [
     `${name} <${email}>`,
     "",
     message,
-    "",
-    subsidy.on ? `Subsidio: sí${subsidy.reason ? `\nMotivo: ${subsidy.reason}` : ""}` : "Subsidio: no",
-    "",
-    "— Presupuesto calculado —",
-    ...b.summary,
-    ...b.lines.map(([k, v]) => `${k}: ${v}`),
-    `Total estimado: ${b.total}`,
-    `${b.depositLabel}: ${b.deposit}`,
-    ...(refLine ? ["", refLine] : []),
+    ...(extra.length ? ["", ...extra] : []),
     "",
     "--",
     `Enviado desde ${publicHost}/contratar. Respondé este email para contestarle a ${email}.`,
   ].join("\n");
-  const row = (k: string, v: string, strong = false) =>
-    `<tr><td style="padding:4px 12px 4px 0;color:#555">${esc(k)}</td><td style="padding:4px 0;text-align:right;font-family:monospace${strong ? ";font-weight:700;font-size:18px" : ""}">${esc(v)}</td></tr>`;
   const html = `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(subject)}</title></head><body><div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#1a1a1a;max-width:560px">
 <p style="margin:0 0 4px;font-weight:700">${esc(name)} &lt;${esc(email)}&gt;</p>
 <p style="font-size:17px;line-height:1.5;white-space:pre-wrap;margin:12px 0 24px">${esc(message)}</p>
-<p style="margin:0 0 16px;font-size:14px"><strong>Subsidio:</strong> ${subsidy.on ? "sí" : "no"}${subsidy.on && subsidy.reason ? `<br><strong>Motivo:</strong> ${esc(subsidy.reason)}` : ""}</p>
-<h3 style="margin:0 0 8px;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#7A2FE0">Presupuesto calculado</h3>
-<p style="margin:0 0 8px;font-size:14px;line-height:1.6">${b.summary.map(esc).join("<br>")}</p>
-<table role="presentation" style="border-collapse:collapse;width:100%;font-size:14px">${b.lines.map(([k, v]) => row(k, v)).join("")}${row("Total estimado", b.total, true)}${row(b.depositLabel, b.deposit)}</table>
-${refLine ? `<p style="margin:16px 0 0;font-size:14px;font-weight:700;color:#0F766E">${esc(refLine)}</p>` : ""}
+${extra.map((l) => `<p style="margin:0 0 6px;font-size:14px;color:#0F766E">${esc(l)}</p>`).join("")}
 <p style="font-size:12px;color:#666;margin-top:24px">Enviado desde ${esc(publicHost)}/contratar. Respondé este email para contestarle a ${esc(email)}.</p>
 </div></body></html>`;
 
@@ -270,26 +151,17 @@ ${refLine ? `<p style="margin:16px 0 0;font-size:14px;font-weight:700;color:#0F7
     console.error("[hire-contact] send failed");
     return { status: 502, body: { error: "send_failed" } };
   }
+  const meta = Object.keys(utm).length ? { utm } : null;
   if (deps.forward) {
     try {
-      const r = estimateBudget(budget, pricing);
-      deps.forward({ name, email, message, budget: { ...budget, total: r.total, deposit: r.deposit, subsidy: subsidy.on, subsidyReason: subsidy.reason }, refCode: referrer?.code ?? null, subsidy: subsidy.on, subsidyReason: subsidy.reason });
+      deps.forward({ name, email, message, budget: meta, refCode: referrer?.code ?? null });
     } catch {
       console.error("[hire-contact] forward failed");
     }
   }
   if (deps.saveLead) {
     try {
-      const r = estimateBudget(budget, pricing);
-      await deps.saveLead({
-        name,
-        email,
-        message,
-        budgetJson: JSON.stringify({ ...budget, total: r.total, deposit: r.deposit, subsidy: subsidy.on, subsidyReason: subsidy.reason }),
-        totalUsd: r.total,
-        refCode: referrer?.code ?? null,
-        referrerId: referrer?.id ?? null,
-      });
+      await deps.saveLead({ name, email, message, budgetJson: JSON.stringify(meta ?? {}), totalUsd: 0, refCode: referrer?.code ?? null, referrerId: referrer?.id ?? null });
     } catch {
       console.error("[hire-contact] lead not stored");
     }
@@ -303,18 +175,14 @@ ${refLine ? `<p style="margin:16px 0 0;font-size:14px;font-weight:700;color:#0F7
  */
 export function bodyFromForm(entries: Iterable<[string, unknown]>): Record<string, unknown> {
   const out: Record<string, unknown> = {};
-  const budget: Record<string, unknown> = {};
+  const utm: Record<string, string> = {};
   for (const [k, raw] of entries) {
     if (typeof raw !== "string") continue;
-    if (k.startsWith("budget.")) {
-      const key = k.slice(7);
-      budget[key] = raw === "true" ? true : raw === "false" ? false : /^\d+$/.test(raw) ? Number(raw) : raw;
-    } else if (k === "cf-turnstile-response") out.turnstileToken = raw;
+    if (UTM_KEY.test(k)) utm[k] = raw;
+    else if (k === "cf-turnstile-response") out.turnstileToken = raw;
     else if (k === "ref_code") out.refCode = raw;
-    else if (k === "subsidy") out.subsidy = raw === "true";
-    else if (k === "subsidy_reason") out.subsidyReason = raw;
     else if (["name", "email", "message", "hire_hp", "turnstileToken"].includes(k)) out[k] = raw;
   }
-  out.budget = budget;
+  out.utm = utm;
   return out;
 }

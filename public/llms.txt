@@ -1,14 +1,14 @@
 # Lulox (Luciano Oliva Bianco)
 
-> Luciano Oliva Bianco ("Lulox") automates teams' repetitive work with AI agents and n8n, and builds custom CRMs and internal tools. He works remotely from Argentina, in Spanish or English. Site in Spanish at the root and in English under /en.
+> Luciano Oliva Bianco ("Lulox") automates teams' repetitive work with AI agents, and builds custom CRMs and internal tools. For AI agents he prefers Grok, Grok Bot and Hermes. He works remotely from Argentina, in Spanish or English. Site in Spanish at the root and in English under /en.
 
-Automatizo con agentes de IA y n8n el trabajo repetitivo de tu equipo, y armo CRMs y sistemas a medida. Si hoy eso lo hacen personas, a mano, una y otra vez, lo pasamos a un flujo que lo hace solo.
+Automatizo con agentes de IA el trabajo repetitivo de tu equipo, y armo CRMs y sistemas a medida. Si hoy eso lo hacen personas, a mano, una y otra vez, lo pasamos a un flujo que lo hace solo.
 
 ## Services
 
-- [Servicios / Services](https://lulox.com.ar/servicios): automation with AI agents, n8n workflows, custom CRM, custom internal tools. English: https://lulox.com.ar/en/services
-- [Contratar / Hire](https://lulox.com.ar/contratar): price calculator (rough quote in seconds) and contact form. English: https://lulox.com.ar/en/hire
-- How it works: 1) you describe what your team does by hand, 2) a call and a rough estimate, 3) 50% upfront and 50% on delivery.
+- [Servicios / Services](https://lulox.com.ar/servicios): automation with AI agents (Grok, Grok Bot, Hermes), automations between tools, custom CRM, custom internal tools. English: https://lulox.com.ar/en/services
+- [Contratar / Hire](https://lulox.com.ar/contratar): a simple form (name, email, message up to 1000 characters). English: https://lulox.com.ar/en/hire
+- How it works: 1) you describe what your team does by hand, 2) a call where the work is estimated, 3) 50% upfront and 50% on delivery. There is no public price list; cost depends on the size of the process and is estimated on the call.
 
 ## Examples of what can be automated (examples, not client work)
 
