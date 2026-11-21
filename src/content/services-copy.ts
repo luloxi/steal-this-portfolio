@@ -8,7 +8,6 @@ export type ServicesCopy = {
   useCases: { title: string; note: string; items: { title: string; body: string }[] };
   custom: { title: string; body: string; projectsLabel: string };
   stack: { title: string; body: string };
-  n8n: { title: string; body: string };
   process: { title: string; steps: string[] };
   closing: string;
   offers: { name: string; description: string }[];
@@ -17,13 +16,13 @@ export type ServicesCopy = {
 export const servicesCopy: Record<Locale, ServicesCopy> = {
   es: {
     meta: {
-      title: "Servicios de automatización con agentes de IA y n8n",
+      title: "Servicios de automatización con agentes de IA",
       description:
-        "Qué puedo automatizar con agentes de IA y n8n: correo, carga de datos, CRM, facturas, reportes y agenda. También CRMs y herramientas internas a medida.",
+        "Qué puedo automatizar con agentes de IA (Grok, Grok Bot y Hermes): correo, carga de datos, CRM, facturas, reportes y agenda. También CRMs y herramientas internas a medida.",
     },
-    title: "Automatización con agentes de IA y n8n",
+    title: "Automatización con agentes de IA",
     intro:
-      "Tomo el trabajo que tu equipo hace a mano, una y otra vez, y lo paso a flujos que corren solos. n8n conecta las herramientas que ya usás y los agentes de IA se encargan de la parte que antes necesitaba a una persona: leer, clasificar, resumir y redactar.",
+      "Tomo el trabajo que tu equipo hace a mano, una y otra vez, y lo paso a agentes de IA y flujos que corren solos. Los agentes se encargan de la parte que antes necesitaba a una persona: leer, clasificar, resumir y redactar.",
     useCases: {
       title: "Qué se puede automatizar",
       note: "Son ejemplos de lo que se puede hacer, no trabajos para clientes.",
@@ -61,11 +60,7 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
     },
     stack: {
       title: "Con qué trabajo",
-      body: "n8n para los flujos, modelos de lenguaje como agentes, Google Workspace, Gmail y planillas, y aplicaciones web propias en Next.js sobre Cloudflare cuando hace falta algo a medida.",
-    },
-    n8n: {
-      title: "¿Por qué n8n?",
-      body: "n8n arma flujos que conectan cientos de aplicaciones sin escribir todo desde cero, y se puede alojar en un servidor propio, así los datos quedan bajo tu control. Cuando un paso necesita criterio, un agente de IA lo resuelve dentro del mismo flujo.",
+      body: "Para los agentes de IA prefiero Grok, Grok Bot y Hermes. Para conectar tus herramientas (Gmail, Google Workspace, planillas, CRMs) uso lo que mejor encaje, n8n incluido, y armo aplicaciones web propias en Next.js sobre Cloudflare cuando hace falta algo a medida.",
     },
     process: {
       title: "Cómo es trabajar conmigo",
@@ -79,11 +74,11 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
     offers: [
       {
         name: "Automatización con agentes de IA",
-        description: "Agentes de IA que leen, clasifican, resumen y redactan dentro de los procesos de tu equipo.",
+        description: "Agentes de IA con Grok, Grok Bot y Hermes que leen, clasifican, resumen y redactan dentro de los procesos de tu equipo.",
       },
       {
-        name: "Flujos de automatización con n8n",
-        description: "Flujos en n8n que conectan correo, planillas, formularios, CRMs y agendas para que el trabajo repetitivo corra solo.",
+        name: "Automatizaciones entre herramientas",
+        description: "Flujos que conectan correo, planillas, formularios, CRMs y agendas para que el trabajo repetitivo corra solo.",
       },
       {
         name: "CRM a medida",
@@ -97,13 +92,13 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
   },
   en: {
     meta: {
-      title: "Automation services with AI agents and n8n",
+      title: "Automation services with AI agents",
       description:
-        "What I can automate with AI agents and n8n: email, data entry, CRM, invoices, reports and scheduling. Plus custom CRMs and internal tools.",
+        "What I can automate with AI agents (Grok, Grok Bot and Hermes): email, data entry, CRM, invoices, reports and scheduling. Plus custom CRMs and internal tools.",
     },
-    title: "Automation with AI agents and n8n",
+    title: "Automation with AI agents",
     intro:
-      "I take the work your team does by hand, over and over, and move it to flows that run on their own. n8n connects the tools you already use and AI agents handle the part that used to need a person: reading, sorting, summarizing and writing.",
+      "I take the work your team does by hand, over and over, and move it to AI agents and flows that run on their own. The agents handle the part that used to need a person: reading, sorting, summarizing and writing.",
     useCases: {
       title: "What can be automated",
       note: "These are examples of what can be done, not client work.",
@@ -141,11 +136,7 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
     },
     stack: {
       title: "What I work with",
-      body: "n8n for the flows, language models as agents, Google Workspace, Gmail and sheets, and my own web apps in Next.js on Cloudflare when something custom is needed.",
-    },
-    n8n: {
-      title: "Why n8n?",
-      body: "n8n builds flows that connect hundreds of apps without writing everything from scratch, and it can run on your own server, so the data stays under your control. When a step needs judgment, an AI agent handles it inside the same flow.",
+      body: "For AI agents I prefer Grok, Grok Bot and Hermes. To connect your tools (Gmail, Google Workspace, sheets, CRMs) I use whatever fits best, n8n included, and I build my own web apps in Next.js on Cloudflare when something custom is needed.",
     },
     process: {
       title: "How working with me goes",
@@ -159,11 +150,11 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
     offers: [
       {
         name: "Automation with AI agents",
-        description: "AI agents that read, sort, summarize and write inside your team's processes.",
+        description: "AI agents with Grok, Grok Bot and Hermes that read, sort, summarize and write inside your team's processes.",
       },
       {
-        name: "n8n automation workflows",
-        description: "n8n flows that connect email, sheets, forms, CRMs and calendars so repetitive work runs on its own.",
+        name: "Automations between tools",
+        description: "Flows that connect email, sheets, forms, CRMs and calendars so repetitive work runs on its own.",
       },
       {
         name: "Custom CRM",

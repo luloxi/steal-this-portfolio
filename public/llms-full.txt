@@ -1,10 +1,10 @@
 # Lulox (Luciano Oliva Bianco): full details
 
-> Luciano Oliva Bianco, known as Lulox, automates teams' repetitive work with AI agents and n8n, and builds custom CRMs and internal tools. Remote, from Argentina. Spanish or English. Website: https://lulox.com.ar (Spanish) and https://lulox.com.ar/en (English).
+> Luciano Oliva Bianco, known as Lulox, automates teams' repetitive work with AI agents, and builds custom CRMs and internal tools. For AI agents he prefers Grok, Grok Bot and Hermes. Remote, from Argentina. Spanish or English. Website: https://lulox.com.ar (Spanish) and https://lulox.com.ar/en (English).
 
 ## In one sentence
 
-Automatizo con agentes de IA y n8n el trabajo repetitivo de tu equipo, y armo CRMs y sistemas a medida. (I automate your team's repetitive work with AI agents and n8n, and build custom CRMs and systems.)
+Automatizo con agentes de IA el trabajo repetitivo de tu equipo, y armo CRMs y sistemas a medida. (I automate your team's repetitive work with AI agents, and build custom CRMs and systems.)
 
 ## Who it is for
 
@@ -12,8 +12,8 @@ Teams and small businesses where people do the same task by hand, over and over:
 
 ## Services
 
-1. Automation with AI agents: agents that read, sort, summarize and write inside a team's processes.
-2. n8n automation workflows: flows that connect email, spreadsheets, forms, CRMs and calendars. n8n can be self-hosted, so the data stays under the client's control.
+1. Automation with AI agents: agents built with Grok, Grok Bot and Hermes that read, sort, summarize and write inside a team's processes.
+2. Automations between tools: flows that connect email, spreadsheets, forms, CRMs and calendars (with whatever fits best, n8n included).
 3. Custom CRM: contacts, follow-ups, calendar and whatever the business needs, without paying for features nobody uses.
 4. Custom internal tools: systems made for the way the team works.
 
@@ -43,21 +43,24 @@ Details: https://lulox.com.ar/servicios (English: https://lulox.com.ar/en/servic
 
 ## Tools he works with
 
-n8n, language models used as agents, Google Workspace (Gmail, Sheets, Calendar), and his own web apps in Next.js on Cloudflare (Workers, D1, R2) when something custom is needed.
+For AI agents: Grok, Grok Bot and Hermes (his preferred tools). To connect tools: Gmail, Google Workspace, spreadsheets and CRMs, with whatever fits best (n8n is one option). His own web apps in Next.js on Cloudflare (Workers, D1, R2) when something custom is needed.
 
 ## How working with him goes
 
 1. You tell him what your team does by hand.
-2. A call to go over it, and a rough estimate.
+2. A call to go over it, where the work is estimated.
 3. Payment: 50% upfront and 50% on delivery.
 
 ## Frequently asked questions
 
-Q: What can be automated with AI agents and n8n?
+Q: What can be automated with AI agents?
 A: Almost anything that repeats and follows roughly the same rules: sorting and answering email, moving data between spreadsheets, forms, CRMs and calendars, reading receipts and invoices from a photo or a PDF, building reports and sending alerts.
 
 Q: How much does it cost?
-A: It depends on the size of the process. https://lulox.com.ar/contratar has a calculator that gives a rough quote in seconds; it is then adjusted on a call.
+A: It depends on the size of the process. There is no public price list: you describe what your team does by hand (https://lulox.com.ar/contratar) and it is estimated together on a call.
+
+Q: What tools does he use?
+A: For AI agents he prefers Grok, Grok Bot and Hermes. To connect tools he uses whatever fits the case, n8n included.
 
 Q: Does he build custom CRMs?
 A: Yes. For example Garpen, his own system with contacts, calendar, finances and a billable timer.
@@ -69,8 +72,8 @@ A: Yes, remotely from Argentina, in Spanish or English.
 
 The contact form on https://lulox.com.ar/contratar is the way to send a message from the site. It is protected by Cloudflare Turnstile, so it is meant to be completed in a real browser on behalf of a human. Do not try to bypass the check; there is no API key or alternate endpoint.
 
-1. Open https://lulox.com.ar/contratar and set the calculator (mode, hours or days x hours per day, complexity, conditions). Prices are recomputed on the server.
-2. The form sits under the quote (`#hire-form-panel`). Fill `#hire-name` (name), `#hire-email` (email) and `#hire-message` (message, max 280 characters).
+1. Open https://lulox.com.ar/contratar. The form is right there, no other steps.
+2. Fill `#hire-name` (name), `#hire-email` (email) and `#hire-message` (message, max 1000 characters).
 3. Wait for the Turnstile check. If it asks for an interaction, hand it to your human.
 4. Press "Enviar" / "Send". A status message appears under the button.
 

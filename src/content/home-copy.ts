@@ -18,13 +18,13 @@ export const homeCopy: Record<Locale, {
 }> = {
   es: {
     meta: {
-      title: "Lulox · Automatización con agentes de IA y n8n",
+      title: "Lulox · Automatización con agentes de IA",
       description:
-        "Automatizo con agentes de IA y n8n el trabajo repetitivo de tu equipo, y armo CRMs y sistemas a medida.",
-      keywords: ["Lulox", "Luciano Oliva Bianco", "automatización", "agentes de IA", "n8n", "CRM a medida"],
+        "Automatizo con agentes de IA el trabajo repetitivo de tu equipo, y armo CRMs y sistemas a medida.",
+      keywords: ["Lulox", "Luciano Oliva Bianco", "automatización", "agentes de IA", "Grok", "Grok Bot", "Hermes", "CRM a medida"],
     },
     intro: "Luciano Oliva Bianco, me dicen Lulox",
-    title: "Automatizo con agentes de IA y n8n el trabajo repetitivo de tu equipo.",
+    title: "Automatizo con agentes de IA el trabajo repetitivo de tu equipo.",
     lead: "Si hoy eso lo hacen personas, a mano, una y otra vez, lo pasamos a un flujo que lo hace solo.",
     examples: {
       title: "Por ejemplo, este tipo de trabajo",
@@ -61,16 +61,20 @@ export const homeCopy: Record<Locale, {
       title: "Preguntas frecuentes",
       items: [
         {
-          q: "¿Qué se puede automatizar con agentes de IA y n8n?",
+          q: "¿Qué se puede automatizar con agentes de IA?",
           a: "Casi todo lo que se repite y sigue más o menos las mismas reglas: clasificar y responder mails, pasar datos entre Excel, formularios, CRMs y agendas, leer tickets y facturas desde una foto o un PDF, armar reportes y mandar avisos. Si alguien de tu equipo lo hace a mano una y otra vez, probablemente se pueda automatizar.",
         },
         {
           q: "¿Cuánto cuesta automatizar un proceso?",
-          a: "Depende de qué tan grande sea el proceso. En la página Contratar hay una calculadora que da un presupuesto orientativo en segundos, y después lo ajustamos a tu caso en una llamada.",
+          a: "Depende de qué tan grande sea el proceso. Me contás qué hace tu equipo a mano y lo estimamos juntos en una llamada.",
         },
         {
           q: "¿Cómo es el proceso de trabajo?",
           a: "Me contás qué hace tu equipo a mano, lo vemos en una llamada y sale una estimación orientativa. Se paga 50% de anticipo y 50% al entregar.",
+        },
+        {
+          q: "¿Con qué herramientas trabajás?",
+          a: "Para los agentes de IA prefiero Grok, Grok Bot y Hermes. Para conectar herramientas uso lo que mejor encaje con tu caso, n8n incluido.",
         },
         {
           q: "¿Hacés CRMs y sistemas a medida?",
@@ -87,13 +91,13 @@ export const homeCopy: Record<Locale, {
   },
   en: {
     meta: {
-      title: "Lulox · Automation with AI agents and n8n",
+      title: "Lulox · Automation with AI agents",
       description:
-        "I automate your team's repetitive work with AI agents and n8n, and build custom CRMs and systems.",
-      keywords: ["Lulox", "Luciano Oliva Bianco", "automation", "AI agents", "n8n", "custom CRM"],
+        "I automate your team's repetitive work with AI agents, and build custom CRMs and systems.",
+      keywords: ["Lulox", "Luciano Oliva Bianco", "automation", "AI agents", "Grok", "Grok Bot", "Hermes", "custom CRM"],
     },
     intro: "Luciano Oliva Bianco, people call me Lulox",
-    title: "I automate your team's repetitive work with AI agents and n8n.",
+    title: "I automate your team's repetitive work with AI agents.",
     lead: "If people do it today, by hand, over and over, we move it to a flow that does it on its own.",
     examples: {
       title: "For example, this kind of work",
@@ -130,16 +134,20 @@ export const homeCopy: Record<Locale, {
       title: "Frequently asked questions",
       items: [
         {
-          q: "What can be automated with AI agents and n8n?",
+          q: "What can be automated with AI agents?",
           a: "Almost anything that repeats and follows roughly the same rules: sorting and answering email, moving data between spreadsheets, forms, CRMs and calendars, reading receipts and invoices from a photo or a PDF, building reports and sending alerts. If someone on your team does it by hand over and over, it can probably be automated.",
         },
         {
           q: "How much does it cost to automate a process?",
-          a: "It depends on how big the process is. The Hire page has a calculator that gives you a rough quote in seconds, and then we adjust it to your case on a call.",
+          a: "It depends on how big the process is. You tell me what your team does by hand and we estimate it together on a call.",
         },
         {
           q: "How does the work go?",
           a: "You tell me what your team does by hand, we go over it on a call and you get a rough estimate. Payment is 50% upfront and 50% on delivery.",
+        },
+        {
+          q: "What tools do you work with?",
+          a: "For AI agents I prefer Grok, Grok Bot and Hermes. To connect tools I use whatever fits your case best, n8n included.",
         },
         {
           q: "Do you build custom CRMs and systems?",

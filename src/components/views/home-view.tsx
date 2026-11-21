@@ -3,7 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, type ComponentType, type PointerEvent } from "react";
+import { HandCoins, MessageSquareText, PhoneCall } from "lucide-react";
 import { HireButton } from "@/components/hire-button";
+import { AgentFlow, DataMove, MailSort, ReceiptScan } from "@/components/home-visuals";
 import { bounce, playLaugh } from "@/components/laugh-button";
 import { GitHubIcon, InstagramBrandIcon, LinkedInIcon, TelegramIcon, XIcon } from "@/components/icons/social";
 import { useSiteSettings } from "@/components/site-settings-context";
@@ -27,6 +29,8 @@ const socialIcons: Record<string, ComponentType<{ className?: string }>> = {
 };
 
 const accents = ["var(--section-contact)", "var(--section-blog)", "var(--section-projects)"];
+const exampleArt = [MailSort, DataMove, ReceiptScan];
+const stepIcons = [MessageSquareText, PhoneCall, HandCoins];
 
 /** Scrolling landing page. Theme and language controls stay fixed in the layout. */
 export function HomeView({ projects }: { projects: HomeProject[] }) {
@@ -63,6 +67,7 @@ export function HomeView({ projects }: { projects: HomeProject[] }) {
     <div className="hm">
       <main className="hm-main">
         <header className="hm-hero">
+          <div className="hm-hero-text">
           <div className="hm-id">
             <div
               ref={photoRef}
@@ -83,6 +88,10 @@ export function HomeView({ projects }: { projects: HomeProject[] }) {
           <div className="hm-cta">
             <HireButton />
           </div>
+          </div>
+          <div className="hm-hero-art">
+            <AgentFlow />
+          </div>
         </header>
 
         <section className="hm-section" aria-labelledby="hm-examples">
@@ -90,7 +99,11 @@ export function HomeView({ projects }: { projects: HomeProject[] }) {
           <p className="hm-note">{c.examples.note}</p>
           <ul className="hm-cards">
             {c.examples.items.map((item, i) => (
-              <li key={item.title} className="hm-card" style={{ ["--hm-accent" as string]: accents[i % accents.length] }}>
+              <li key={item.title} className="hm-card" data-reveal style={{ ["--hm-accent" as string]: accents[i % accents.length] }}>
+                {(() => {
+                  const Art = exampleArt[i % exampleArt.length];
+                  return <Art />;
+                })()}
                 <h3 className="hm-card-title">{item.title}</h3>
                 <p className="hm-card-body">{item.body}</p>
               </li>
@@ -100,35 +113,31 @@ export function HomeView({ projects }: { projects: HomeProject[] }) {
 
         <section className="hm-section" aria-labelledby="hm-custom">
           <h2 id="hm-custom" className="hm-h2">{c.custom.title}</h2>
-          <p className="hm-field">{c.custom.body}</p>
+          <p className="hm-field" data-reveal>{c.custom.body}</p>
         </section>
 
         {projects.length ? (
           <section className="hm-section" aria-labelledby="hm-built">
             <h2 id="hm-built" className="hm-h2">{c.built.title}</h2>
-            <ul className="hm-projects">
+            <ul className="hm-tiles">
               {projects.map((p, i) => {
                 const copy = p.copy[locale] ?? p.copy.es;
                 return (
-                  <li key={p.id}>
+                  <li key={p.id} data-reveal>
                     <Link
                       href={href(`/proyectos/${p.id}`)}
-                      className="cp-row group hm-project"
-                      style={{ ["--cp-accent" as string]: accents[i % accents.length] }}
+                      className="hm-tile"
+                      style={{ ["--hm-accent" as string]: accents[i % accents.length] }}
                     >
-                      <span className="cp-nav-frame" aria-hidden>
-                        <span className="cp-nav-corner cp-nav-corner-tl" />
-                        <span className="cp-nav-corner cp-nav-corner-br" />
+                      <span className="hm-tile-logo" aria-hidden>
+                        {p.icon ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={thumb(p.icon)} alt="" width={64} height={64} loading="lazy" decoding="async" className="project-icon" />
+                        ) : null}
                       </span>
-                      {p.icon ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={thumb(p.icon)} alt="" width={56} height={56} loading="lazy" decoding="async" className="cp-row-icon project-icon hm-project-icon" />
-                      ) : null}
-                      <span className="cp-row-body min-w-0">
-                        <span className="cp-row-label">{copy.title}</span>
-                        <span className="cp-row-detail">{copy.body}</span>
-                      </span>
-                      <span className="cp-nav-chevron cp-row-chevron" aria-hidden>▸</span>
+                      <span className="hm-tile-title">{copy.title}</span>
+                      <span className="hm-tile-body">{copy.body}</span>
+                      <span className="hm-tile-go" aria-hidden>▸</span>
                     </Link>
                   </li>
                 );
@@ -141,8 +150,14 @@ export function HomeView({ projects }: { projects: HomeProject[] }) {
           <h2 id="hm-process" className="hm-h2">{c.process.title}</h2>
           <ol className="hm-steps">
             {c.process.steps.map((step, i) => (
-              <li key={step} className="hm-step">
-                <span className="hm-step-n" aria-hidden>{i + 1}</span>
+              <li key={step} className="hm-step" data-reveal>
+                <span className="hm-step-icon" aria-hidden>
+                  {(() => {
+                    const Icon = stepIcons[i % stepIcons.length];
+                    return <Icon />;
+                  })()}
+                  <span className="hm-step-n">{i + 1}</span>
+                </span>
                 <span>{step}</span>
               </li>
             ))}
@@ -151,17 +166,17 @@ export function HomeView({ projects }: { projects: HomeProject[] }) {
 
         <section className="hm-section" aria-labelledby="hm-faq">
           <h2 id="hm-faq" className="hm-h2">{c.faq.title}</h2>
-          <dl className="hm-faq">
+          <div className="hm-faq">
             {c.faq.items.map((item) => (
-              <div key={item.q} className="hm-faq-item">
-                <dt className="hm-faq-q">{item.q}</dt>
-                <dd className="hm-faq-a">{item.a}</dd>
-              </div>
+              <details key={item.q} className="hm-faq-item" data-reveal>
+                <summary className="hm-faq-q">{item.q}</summary>
+                <p className="hm-faq-a">{item.a}</p>
+              </details>
             ))}
-          </dl>
+          </div>
         </section>
 
-        <section className="hm-closing">
+        <section className="hm-closing" data-reveal>
           <p>{c.closing}</p>
           <div className="hm-cta">
             <HireButton />

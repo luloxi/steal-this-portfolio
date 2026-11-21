@@ -13,5 +13,5 @@
 /llms-full.txt
   Content-Type: text/plain; charset=utf-8
 
-/og-automation-*
+/og-*
   Cache-Control: public,max-age=86400

@@ -9,7 +9,7 @@ import { localizePath } from "@/lib/routes";
 
 type Json = Record<string, unknown>;
 
-/** Share image per language: "/og-automation-es.jpg" -> "/og-automation-en.jpg" under /en. Other paths pass through. */
+/** Share image per language: "/og-agents-es.jpg" -> "/og-agents-en.jpg" under /en. Other paths pass through. */
 export function localizedOgImage(path: string, locale: Locale): string {
   return path.replace(/-(es|en)(\.[a-z]+)$/i, `-${locale}$2`);
 }

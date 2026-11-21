@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import { bodyFromForm, handleHireContact, type HireDeps, type HireEnv } from "@/lib/hire-contact";
 import { getDb } from "@/lib/db";
 import { getActiveReferrer, insertLead } from "@/lib/referrals-db";
-import { loadPricing } from "@/lib/pricing-db";
 import { getSiteSettings } from "@/lib/site-settings-db";
 
 export async function POST(request: Request) {
@@ -18,11 +17,10 @@ export async function POST(request: Request) {
   const { env, ctx } = await getCloudflareContext({ async: true });
   const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
   const db = await getDb();
-  // Same stored amounts the page shows (code defaults if no rows); never the browser's numbers.
-  const [pricing, settings] = await Promise.all([loadPricing(db), getSiteSettings()]);
+  const settings = await getSiteSettings();
   const deps: HireDeps = db
-    ? { pricing, fromName: settings.name, publicUrl: settings.url, findReferrer: (code) => getActiveReferrer(db, code), saveLead: (lead) => insertLead(db, lead) }
-    : { pricing, fromName: settings.name, publicUrl: settings.url };
+    ? { fromName: settings.name, publicUrl: settings.url, findReferrer: (code) => getActiveReferrer(db, code), saveLead: (lead) => insertLead(db, lead) }
+    : { fromName: settings.name, publicUrl: settings.url };
   // After the email is sent, a copy goes to Garpen (Service Binding SERPIX + shared secret). Failures are ignored: the visitor and the email are unaffected.
   deps.forward = (inquiry) => {
     const e = env as unknown as { SERPIX?: { fetch: typeof fetch }; SERPIX_INBOUND_SECRET?: string };

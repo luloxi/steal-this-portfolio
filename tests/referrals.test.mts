@@ -206,7 +206,7 @@ test("admin: 15% payout, pending/paid with date, totals per referrer and currenc
   assert.equal((await adminSetActive(ADMIN, ana.id, { active: "yes" }, db)).status, 400);
 });
 
-test("hire form: valid active code is attributed, stored with the server budget and added to the mail", async () => {
+test("hire form: valid active code is attributed, stored with the utm tags and added to the mail", async () => {
   const db = fresh();
   await signup(ANA, { name: "Ana Pérez", code: "ana" }, { db });
   await signup(BETO, { name: "Beto", code: "beto" }, { db });
@@ -226,23 +226,15 @@ test("hire form: valid active code is attributed, stored with the server budget 
     findReferrer: (c: string) => getActiveReferrer(db, c),
     saveLead: (l: Parameters<typeof insertLead>[1]) => insertLead(db, l),
   };
-  const base = { name: "Cliente", email: "cli@example.com", message: "Hola", turnstileToken: "t", budget: { mode: "project", days: 5, hoursPerDay: 4, hours: 1, complexity: "medium", onSite: false, extra: false, total: 1 } };
+  const base = { name: "Cliente", email: "cli@example.com", message: "Hola", turnstileToken: "t", utm: { utm_source: "ig" } };
   const r = await handleHireContact({ ...base, refCode: " ANA " }, env, "1.1.1.1", deps);
   assert.deepEqual(r, { status: 200, body: { ok: true, ref: "ana" } });
   assert.match(sent[0].text, /Referido por: ana \(Ana Pérez\)/);
   assert.match(sent[0].html, /Referido por: ana \(Ana Pérez\)/);
   const row = db.raw.prepare("SELECT ref_code, total_usd, budget_json FROM hire_leads").get() as { ref_code: string; total_usd: number; budget_json: string };
   assert.equal(row.ref_code, "ana");
-  assert.equal(row.total_usd, 306); // 20 h x 18 = 360, -15% (Chico) = 306: the server's number, not the client's "total: 1"
-  assert.equal(JSON.parse(row.budget_json).total, 306);
-  assert.equal(JSON.parse(row.budget_json).privateUse, false); // stored inside budget_json, no migration
-
-  // Private use: +100 in the stored total and flag inside budget_json; the referral base is that total.
-  await handleHireContact({ ...base, budget: { ...base.budget, privateUse: true }, refCode: "ana" }, env, "1.1.1.1", deps);
-  const priv = db.raw.prepare("SELECT total_usd, budget_json FROM hire_leads ORDER BY rowid DESC LIMIT 1").get() as { total_usd: number; budget_json: string };
-  assert.equal(priv.total_usd, 406);
-  assert.deepEqual([JSON.parse(priv.budget_json).privateUse, JSON.parse(priv.budget_json).total, JSON.parse(priv.budget_json).deposit], [true, 406, 203]);
-  assert.match(sent.at(-1)!.text, /Uso privado: US\$ 100/);
+  assert.equal(row.total_usd, 0); // no amounts anymore: the referral base is set later, when the client pays
+  assert.deepEqual(JSON.parse(row.budget_json), { utm: { utm_source: "ig" } });
 
   // Paused or unknown code: still sent and stored, just not attributed.
   for (const code of ["beto", "nadie", "<x>"]) {
