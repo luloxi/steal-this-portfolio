@@ -3056,7 +3056,7 @@
 
 :root:not(.dark) .cosmic-base {
   background:
-    radial-gradient(ellipse 85% 45% at 50% -14%, color-mix(in oklab, #a4503f 6%, transparent), transparent 60%),
+    radial-gradient(ellipse 85% 45% at 50% -14%, color-mix(in oklab, var(--accent) 6%, transparent), transparent 60%),
     var(--background);
 }
 
@@ -3077,8 +3077,8 @@
   color: var(--accent);
   text-shadow:
     0 1px 0 #ffffff,
-    2px 3px 0 color-mix(in oklab, #a4503f 18%, transparent),
-    0 10px 24px color-mix(in oklab, #a4503f 22%, transparent);
+    2px 3px 0 color-mix(in oklab, var(--accent) 18%, transparent),
+    0 10px 24px color-mix(in oklab, var(--accent) 22%, transparent);
 }
 
 
@@ -3228,7 +3228,7 @@ span.md-copy { display: inline; }
 .md-copy .md-quote { border-left: 3px solid #a4503f; padding: 0.2rem 0 0.2rem 0.9rem; font-style: italic; opacity: 0.9; }
 .md-copy .md-strong { font-weight: 700; color: var(--foreground); }
 .md-copy .cp-prose-link { color: #a4503f; }
-:root:not(.dark) .md-copy .cp-prose-link { color: #a4503f; }
+:root:not(.dark) .md-copy .cp-prose-link { color: var(--accent); }
 
 /* Markdown editor */
 .ie-sheet-md { display: flex; flex-direction: column; max-height: 92vh; }
@@ -4962,7 +4962,7 @@ textarea.adm-input { resize: vertical; }
 }
 
 
-/* ── Rothko: luminous colour fields (maroon / burnt orange / ochre / plum) ─────
+/* ── Rothko: luminous colour fields (dark: maroon / burnt orange / ochre / plum; light: coral / peach / lemon / lilac) ─────
    Stacked feathered rectangles behind everything; text keeps AA contrast because
    the fields stay low in opacity and the surfaces above are near-opaque. */
 .dark {
@@ -4979,10 +4979,11 @@ textarea.adm-input { resize: vertical; }
 :root:not(.dark) {
   --background: #f8f4ef;
   --surface: #fffdfa;
-  --rk-1: #b0505a;
-  --rk-2: #d98a52;
-  --rk-3: #dcb25e;
-  --rk-4: #9a6a98;
+  /* Bright, sunny fields (coral pink, peach, lemon, lilac): no maroon or muddy plum in light. */
+  --rk-1: #ff9fb4;
+  --rk-2: #ffc08a;
+  --rk-3: #ffe27a;
+  --rk-4: #b9a6ff;
   --rk-a: 0.3;
   --rk-b: 0.24;
 }
@@ -5115,3 +5116,19 @@ textarea.adm-input { resize: vertical; }
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
 }
 .cp-back-footer { background-color: color-mix(in oklab, var(--accent) 10%, var(--card-solid)) !important; }
+
+/* Light theme: no brick, maroon or muddy reds in glows, gradients and fields.
+   The D1 palette injects :root:not(.dark){--accent:#a4503f ...}; html:root wins
+   over it here, so every accent glow turns into a friendly violet or berry.
+   All of these still pass AA as text on the light backgrounds (≥ 4.8:1). */
+html:root:not(.dark) {
+  --accent: #6d28d9;
+  --section-hire: #c2185b;
+  --section-projects: #c2185b;
+  --section-tastes: #b5317f;
+}
+
+:root:not(.dark) .md-copy .md-hr { background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 70%, transparent), transparent); }
+:root:not(.dark) .md-copy li::marker { color: var(--accent); }
+:root:not(.dark) .md-copy .md-quote { border-left-color: var(--accent); }
+:root:not(.dark) .md-acc-btn:focus-visible { outline-color: var(--accent); }

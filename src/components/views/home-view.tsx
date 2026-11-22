@@ -71,7 +71,7 @@ export function HomeView({ posts }: { posts: HomePost[] }) {
           </div>
           </div>
           <div className="hm-hero-art">
-            <AgentFlow />
+            <AgentFlow coreLabel={locale === "en" ? "AI" : "IA"} />
           </div>
         </header>
 

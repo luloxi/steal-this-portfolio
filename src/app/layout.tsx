@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { homeCopy } from "@/content/home-copy";
 import { Orbitron, Space_Grotesk } from "next/font/google";
 import { CosmicBg } from "@/components/cosmic-bg";
 import { SiteControls } from "@/components/site-controls";
@@ -40,6 +41,9 @@ function siteUrl(fallback: string) {
   return fallback;
 }
 
+/** Spanish tells: accents/ñ, the word "IA", or common Spanish connectors. */
+const isEnglishKeyword = (k: string) => !/[áéíóúñ]|\bIA\b|\b(de|del|a medida|herramientas|para)\b/i.test(k);
+
 export async function generateMetadata(): Promise<Metadata> {
   const [locale, settings] = await Promise.all([getRequestLocale(), getSiteSettings()]);
   const description = descriptionFor(settings, locale);
@@ -60,7 +64,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     authors: [{ name: settings.legalName, url: settings.url }],
     creator: settings.name,
-    keywords: settings.keywords,
+    // The D1 keyword list mixes Spanish and English; /en only gets English terms.
+    keywords: locale === "en" ? [...new Set([...homeCopy.en.meta.keywords, ...settings.keywords.filter(isEnglishKeyword)])] : settings.keywords,
     openGraph: {
       type: "website",
       locale: "es_AR",
