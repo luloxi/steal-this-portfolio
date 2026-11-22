@@ -6,7 +6,7 @@
  */
 
 /** Hero: tasks flow from mail, sheet and receipt into an AI agent, which fills a CRM card. */
-export function AgentFlow() {
+export function AgentFlow({ coreLabel = "IA" }: { coreLabel?: string }) {
   const inputs = [
     { y: 34, label: "mail", color: "var(--section-contact)" },
     { y: 96, label: "xls", color: "var(--section-blog)" },
@@ -18,9 +18,11 @@ export function AgentFlow() {
     <svg className="hm-flow" viewBox="0 0 360 220" aria-hidden="true" focusable="false">
       <defs>
         <radialGradient id="hm-core" cx="50%" cy="45%" r="60%">
-          <stop offset="0%" stopColor="#fff" stopOpacity=".95" />
-          <stop offset="35%" style={{ stopColor: "var(--accent)" }} />
-          <stop offset="100%" style={{ stopColor: "var(--neon-orange)" }} />
+          {/* Colours come from home.css (--core-*): neon in dark, sunny cream in light. */}
+          <stop offset="0%" style={{ stopColor: "var(--core-0)" }} />
+          <stop offset="35%" style={{ stopColor: "var(--core-1)" }} />
+          <stop offset="70%" style={{ stopColor: "var(--core-2)" }} />
+          <stop offset="100%" style={{ stopColor: "var(--core-3)" }} />
         </radialGradient>
         <filter id="hm-glow" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="6" />
@@ -28,7 +30,7 @@ export function AgentFlow() {
       </defs>
 
       {/* Rothko field behind the agent */}
-      <ellipse cx="200" cy="110" rx="120" ry="80" style={{ fill: "var(--accent)" }} opacity=".10" filter="url(#hm-glow)" />
+      <ellipse cx="200" cy="110" rx="120" ry="80" className="hm-flow-field" filter="url(#hm-glow)" />
 
       {paths.map((d, i) => (
         <path key={d} d={d} className="hm-flow-line" style={{ animationDelay: `${i * 0.4}s` }} />
@@ -49,8 +51,8 @@ export function AgentFlow() {
       <g className="hm-flow-core">
         <circle cx="200" cy="110" r="44" className="hm-flow-orbit" />
         <circle cx="200" cy="110" r="34" fill="url(#hm-core)" className="hm-flow-pulse" />
-        <circle cx="200" cy="110" r="34" fill="none" style={{ stroke: "var(--accent)" }} strokeOpacity=".5" />
-        <text x="200" y="116" textAnchor="middle" className="hm-flow-core-label">IA</text>
+        <circle cx="200" cy="110" r="34" fill="none" className="hm-flow-core-ring" />
+        <text x="200" y="116" textAnchor="middle" className="hm-flow-core-label">{coreLabel}</text>
       </g>
 
       {/* Output card: rows fill in turn */}

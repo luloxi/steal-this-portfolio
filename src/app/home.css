@@ -179,3 +179,26 @@ details.hm-faq-item .hm-faq-a { padding: 0 1.15rem 1rem; }
   .hm-ill-tag, .hm-ill-field, .hm-flow-card-dot { opacity: 1; }
   .hm-flow-card-row { transform: none; }
 }
+
+/* Hero "IA" core. Dark keeps the neon orb; light is a friendly sunny light
+   (cream core, lemon and peach glow, sky edge) with no dark or reddish tones. */
+.hm-flow {
+  --core-0: rgb(255 255 255 / .95);
+  --core-1: var(--accent);
+  --core-2: color-mix(in srgb, var(--accent) 46%, var(--neon-orange));
+  --core-3: var(--neon-orange);
+}
+.hm-flow-field { fill: var(--accent); opacity: .10; }
+.hm-flow-core-ring { stroke: var(--accent); stroke-opacity: .5; }
+:root:not(.dark) .hm-flow {
+  --core-0: #fffef9;
+  --core-1: #fff4c8;
+  --core-2: #ffdcae;
+  --core-3: #bfe7ff;
+}
+:root:not(.dark) .hm-flow-field { fill: #ffe7a0; opacity: .45; }
+:root:not(.dark) .hm-flow-pulse { filter: drop-shadow(0 0 12px #ffd76e) drop-shadow(0 0 22px rgb(150 215 255 / .55)); }
+:root:not(.dark) .hm-flow-core-ring { stroke: #a97bff; stroke-opacity: .75; }
+:root:not(.dark) .hm-flow-core-label { fill: #5e2590; }
+:root:not(.dark) .hm-flow-line { stroke: color-mix(in oklab, #a97bff 70%, transparent); }
+:root:not(.dark) .hm-flow-orbit { stroke: color-mix(in oklab, #3cb6ff 70%, transparent); }
