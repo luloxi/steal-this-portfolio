@@ -22,7 +22,7 @@ export function SiteControls({
   name?: string;
 }) {
   return (
-    <div
+    <aside
       data-inline-editor="skip"
       className={cn(
         "fixed right-3 top-3 z-50 flex items-center gap-2 sm:right-5 sm:top-4",
@@ -32,6 +32,6 @@ export function SiteControls({
       <LocaleToggle />
       <ThemeToggle />
       {signedIn ? <ProfileMenu image={image} name={name} /> : <LoginLink />}
-    </div>
+    </aside>
   );
 }

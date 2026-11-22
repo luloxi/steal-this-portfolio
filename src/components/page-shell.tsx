@@ -41,7 +41,7 @@ export function PageShell({
       {/* Top bar backdrop: page colour fading out, so scrolled content slides under the bar */}
       <div className="cp-topbar-fade" aria-hidden />
       {/* Back link lives in the fixed top bar, opposite the language/theme controls */}
-      <div className="cp-topbar-back" data-inline-editor="skip">
+      <nav className="cp-topbar-back" data-inline-editor="skip" aria-label={topLabel}>
         <Link
           href={href(backHref)}
           className="cp-back-link group shrink-0"
@@ -52,7 +52,8 @@ export function PageShell({
           </span>
           <span>{topLabel}</span>
         </Link>
-      </div>
+      </nav>
+      <main id="main">
       {hideTitle ? (
         <h1 className="sr-only">{title}</h1>
       ) : (
@@ -65,8 +66,9 @@ export function PageShell({
       )}
 
       <div>{children}</div>
+      </main>
 
-      <div className="mt-12">
+      <nav className="mt-12" aria-label={bottomLabel}>
         <Link href={href(bottomHref)} className="cp-back-footer group">
           <span className="cp-nav-frame" aria-hidden>
             <span className="cp-nav-corner cp-nav-corner-tl" />
@@ -77,7 +79,7 @@ export function PageShell({
           </span>
           <span className="cp-back-footer-label">{bottomLabel}</span>
         </Link>
-      </div>
+      </nav>
     </div>
   );
 }

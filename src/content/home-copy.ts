@@ -1,16 +1,17 @@
 import type { Locale } from "@/i18n/types";
 
 /** Home landing copy (ES is the source text; EN mirrors it). No em dashes. */
-export const HOME_PROJECT_IDS = ["garpen", "tarask", "malito"] as const;
+/**
+ * D1 projects offered on the sales pages (home Proyectos with a demo, /servicios).
+ * Personal projects (Tarask, DJ Tube, Mochi...) live only on /proyectos and /sobre-mi.
+ */
+export const HOME_PROJECT_IDS = ["garpen", "malito"] as const;
 
 export const homeCopy: Record<Locale, {
   meta: { title: string; description: string; keywords: string[] };
-  intro: string;
   title: string;
   lead: string;
-  examples: { title: string; note: string; items: { title: string; body: string }[] };
-  custom: { title: string; body: string };
-  built: { title: string };
+  examples: { title: string; items: { title: string; body: string }[] };
   process: { title: string; steps: string[] };
   faq: { title: string; items: { q: string; a: string }[] };
   closing: string;
@@ -23,12 +24,10 @@ export const homeCopy: Record<Locale, {
         "Automatizo con agentes de IA el trabajo repetitivo de tu equipo, y armo CRMs y sistemas a medida.",
       keywords: ["Lulox", "Luciano Oliva Bianco", "automatización", "agentes de IA", "Grok", "Grok Bot", "Hermes", "CRM a medida"],
     },
-    intro: "Luciano Oliva Bianco, me dicen Lulox",
     title: "Automatizo con agentes de IA el trabajo repetitivo de tu equipo.",
-    lead: "Si hoy eso lo hacen personas, a mano, una y otra vez, lo pasamos a un flujo que lo hace solo.",
+    lead: "Si hay cosas repetitivas que hacés a mano, podemos automatizarlas",
     examples: {
       title: "Por ejemplo, este tipo de trabajo",
-      note: "Son ejemplos, no trabajos para clientes.",
       items: [
         {
           title: "El correo",
@@ -44,16 +43,11 @@ export const homeCopy: Record<Locale, {
         },
       ],
     },
-    custom: {
-      title: "También a medida",
-      body: "Armo tu CRM a medida para manejar la relación con tus clientes: contactos, seguimiento, agenda y lo que tu negocio necesite, sin pagar por funciones que no usás. Y otras herramientas internas hechas para cómo trabaja tu equipo.",
-    },
-    built: { title: "Algunas cosas que ya construí" },
     process: {
       title: "Cómo es trabajar conmigo",
       steps: [
         "Me contás qué hace tu equipo a mano.",
-        "Lo vemos en una llamada y sale una estimación orientativa.",
+        "Lo charlamos en una llamada y te paso un presupuesto.",
         "50% de anticipo y 50% al entregar.",
       ],
     },
@@ -62,7 +56,7 @@ export const homeCopy: Record<Locale, {
       items: [
         {
           q: "¿Qué se puede automatizar con agentes de IA?",
-          a: "Casi todo lo que se repite y sigue más o menos las mismas reglas: clasificar y responder mails, pasar datos entre Excel, formularios, CRMs y agendas, leer tickets y facturas desde una foto o un PDF, armar reportes y mandar avisos. Si alguien de tu equipo lo hace a mano una y otra vez, probablemente se pueda automatizar.",
+          a: "Casi todo lo que se repite y sigue más o menos las mismas reglas: clasificar y responder mails, pasar datos entre planillas, formularios y agendas, leer tickets y facturas desde una foto o un PDF, armar reportes y mandar avisos. Si alguien de tu equipo lo hace a mano una y otra vez, probablemente se pueda automatizar.",
         },
         {
           q: "¿Cuánto cuesta automatizar un proceso?",
@@ -70,19 +64,19 @@ export const homeCopy: Record<Locale, {
         },
         {
           q: "¿Cómo es el proceso de trabajo?",
-          a: "Me contás qué hace tu equipo a mano, lo vemos en una llamada y sale una estimación orientativa. Se paga 50% de anticipo y 50% al entregar.",
+          a: "Me contás qué hace tu equipo a mano, lo charlamos en una llamada y te paso un presupuesto. Se paga 50% de anticipo y 50% al entregar.",
         },
         {
           q: "¿Con qué herramientas trabajás?",
-          a: "Para los agentes de IA prefiero Grok, Grok Bot y Hermes. Para conectar herramientas uso lo que mejor encaje con tu caso, n8n incluido.",
+          a: "Con las que ya usás: mail, planillas, WhatsApp, tu agenda o tu sistema de clientes. Elijo lo que mejor encaje con tu caso.",
         },
         {
           q: "¿Hacés CRMs y sistemas a medida?",
-          a: "Sí. Armo CRMs y herramientas internas pensadas para cómo trabaja tu equipo. Por ejemplo Garpen, mi propio sistema con contactos, agenda, finanzas y temporizador facturable.",
+          a: "Sí. Sistemas de clientes y herramientas internas pensadas para cómo trabaja tu equipo.",
         },
         {
           q: "¿Trabajás de forma remota?",
-          a: "Sí. Trabajo remoto desde Buenos Aires, Argentina, con equipos de cualquier país, en español o en inglés.",
+          a: "Sí. Desde Buenos Aires, con gente de cualquier país, en español o en inglés.",
         },
       ],
     },
@@ -96,12 +90,10 @@ export const homeCopy: Record<Locale, {
         "I automate your team's repetitive work with AI agents, and build custom CRMs and systems.",
       keywords: ["Lulox", "Luciano Oliva Bianco", "automation", "AI agents", "Grok", "Grok Bot", "Hermes", "custom CRM"],
     },
-    intro: "Luciano Oliva Bianco, people call me Lulox",
     title: "I automate your team's repetitive work with AI agents.",
-    lead: "If people do it today, by hand, over and over, we move it to a flow that does it on its own.",
+    lead: "If there are repetitive things you do by hand, we can automate them",
     examples: {
       title: "For example, this kind of work",
-      note: "These are examples, not client work.",
       items: [
         {
           title: "Email",
@@ -117,16 +109,11 @@ export const homeCopy: Record<Locale, {
         },
       ],
     },
-    custom: {
-      title: "Also custom-built",
-      body: "I build your own CRM to manage your client relationships: contacts, follow-ups, calendar and whatever your business needs, without paying for features you don't use. Plus other internal tools made for the way your team works.",
-    },
-    built: { title: "Some things I've already built" },
     process: {
       title: "How working with me goes",
       steps: [
         "You tell me what your team does by hand.",
-        "We go over it on a call and you get a rough estimate.",
+        "We talk it over on a call and I send you a quote.",
         "50% upfront and 50% on delivery.",
       ],
     },
@@ -135,7 +122,7 @@ export const homeCopy: Record<Locale, {
       items: [
         {
           q: "What can be automated with AI agents?",
-          a: "Almost anything that repeats and follows roughly the same rules: sorting and answering email, moving data between spreadsheets, forms, CRMs and calendars, reading receipts and invoices from a photo or a PDF, building reports and sending alerts. If someone on your team does it by hand over and over, it can probably be automated.",
+          a: "Almost anything that repeats and follows roughly the same rules: sorting and answering email, moving data between spreadsheets, forms and calendars, reading receipts and invoices from a photo or a PDF, building reports and sending alerts. If someone on your team does it by hand over and over, it can probably be automated.",
         },
         {
           q: "How much does it cost to automate a process?",
@@ -143,19 +130,19 @@ export const homeCopy: Record<Locale, {
         },
         {
           q: "How does the work go?",
-          a: "You tell me what your team does by hand, we go over it on a call and you get a rough estimate. Payment is 50% upfront and 50% on delivery.",
+          a: "You tell me what your team does by hand, we talk it over on a call and I send you a quote. Payment is 50% upfront and 50% on delivery.",
         },
         {
           q: "What tools do you work with?",
-          a: "For AI agents I prefer Grok, Grok Bot and Hermes. To connect tools I use whatever fits your case best, n8n included.",
+          a: "The ones you already use: email, spreadsheets, WhatsApp, your calendar or your client system. I pick whatever fits your case best.",
         },
         {
           q: "Do you build custom CRMs and systems?",
-          a: "Yes. I build CRMs and internal tools made for the way your team works. For example Garpen, my own system with contacts, calendar, finances and a billable timer.",
+          a: "Yes. Client systems and internal tools made for the way your team works.",
         },
         {
           q: "Do you work remotely?",
-          a: "Yes. I work remotely from Buenos Aires, Argentina, with teams in any country, in Spanish or English.",
+          a: "Yes. From Buenos Aires, with people in any country, in Spanish or English.",
         },
       ],
     },
@@ -164,74 +151,45 @@ export const homeCopy: Record<Locale, {
   },
 };
 
-/** Home sections added for the Grok Bot showcase (task: "que mi portfolio sea un reflejo de nuestro potencial"). */
+/** Home sections: header nav, about, automations showcase, cases, services, projects, blog. Plain words, no stack names. */
 export const homeMore: Record<Locale, {
-  nav: { about: string; showcase: string; cases: string; services: string; projects: string; blog: string; contact: string; hire: string };
-  about: { title: string; body: string; facts: string[]; more: string };
-  showcase: { title: string; lead: string; cta: string; demoLabel: string };
-  cases: { title: string; lead: string; open: string; caseLink: string; all: string };
+  nav: { about: string; showcase: string; services: string; projects: string; blog: string; contact: string; hire: string };
+  about: { title: string; body: string; more: string };
+  showcase: { title: string; lead: string; cta: string };
   services: { title: string; lead: string };
-  projects: { title: string; all: string };
+  projects: { title: string };
   blog: { title: string; all: string };
 }> = {
   es: {
-    nav: { about: "Sobre mí", showcase: "Grok Bot", cases: "Casos", services: "Servicios", projects: "Proyectos", blog: "Blog", contact: "Contacto", hire: "Contratar" },
+    nav: { about: "Sobre mí", showcase: "Automatizando", services: "Servicios", projects: "Proyectos", blog: "Blog", contact: "Contacto", hire: "Contratar" },
     about: {
       title: "Sobre mí",
-      body: "Soy Luciano Oliva Bianco (Lulox), de Buenos Aires. Vengo del cine y de años construyendo en blockchain, y hoy armo agentes de IA y sistemas a medida. Trabajo todos los días con una flota de bots de Grok Bot: esta misma web la escriben, prueban y publican ellos, con mi revisión.",
-      facts: [
-        "Buenos Aires, Argentina. Remoto, en español o en inglés",
-        "Research & Development en Input Output Global (2025 a 2026)",
-        "Fullstack Web3 developer en BuidlGuidl (2023 a 2024)",
-        "Embajador de Midnight, la blockchain de privacidad de IOG",
-      ],
+      body: "Soy Luciano Oliva Bianco, me dicen Lulox. Vivo en Buenos Aires y ayudo a personas y equipos a sacarse de encima el trabajo repetitivo.",
       more: "Leer mi historia",
     },
     showcase: {
-      title: "Lo que hacemos con Grok Bot",
-      lead: "Grok Bot es el motor principal: agentes que trabajan solos en tareas reales y te piden el OK antes de lo importante. Esto es lo que ya hacen todos los días en mi propio trabajo.",
+      title: "Automatizando procesos",
+      lead: "Tareas de todos los días que pueden hacerse solas.",
       cta: "Quiero algo así",
-      demoLabel: "Demo de la cola de tareas de la flota de bots",
     },
-    cases: {
-      title: "Proyectos con demo",
-      lead: "Grabaciones cortas con datos de prueba. Cada uno resuelve un problema concreto.",
-      open: "Abrir",
-      caseLink: "Ver el caso",
-      all: "Todos los casos",
-    },
-    services: { title: "Servicios", lead: "Elegí por dónde empezar. Cada página explica casos, cómo trabajo y preguntas frecuentes." },
-    projects: { title: "Más proyectos", all: "Ver todos los proyectos" },
+    services: { title: "Servicios", lead: "Elegí por dónde empezar." },
+    projects: { title: "Proyectos" },
     blog: { title: "Del blog", all: "Ver todas las notas" },
   },
   en: {
-    nav: { about: "About", showcase: "Grok Bot", cases: "Case studies", services: "Services", projects: "Projects", blog: "Blog", contact: "Contact", hire: "Hire me" },
+    nav: { about: "About", showcase: "Automating", services: "Services", projects: "Projects", blog: "Blog", contact: "Contact", hire: "Hire me" },
     about: {
       title: "About me",
-      body: "I'm Luciano Oliva Bianco (Lulox), from Buenos Aires. I come from film and years of building on blockchain, and today I build AI agents and custom systems. I work every day with a fleet of Grok Bot bots: they write, test and ship this very website, with my review.",
-      facts: [
-        "Buenos Aires, Argentina. Remote, in Spanish or English",
-        "Research & Development at Input Output Global (2025 to 2026)",
-        "Fullstack Web3 developer at BuidlGuidl (2023 to 2024)",
-        "Ambassador for Midnight, IOG's privacy blockchain",
-      ],
+      body: "I'm Luciano Oliva Bianco, people call me Lulox. I live in Buenos Aires and help people and teams get repetitive work off their plate.",
       more: "Read my story",
     },
     showcase: {
-      title: "What we do with Grok Bot",
-      lead: "Grok Bot is the main engine: agents that work on real tasks on their own and ask for your OK before anything important. This is what they already do every day in my own work.",
+      title: "Automating processes",
+      lead: "Everyday tasks that can run on their own.",
       cta: "I want something like this",
-      demoLabel: "Demo of the bot fleet task queue",
     },
-    cases: {
-      title: "Projects with a demo",
-      lead: "Short recordings with test data. Each one solves a concrete problem.",
-      open: "Open",
-      caseLink: "Read the case",
-      all: "All case studies",
-    },
-    services: { title: "Services", lead: "Pick where to start. Each page covers use cases, how I work and common questions." },
-    projects: { title: "More projects", all: "See all projects" },
+    services: { title: "Services", lead: "Pick where to start." },
+    projects: { title: "Projects" },
     blog: { title: "From the blog", all: "See all posts" },
   },
 };

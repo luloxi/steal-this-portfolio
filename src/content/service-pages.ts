@@ -1,5 +1,4 @@
 import type { Locale } from "@/i18n/types";
-import type { CaseSlug } from "@/content/showcase";
 
 /**
  * One landing per search intent under /servicios/[slug] (/en/services/[slug], slugs in src/lib/routes.ts).
@@ -25,7 +24,6 @@ export type ServicePageCopy = {
 
 export type ServicePage = {
   slug: string;
-  related: CaseSlug[];
   copy: Record<Locale, ServicePageCopy>;
 };
 
@@ -45,7 +43,6 @@ const HOW_EN = [
 export const SERVICE_PAGES: ServicePage[] = [
   {
     slug: "agentes-de-ia",
-    related: ["flota-de-bots", "genki", "garpen"],
     copy: {
       es: {
         label: "Agentes de IA para empresas",
@@ -59,7 +56,7 @@ export const SERVICE_PAGES: ServicePage[] = [
           { title: "Atención de consultas", body: "Lee lo que entra por mail o formulario, responde lo frecuente y te pasa lo que necesita una persona." },
           { title: "Carga de datos", body: "Pasa la información de mails, PDFs y planillas a tu CRM o sistema, sin copiar a mano." },
           { title: "Seguimiento de clientes", body: "Recuerda a quién hay que escribir, prepara el borrador y lo deja listo para que lo apruebes." },
-          { title: "Tareas en tus máquinas", body: "Con Hermes y una cola de runners, corre procesos en tus computadoras sin que estés mirando." },
+          { title: "Tareas en tus máquinas", body: "Con Hermes y una cola de tareas, corre procesos en tus computadoras sin que estés mirando." },
         ],
         howTitle: "Cómo trabajamos",
         how: HOW_ES,
@@ -81,7 +78,7 @@ export const SERVICE_PAGES: ServicePage[] = [
           { title: "Handling inquiries", body: "Reads what comes in by email or form, answers the frequent ones and hands you what needs a person." },
           { title: "Data entry", body: "Moves information from emails, PDFs and spreadsheets into your CRM or system, without copying by hand." },
           { title: "Client follow-up", body: "Remembers who needs a message, prepares the draft and leaves it ready for your approval." },
-          { title: "Tasks on your machines", body: "With Hermes and a runner queue, it runs processes on your computers while you are not watching." },
+          { title: "Tasks on your machines", body: "With Hermes and a task queue, it runs processes on your computers while you are not watching." },
         ],
         howTitle: "How we work",
         how: HOW_EN,
@@ -95,7 +92,6 @@ export const SERVICE_PAGES: ServicePage[] = [
   },
   {
     slug: "automatizacion-de-procesos",
-    related: ["flota-de-bots", "malito", "tarask"],
     copy: {
       es: {
         label: "Automatización de procesos",
@@ -145,7 +141,6 @@ export const SERVICE_PAGES: ServicePage[] = [
   },
   {
     slug: "crm-a-medida",
-    related: ["garpen", "malito", "genki"],
     copy: {
       es: {
         label: "CRM a medida",
@@ -195,19 +190,17 @@ export const SERVICE_PAGES: ServicePage[] = [
   },
   {
     slug: "grok-bot",
-    related: ["flota-de-bots", "genki", "tarask"],
     copy: {
       es: {
         label: "Automatizar con Grok Bot",
         h1: "Automatizaciones con Grok Bot",
         metaTitle: "Automatizar con Grok Bot | Lulox",
-        metaDescription: "Armo y configuro bots con Grok Bot como motor principal: código, finanzas, links, borradores, rutinas y recordatorios. Remoto desde Buenos Aires.",
+        metaDescription: "Armo y configuro bots con Grok Bot como motor principal: código, links, borradores, rutinas y recordatorios. Remoto desde Buenos Aires.",
         question: "¿Qué se puede automatizar con Grok Bot?",
-        answer: "Con Grok Bot se pueden armar bots que trabajan solos: programan y publican código, leen y cargan finanzas, guardan links en marcadores, preparan borradores para redes y WhatsApp, y corren rutinas y recordatorios. Yo uso una flota así todos los días, y te ayudo a armar la tuya con permisos claros y aprobación humana.",
+        answer: "Con Grok Bot se pueden armar bots que trabajan solos: programan y publican código, guardan links en marcadores, preparan borradores para redes y WhatsApp, y corren rutinas y recordatorios. Yo uso una flota así todos los días, y te ayudo a armar la tuya con permisos claros y aprobación humana.",
         casesTitle: "Bots que ya uso",
         cases: [
-          { title: "Desarrollo y deploy", body: "Un bot que arma el cambio, corre tests, abre el PR y publica. Este sitio se hace así." },
-          { title: "Finanzas", body: "Lee resúmenes y tickets, los carga en Tarask y pide OK antes de importar." },
+          { title: "Desarrollo y deploy", body: "Un bot que arma el cambio, corre pruebas, abre el PR, revisa que no haya fallas y publica." },
           { title: "Links y notas", body: "Lo que le mandás termina en la carpeta correcta de marcadores." },
           { title: "Borradores y rutinas", body: "Posts, mensajes de WhatsApp, resúmenes diarios y recordatorios que revisás antes de que salgan." },
         ],
@@ -223,13 +216,12 @@ export const SERVICE_PAGES: ServicePage[] = [
         label: "Automate with Grok Bot",
         h1: "Automations with Grok Bot",
         metaTitle: "Automate with Grok Bot | Lulox",
-        metaDescription: "I build and set up bots with Grok Bot as the main engine: code, finances, links, drafts, routines and reminders. Remote from Buenos Aires.",
+        metaDescription: "I build and set up bots with Grok Bot as the main engine: code, links, drafts, routines and reminders. Remote from Buenos Aires.",
         question: "What can you automate with Grok Bot?",
-        answer: "With Grok Bot you can build bots that work on their own: they write and ship code, read and load finances, file links into bookmarks, prepare drafts for social media and WhatsApp, and run routines and reminders. I use a fleet like that every day, and I help you build yours with clear permissions and human approval.",
+        answer: "With Grok Bot you can build bots that work on their own: they write and ship code, file links into bookmarks, prepare drafts for social media and WhatsApp, and run routines and reminders. I use a fleet like that every day, and I help you build yours with clear permissions and human approval.",
         casesTitle: "Bots I already use",
         cases: [
-          { title: "Development and deploys", body: "A bot that makes the change, runs tests, opens the PR and ships. This site is made that way." },
-          { title: "Finances", body: "Reads statements and receipts, loads them into Tarask and asks for an OK before importing." },
+          { title: "Development and deploys", body: "A bot that makes the change, runs tests, opens the PR, checks for failures and ships." },
           { title: "Links and notes", body: "Whatever you send it lands in the right bookmark folder." },
           { title: "Drafts and routines", body: "Posts, WhatsApp messages, daily digests and reminders you review before they go out." },
         ],
@@ -245,7 +237,6 @@ export const SERVICE_PAGES: ServicePage[] = [
   },
   {
     slug: "automatizar-whatsapp-y-mail",
-    related: ["malito", "flota-de-bots", "garpen"],
     copy: {
       es: {
         label: "Automatizar WhatsApp y mail",
@@ -259,7 +250,7 @@ export const SERVICE_PAGES: ServicePage[] = [
           { title: "Bandeja ordenada", body: "Mails clasificados por tema y prioridad, con lo urgente arriba y lo demás archivado." },
           { title: "Respuestas frecuentes", body: "Borradores listos para las preguntas de siempre: precios, horarios, turnos o estado de un pedido." },
           { title: "Seguimientos de WhatsApp", body: "El agente recuerda a quién responder y deja el mensaje escrito para que lo mandes." },
-          { title: "Boletín propio", body: "Listas y campañas por mail desde tu dominio, como en Malito." },
+          { title: "Boletín propio", body: "Tu propia dirección con tu dominio, y boletines y campañas a tus listas, como en Malito." },
         ],
         howTitle: "Cómo trabajamos",
         how: HOW_ES,
@@ -281,7 +272,7 @@ export const SERVICE_PAGES: ServicePage[] = [
           { title: "A sorted inbox", body: "Emails grouped by topic and priority, with urgent ones on top and the rest archived." },
           { title: "Frequent answers", body: "Drafts ready for the usual questions: prices, hours, bookings or order status." },
           { title: "WhatsApp follow-ups", body: "The agent remembers who to answer and leaves the message written for you to send." },
-          { title: "Your own newsletter", body: "Email lists and campaigns from your domain, like in Malito." },
+          { title: "Your own newsletter", body: "Your own address on your own domain, plus newsletters and campaigns to your lists, like in Malito." },
         ],
         howTitle: "How we work",
         how: HOW_EN,
@@ -289,56 +280,6 @@ export const SERVICE_PAGES: ServicePage[] = [
           { q: "Does the agent send messages on its own?", a: "Only if you decide so. By default it leaves drafts and you approve each send, especially on WhatsApp, where the tone is more personal. For internal alerts or very repetitive answers automatic sending can be enabled, always with clear rules and a log of what went out." },
           { q: "Does it work with my Gmail account or my domain?", a: "Yes. It connects with Gmail and Google Workspace, or with email on your own domain. If you want your inbox and newsletter without several paid tools, I can also build something like Malito, which receives and sends from your domain." },
           { q: "What about my clients' privacy?", a: "The agent only reads what it needs for its task and does not share data with third parties. Drafts and information stay in your accounts. To start, we can test with sample messages, so you see how it works before giving it access to real conversations." },
-        ],
-      },
-    },
-  },
-  {
-    slug: "automatizar-finanzas",
-    related: ["tarask", "garpen", "flota-de-bots"],
-    copy: {
-      es: {
-        label: "Automatizar finanzas",
-        h1: "Automatizar finanzas con IA",
-        metaTitle: "Automatizar finanzas con IA | Lulox",
-        metaDescription: "Agentes de IA que importan resúmenes del banco, leen tickets y facturas y ordenan tus gastos por categoría, en pesos y dólares. Remoto desde Buenos Aires.",
-        question: "¿Cómo se automatizan las finanzas con IA?",
-        answer: "Un agente importa los movimientos del banco o la billetera, los categoriza, lee tickets y facturas desde una foto o un PDF y te muestra en qué se va la plata, en pesos y en dólares. Vos revisás y aprobás antes de que se cargue algo. Es lo que hago con Tarask para mis propias cuentas.",
-        casesTitle: "Ejemplos",
-        cases: [
-          { title: "Importar el banco", body: "Resúmenes de Excel, CSV o PDF que se cargan solos, sin duplicados." },
-          { title: "Tickets y facturas", body: "Una foto o un PDF que se lee con IA y queda cargado con monto, fecha y categoría." },
-          { title: "Pesos y dólares", body: "Ahorros, deuda de tarjeta y patrimonio por moneda, con su evolución mes a mes." },
-          { title: "Gastos compartidos", body: "Hogares o equipos que dividen gastos y ven quién le debe a quién." },
-        ],
-        howTitle: "Cómo trabajamos",
-        how: HOW_ES,
-        faq: [
-          { q: "¿Es seguro darle mis datos financieros a un agente?", a: "El agente no necesita tus claves del banco: trabaja con los resúmenes y archivos que vos exportás. Nada se importa sin tu aprobación y se guardan copias antes de cambiar datos. Para probar se usan datos ficticios, como en la demo de Tarask, antes de tocar información real." },
-          { q: "¿Sirve para una empresa o solo para finanzas personales?", a: "Sirve para las dos. En lo personal ordena gastos, ahorros y deudas. En una empresa o un estudio puede cargar facturas de proveedores, conciliar movimientos, avisar vencimientos y armar reportes para quien lleva la contabilidad, sin reemplazar al contador." },
-          { q: "¿Funciona con bancos y billeteras de Argentina?", a: "Sí. Tarask ya importa resúmenes de bancos y billeteras argentinas en Excel y CSV, y maneja pesos, dólares y USDT. Para otros bancos se agrega el formato de su exportación. Lo importante es que el banco permita descargar los movimientos." },
-        ],
-      },
-      en: {
-        label: "Finance automation",
-        h1: "Finance automation with AI",
-        metaTitle: "Finance automation with AI | Lulox",
-        metaDescription: "AI agents that import bank statements, read receipts and invoices and sort your expenses by category, in pesos and dollars. Remote from Buenos Aires.",
-        question: "How do you automate finances with AI?",
-        answer: "An agent imports bank or wallet movements, categorizes them, reads receipts and invoices from a photo or a PDF and shows you where the money goes, in pesos and dollars. You review and approve before anything is loaded. That is what I do with Tarask for my own accounts.",
-        casesTitle: "Examples",
-        cases: [
-          { title: "Bank imports", body: "Excel, CSV or PDF statements that load by themselves, without duplicates." },
-          { title: "Receipts and invoices", body: "A photo or PDF read with AI and entered with amount, date and category." },
-          { title: "Pesos and dollars", body: "Savings, card debt and net worth per currency, with the month by month trend." },
-          { title: "Shared expenses", body: "Households or teams that split expenses and see who owes whom." },
-        ],
-        howTitle: "How we work",
-        how: HOW_EN,
-        faq: [
-          { q: "Is it safe to give my financial data to an agent?", a: "The agent does not need your bank passwords: it works with the statements and files you export. Nothing is imported without your approval and backups are taken before data changes. Testing uses fictional data, like the Tarask demo, before touching real information." },
-          { q: "Is it for businesses or only personal finances?", a: "Both. Personally it sorts expenses, savings and debts. In a company or a studio it can load supplier invoices, reconcile movements, flag due dates and build reports for whoever keeps the books, without replacing the accountant." },
-          { q: "Does it work with Argentine banks and wallets?", a: "Yes. Tarask already imports statements from Argentine banks and wallets in Excel and CSV, and handles pesos, dollars and USDT. For other banks the export format is added. What matters is that the bank lets you download the movements." },
         ],
       },
     },

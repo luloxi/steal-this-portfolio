@@ -2,7 +2,7 @@
 
 > Luciano Oliva Bianco ("Lulox") builds AI agents and automations for companies and people, plus custom CRMs and internal tools, so teams stop doing repetitive work by hand. His main engines are Grok, Grok Bot and Hermes. Based in Buenos Aires, Argentina; works remotely with Latin America and worldwide, in Spanish or English. X: @LuloxDev. Site in Spanish at the root and in English under /en.
 
-Automatizo con agentes de IA el trabajo repetitivo de tu equipo, y armo CRMs y sistemas a medida. Si hoy eso lo hacen personas, a mano, una y otra vez, lo pasamos a un flujo que lo hace solo.
+Automatizo con agentes de IA el trabajo repetitivo de tu equipo, y armo CRMs y sistemas a medida. Si hay cosas repetitivas que hacés a mano, podemos automatizarlas.
 
 ## Services (one page per need, each with use cases, how it works, FAQ and a hire link)
 
@@ -11,18 +11,15 @@ Automatizo con agentes de IA el trabajo repetitivo de tu equipo, y armo CRMs y s
 - [CRM a medida](https://lulox.com.ar/servicios/crm-a-medida): custom CRM and internal tools. English: https://lulox.com.ar/en/services/custom-crm
 - [Automatizar con Grok Bot](https://lulox.com.ar/servicios/grok-bot): bots with Grok Bot as the main engine. English: https://lulox.com.ar/en/services/grok-bot
 - [Automatizar WhatsApp y mail](https://lulox.com.ar/servicios/automatizar-whatsapp-y-mail): WhatsApp and email automation with approval before sending. English: https://lulox.com.ar/en/services/whatsapp-and-email-automation
-- [Automatizar finanzas](https://lulox.com.ar/servicios/automatizar-finanzas): finance automation (statements, receipts, invoices). English: https://lulox.com.ar/en/services/finance-automation
 - [All services](https://lulox.com.ar/servicios) · [Hire / Contratar](https://lulox.com.ar/contratar): a simple form (name, email, message up to 1000 characters).
 - How it works: 1) you describe what your team does by hand, 2) a short call with a ballpark estimate, 3) he builds and tests it with your data, 4) it stays running with support. 50% upfront and 50% on delivery. No public price list.
 
-## Case studies (real projects, each with a short demo video recorded with test data)
+## Featured projects (each with a short demo video recorded with test data)
 
-- [Genki](https://lulox.com.ar/casos/genki): a browser desktop with agents (Mochi), an App Market and self-hosted runners.
-- [Malito](https://lulox.com.ar/casos/malito): self-hosted email inbox and newsletter. Live: https://malito.lulox.com.ar
-- [Tarask](https://lulox.com.ar/casos/tarask): personal and household finances with AI receipts and bank imports. Live: https://tarask.lulox.com.ar
-- [Garpen](https://lulox.com.ar/casos/garpen): custom CRM and ERP with contacts, agenda, finances and an agent over MCP. Live: https://garpen.lulox.com.ar
-- [Bot fleet](https://lulox.com.ar/casos/flota-de-bots): his Grok Bot fleet that codes and deploys, files finances, saves links, drafts posts and WhatsApp messages, and runs routines.
-- [All case studies](https://lulox.com.ar/casos) · [All projects](https://lulox.com.ar/proyectos)
+- [Malito](https://lulox.com.ar/proyectos/malito): an email tool for work: your own address on your own domain, plus newsletters and campaigns to your lists. Live: https://malito.lulox.com.ar
+- [Garpen](https://lulox.com.ar/proyectos/garpen): custom CRM and ERP with contacts, agenda and finances that an agent can use. Live: https://garpen.lulox.com.ar
+- Bot fleet: his Grok Bot fleet that writes and ships code, saves links, drafts posts, helps with clients on WhatsApp, and runs routines.
+- [All projects](https://lulox.com.ar/proyectos), including personal ones like Tarask (personal finance) and DJ Tube.
 
 ## More
 

@@ -23,7 +23,6 @@ export const SEGMENTS_ES_TO_EN: Readonly<Record<string, string>> = {
   ingresar: "sign-in",
   referidos: "referrals",
   servicios: "services",
-  casos: "case-studies",
 };
 
 /**
@@ -37,14 +36,6 @@ export const SUBSEGMENTS_ES_TO_EN: Readonly<Record<string, Readonly<Record<strin
     "crm-a-medida": "custom-crm",
     "grok-bot": "grok-bot",
     "automatizar-whatsapp-y-mail": "whatsapp-and-email-automation",
-    "automatizar-finanzas": "finance-automation",
-  },
-  casos: {
-    genki: "genki",
-    malito: "malito",
-    tarask: "tarask",
-    garpen: "garpen",
-    "flota-de-bots": "bot-fleet",
   },
 };
 

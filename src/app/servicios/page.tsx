@@ -14,7 +14,7 @@ import { thumb } from "@/lib/thumbs";
 import "../home.css";
 import "../showcase.css";
 
-const accents = ["var(--section-contact)", "var(--section-blog)", "var(--section-projects)"];
+const accents = ["var(--joy-1)", "var(--joy-2)", "var(--joy-3)", "var(--joy-4)", "var(--joy-5)"];
 
 /** /servicios (/en/services): concrete use cases (marked as examples), custom work, process. */
 export default async function ServicesPage() {
@@ -51,7 +51,6 @@ export default async function ServicesPage() {
                 </li>
               ))}
             </ul>
-            <Link href={localizePath(locale, "/casos")} className="hm-more">{locale === "es" ? "Ver casos reales con demo" : "See real case studies with a demo"} ▸</Link>
           </section>
 
           <section className="hm-section" aria-labelledby="sv-cases">

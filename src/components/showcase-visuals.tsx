@@ -1,5 +1,5 @@
 /**
- * Mini demos for "Lo que hacemos con Grok Bot" (SVG + CSS keyframes in home.css, no JS).
+ * Mini demos for "Automatizando procesos" (SVG + CSS keyframes in home.css, no JS).
  * aria-hidden: the card text says what each one shows. Everything stops under reduced motion.
  */
 import type { ShowcaseArt } from "@/content/showcase";
@@ -23,26 +23,6 @@ function Code() {
       <g className="sc-bob">
         <path d="M118 70 a10 10 0 0 1 4-19 a13 13 0 0 1 24 4 a8 8 0 0 1 0 15 z" className="sc-cloud" />
         <path d="M132 66 v-12 m-5 5 l5 -5 l5 5" className="sc-stroke" />
-      </g>
-    </svg>
-  );
-}
-
-function Finance() {
-  const bars = [30, 46, 38, 58, 50];
-  return (
-    <svg className="sc-art" {...box}>
-      <rect x="8" y="10" width="100" height="76" rx="9" className="sc-panel" />
-      {bars.map((h, i) => (
-        <rect key={i} x={20 + i * 17} y={78 - h} width="10" height={h} rx="3" className="sc-grow" style={{ animationDelay: `${i * 0.25}s`, ["--sc-c" as string]: i % 2 ? "var(--section-blog)" : "var(--section-contact)" }} />
-      ))}
-      <g className="sc-bob">
-        <circle cx="132" cy="34" r="14" className="sc-coin" />
-        <text x="132" y="39" textAnchor="middle" className="sc-label is-big">$</text>
-      </g>
-      <g className="sc-pop" style={{ animationDelay: "1.6s" }}>
-        <rect x="114" y="58" width="38" height="16" rx="8" className="sc-pill" />
-        <text x="133" y="69" textAnchor="middle" className="sc-label">OK?</text>
       </g>
     </svg>
   );
@@ -102,7 +82,7 @@ function WhatsApp() {
       </g>
       <g className="sc-pop" style={{ animationDelay: "2.4s" }}>
         <rect x="108" y="38" width="46" height="18" rx="9" className="sc-pill" />
-        <text x="131" y="50" textAnchor="middle" className="sc-label">✎ OK</text>
+        <text x="131" y="50" textAnchor="middle" className="sc-label">✓✓</text>
       </g>
     </svg>
   );
@@ -125,16 +105,15 @@ function Routines() {
   );
 }
 
-const ARTS: Record<Exclude<ShowcaseArt, "runners">, () => React.ReactElement> = {
+const ARTS: Record<ShowcaseArt, () => React.ReactElement> = {
   code: Code,
-  finance: Finance,
   bookmarks: Bookmarks,
   social: Social,
   whatsapp: WhatsApp,
   routines: Routines,
 };
 
-export function ShowcaseVisual({ art }: { art: Exclude<ShowcaseArt, "runners"> }) {
+export function ShowcaseVisual({ art }: { art: ShowcaseArt }) {
   const Art = ARTS[art];
   return <Art />;
 }

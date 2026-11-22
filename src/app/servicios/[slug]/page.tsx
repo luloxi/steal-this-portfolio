@@ -1,25 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { DemoVideo } from "@/components/demo-video";
+import { GrokBotChat } from "@/components/grok-bot-chat";
 import { JsonLd } from "@/components/json-ld";
 import { SERVICE_PAGES, servicePageBySlug } from "@/content/service-pages";
-import { caseBySlug } from "@/content/showcase";
 import { servicesCopy } from "@/content/services-copy";
 import { buildPageMetadata } from "@/lib/page-metadata";
 import { getRequestLocale } from "@/lib/prefs";
 import { localizePath, pathPair } from "@/lib/routes";
 import { breadcrumbLd, faqLd, serviceOfferLd } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/site-settings-db";
-import { thumb } from "@/lib/thumbs";
 import "../../home.css";
 import "../../showcase.css";
 
 type Props = { params: Promise<{ slug: string }> };
 
 const ui = {
-  es: { home: "Inicio", kicker: "Servicio", related: "Casos reales relacionados", other: "Otros servicios", cta: "Contame qué se hace a mano hoy y vemos cómo automatizarlo.", ctaBtn: "Contratar", faq: "Preguntas frecuentes", caseLink: "Ver el caso" },
-  en: { home: "Home", kicker: "Service", related: "Related real projects", other: "Other services", cta: "Tell me what is done by hand today and we'll see how to automate it.", ctaBtn: "Hire me", faq: "Frequently asked questions", caseLink: "Read the case" },
+  es: { home: "Inicio", kicker: "Servicio", other: "Otros servicios", cta: "Contame qué se hace a mano hoy y vemos cómo automatizarlo.", ctaBtn: "Contratar", faq: "Preguntas frecuentes" },
+  en: { home: "Home", kicker: "Service", other: "Other services", cta: "Tell me what is done by hand today and we'll see how to automate it.", ctaBtn: "Hire me", faq: "Frequently asked questions" },
 } as const;
 
 const ogFor = (slug: string, locale: string) => `/og/svc-${slug}-${locale}.jpg`;
@@ -53,10 +51,6 @@ export default async function ServiceIntentPage({ params }: Props) {
   const u = ui[locale];
   const href = (p: string) => localizePath(locale, p);
   const esPath = `/servicios/${page.slug}`;
-  const related = page.related.flatMap((r) => {
-    const cs = caseBySlug(r);
-    return cs ? [cs] : [];
-  });
   const graph = [
     serviceOfferLd(settings, locale, { name: c.h1, description: c.metaDescription, esPath, serviceType: c.label, image: ogFor(page.slug, locale) }),
     faqLd([{ q: c.question, a: c.answer }, ...c.faq]),
@@ -89,6 +83,8 @@ export default async function ServiceIntentPage({ params }: Props) {
           <Link href={href("/contratar")} className="hm-cta-link" style={{ maxWidth: "18rem" }}>{u.ctaBtn}</Link>
         </section>
 
+        {page.slug === "grok-bot" || page.slug === "agentes-de-ia" ? <GrokBotChat locale={locale} /> : null}
+
         <section className="dp-section" aria-labelledby="dp-cases">
           <h2 id="dp-cases" className="dp-h2">{c.casesTitle}</h2>
           <ul className="dp-list is-2">
@@ -99,33 +95,6 @@ export default async function ServiceIntentPage({ params }: Props) {
             ))}
           </ul>
         </section>
-
-        {related.length ? (
-          <section className="dp-section" aria-labelledby="dp-related">
-            <h2 id="dp-related" className="dp-h2">{u.related}</h2>
-            <ul className="cs-grid">
-              {related.map((cs) => {
-                const cc = cs.copy[locale];
-                return (
-                  <li key={cs.slug} className="cs-card" data-reveal style={{ ["--hm-accent" as string]: cs.accent }}>
-                    <Link href={href(`/casos/${cs.slug}`)} className="cs-media" aria-label={`${cc.name}: ${u.caseLink}`}>
-                      <DemoVideo name={cs.media} label={cc.mediaAlt} />
-                    </Link>
-                    <div className="cs-body">
-                      <h3 className="cs-title">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={thumb(cs.icon)} alt="" width={28} height={28} loading="lazy" decoding="async" className="cs-icon" />
-                        {cc.name}
-                      </h3>
-                      <p className="cs-tagline">{cc.tagline}</p>
-                      <Link href={href(`/casos/${cs.slug}`)} className="hm-more">{u.caseLink} ▸</Link>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
-        ) : null}
 
         <section className="dp-section" aria-labelledby="dp-how">
           <h2 id="dp-how" className="dp-h2">{c.howTitle}</h2>

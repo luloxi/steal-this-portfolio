@@ -2,8 +2,6 @@
 
 import { CopyMarkdown } from "@/components/copy-markdown";
 import { CpRow } from "@/components/cp-row";
-import { CASE_STUDIES } from "@/content/showcase";
-import { localizePath } from "@/lib/routes";
 import { GitHubIcon } from "@/components/icons/social";
 import { PageShell } from "@/components/page-shell";
 import type { PortfolioProject, ProjectStatus } from "@/lib/projects";
@@ -154,17 +152,6 @@ export function ProjectDetail({ project }: { project: PortfolioProject }) {
         )}
 
         <div className="!mt-4 space-y-2 sm:!mt-6">
-          {(() => {
-            const cs = CASE_STUDIES.find((c) => c.projectId === project.id);
-            return cs ? (
-              <CpRow
-                href={localizePath(locale, `/casos/${cs.slug}`)}
-                label={locale === "es" ? "Ver el caso con demo en video" : "Read the case study with a video demo"}
-                accent="var(--accent)"
-                external={false}
-              />
-            ) : null;
-          })()}
           {project.liveUrl ? (
             <CpRow
               href={project.liveUrl}
