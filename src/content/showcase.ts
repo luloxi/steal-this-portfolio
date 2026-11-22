@@ -40,23 +40,9 @@ export const FEATURED_PROJECTS: FeaturedProject[] = [
   },
 ];
 
-export type ShowcaseArt = "code" | "bookmarks" | "social" | "whatsapp" | "routines";
+export type ShowcaseArt = "social" | "whatsapp" | "routines";
 
 export const GROK_BOT_SHOWCASE: { art: ShowcaseArt; copy: Record<Locale, { title: string; body: string }> }[] = [
-  {
-    art: "code",
-    copy: {
-      es: { title: "Programa y publica", body: "Toma el pedido, arma el cambio, corre las pruebas, abre el PR, revisa que no haya fallas y publica." },
-      en: { title: "Writes and ships code", body: "Takes the request, makes the change, runs the tests, opens the PR, checks for failures and ships." },
-    },
-  },
-  {
-    art: "bookmarks",
-    copy: {
-      es: { title: "Guarda links en marcadores", body: "Le mandás un link o una nota y lo guarda en la carpeta correcta." },
-      en: { title: "Files links into bookmarks", body: "Send it a link or a note and it saves it in the right folder." },
-    },
-  },
   {
     art: "social",
     copy: {
@@ -74,8 +60,8 @@ export const GROK_BOT_SHOWCASE: { art: ShowcaseArt; copy: Record<Locale, { title
   {
     art: "routines",
     copy: {
-      es: { title: "Rutinas y recordatorios", body: "Resúmenes diarios, recordatorios y chequeos que corren solos a la hora que digas." },
-      en: { title: "Routines and reminders", body: "Daily digests, reminders and checks that run on their own at the time you choose." },
+      es: { title: "Tu asistente 24/7", body: "Boletines sobre lo que te interesa y un asistente que te da una mano con lo que hagas en internet, usando tus propias herramientas." },
+      en: { title: "Your 24/7 assistant", body: "Newsletters about what you care about, and an assistant that helps with whatever you do online, using your own tools." },
     },
   },
 ];

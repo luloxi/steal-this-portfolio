@@ -7,27 +7,27 @@ import type { Locale } from "@/i18n/types";
  */
 const COPY: Record<Locale, { label: string; fleet: string; ask1: string; res1: { title: string; rows: string[] }; ask2: string; res2: { title: string; rows: string[] } }> = {
   es: {
-    label: "Demo: una persona le pide a sus bots que resuman sus mails y publiquen un arreglo, y cada bot responde con el resultado.",
+    label: "Demo: una persona le pide a sus bots que resuman sus mails y le recuerden la agenda de mañana, y cada bot responde con el resultado.",
     fleet: "Tus bots",
     ask1: "Resumí mis mails de hoy",
     res1: { title: "Resumen de hoy", rows: ["3 para responder", "1 factura para pagar", "12 newsletters archivados"] },
-    ask2: "Publicá el arreglo del formulario",
-    res2: { title: "Arreglo publicado", rows: ["Pruebas sin fallas", "Cambio revisado", "Ya está en la web"] },
+    ask2: "¿Qué tengo mañana?",
+    res2: { title: "Agenda de mañana", rows: ["10:00 llamada con un cliente", "13:00 enviar presupuesto", "Recordatorio a las 9:30"] },
   },
   en: {
-    label: "Demo: a person asks their bots to summarize their email and ship a fix, and each bot replies with the result.",
+    label: "Demo: a person asks their bots to summarize their email and remind them of tomorrow's schedule, and each bot replies with the result.",
     fleet: "Your bots",
     ask1: "Summarize today's email",
     res1: { title: "Today's summary", rows: ["3 to reply to", "1 invoice to pay", "12 newsletters archived"] },
-    ask2: "Ship the contact form fix",
-    res2: { title: "Fix shipped", rows: ["Tests passed", "Change reviewed", "It's live on the site"] },
+    ask2: "What do I have tomorrow?",
+    res2: { title: "Tomorrow's schedule", rows: ["10:00 call with a client", "13:00 send a quote", "Reminder at 9:30"] },
   },
 };
 
 const BOTS = [
   { name: "Mail", color: "var(--gb-a)" },
-  { name: "Dev", color: "var(--gb-b)" },
-  { name: "Plata", color: "var(--gb-c)" },
+  { name: "Agenda", color: "var(--gb-b)" },
+  { name: "Redes", color: "var(--gb-c)" },
 ];
 
 function Avatar({ color }: { color: string }) {

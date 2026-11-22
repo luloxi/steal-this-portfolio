@@ -7,7 +7,7 @@
 - Name: Luciano Oliva Bianco. Known as Lulox. Based in Buenos Aires, Argentina. Works remotely, in Spanish or English.
 - What he does: AI agents and automation for companies and people, plus custom CRMs and internal tools, so a team stops doing repetitive work by hand.
 - Main engines: Grok, Grok Bot and Hermes. n8n is a secondary option to connect tools.
-- He runs his own fleet of Grok Bot bots every day: they write, test and deploy lulox.com.ar itself, with his review.
+- He runs his own fleet of Grok Bot bots every day: social media drafts, clients on WhatsApp and a 24/7 assistant, with his review.
 - Background: Research & Development at Input Output Global (Jul 2025 to Oct 2026), Fullstack Web3 developer at BuidlGuidl (Apr 2023 to May 2024), earlier web and press work. Ambassador for Midnight, IOG's privacy blockchain.
 - Profiles: X https://x.com/LuloxDev · GitHub https://github.com/luloxi · LinkedIn https://linkedin.com/in/lulox
 - Hire: https://lulox.com.ar/contratar (English: https://lulox.com.ar/en/hire)
@@ -90,9 +90,9 @@ A: You do. The system can live in your own Cloudflare account or the infrastruct
 Spanish: https://lulox.com.ar/servicios/grok-bot · English: https://lulox.com.ar/en/services/grok-bot
 
 Q: What can you automate with Grok Bot?
-A: With Grok Bot you can build bots that work on their own: they write and ship code, file links into bookmarks, prepare drafts for social media and WhatsApp, and run routines and reminders. I use a fleet like that every day, and I help you build yours with clear permissions and human approval.
+A: With Grok Bot you can build bots that work on their own: they prepare social media drafts, look after clients on WhatsApp and put together newsletters about what you care about, like a 24/7 assistant using your own tools. I use a fleet like that every day, and I help you build yours with clear permissions and human approval.
 
-Use cases (examples, not client work): Development and deploys: A bot that makes the change, runs tests, opens the PR, checks for failures and ships. Links and notes: Whatever you send it lands in the right bookmark folder. Drafts and routines: Posts, WhatsApp messages, daily digests and reminders you review before they go out.
+Use cases (examples, not client work): Social media drafts: Prepares posts for your social media, in your voice, for you to review before they go out. Clients on WhatsApp: Answers questions and follows up with clients so no conversation slips through. Your 24/7 assistant: Newsletters about what you care about, and help with whatever you do online, using your own tools.
 
 Q: What is Grok Bot?
 A: Grok Bot is an agent that works with Grok and can use tools: browse, read and write files, connect to apps over MCP, run routines and prepare messages. I use it as the main engine of my automations, with written rules so it asks for approval before sending anything or touching sensitive data.
@@ -123,11 +123,9 @@ A: The agent only reads what it needs for its task and does not share data with 
 
 ## What his Grok Bot fleet does every day (his own work, not client results)
 
-- Writes and ships code: Takes the request, makes the change, runs the tests, opens the PR, checks for failures and ships.
-- Files links into bookmarks: Send it a link or a note and it saves it in the right folder.
 - Social media drafts: Prepares posts for your social media, in your voice.
 - Clients and errands on WhatsApp: Answers questions, follows up with clients and helps with errands on WhatsApp, so no conversation slips through.
-- Routines and reminders: Daily digests, reminders and checks that run on their own at the time you choose.
+- Your 24/7 assistant: Newsletters about what you care about, and an assistant that helps with whatever you do online, using your own tools.
 
 ## Featured projects (demo videos recorded with test data)
 
@@ -149,7 +147,7 @@ Demo video: https://lulox.com.ar/demos/garpen.mp4
 
 ### Bot fleet
 
-A group of bots built with Grok Bot as the main engine and Hermes for tasks on his own machines. They write and ship code (checking for failures first), file links into bookmarks, prepare social media drafts, help with clients and errands on WhatsApp, and run routines and reminders. Status: in daily use.
+A group of bots built with Grok Bot as the main engine and Hermes for tasks on his own machines. They prepare social media drafts, help with clients and errands on WhatsApp, and work as a 24/7 assistant (newsletters, help with whatever you do online). Status: in daily use.
 
 ## Example use cases (examples of what can be done, not client work)
 
