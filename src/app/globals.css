@@ -3313,7 +3313,7 @@ span.md-copy { display: inline; }
 
 .md-acc-hint .md-acc-title { color: inherit; }
 /* Dark: Judy blue pill + glow, Nick orange text. Light: Nick orange pill + glow, Judy blue text. */
-.md-acc-btn { --acc-bg: 36 73 143; --acc-text: #ffa860; }
+.md-acc-btn { --acc-bg: 36 73 143; --acc-text: #ffb87a; }
 :root:not(.dark) .md-acc-btn { --acc-bg: 238 138 69; --acc-text: #142b5c; }
 .md-acc-hint .md-acc-title { font-weight: 800; }
 @media (prefers-reduced-motion: reduce) {
@@ -3732,8 +3732,8 @@ body.ie-off .ie-row-pencil { display: none; }
   100% { box-shadow: 0 2px 10px rgb(var(--acc-bg) / .25); transform: none; filter: none; }
 }
 /* First section ("Primeros pasos") uses the opposite pair of the others. */
-.md-acc-list > .md-acc-item:first-child .md-acc-btn { --acc-bg: 238 138 69; --acc-text: #24498f; }
-:root:not(.dark) .md-acc-list > .md-acc-item:first-child .md-acc-btn { --acc-bg: 36 73 143; --acc-text: #ffa860; }
+.md-acc-list > .md-acc-item:first-child .md-acc-btn { --acc-bg: 238 138 69; --acc-text: #142b5c; }
+:root:not(.dark) .md-acc-list > .md-acc-item:first-child .md-acc-btn { --acc-bg: 36 73 143; --acc-text: #ffb87a; }
 .md-acc-btn, .md-acc-btn:focus { outline: none; }
 .md-acc-btn:focus-visible { outline: 2px solid var(--acc-text); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) {
@@ -4445,7 +4445,7 @@ fieldset:disabled :is(button, input, select, textarea, label) { cursor: not-allo
 .pub-arrow { display: inline-block; margin-left: 0.3rem; font-size: 0.8em; color: var(--cp-accent); transition: transform .2s; }
 .pub:hover .pub-arrow { transform: translate(2px, -2px); }
 .pub-note { margin: 0.2rem 0 0; font-size: 0.86rem; opacity: 0.85; }
-.pub-cite { margin: 0.25rem 0 0; font-size: 0.78rem; line-height: 1.5; color: var(--muted, currentColor); opacity: 0.9; }
+.pub-cite { margin: 0.25rem 0 0; font-size: 0.78rem; line-height: 1.5; color: var(--muted, currentColor); opacity: 1; }
 .pub-cite > span + span::before { content: "·"; margin: 0 0.4rem; opacity: 0.7; }
 .pub-venue { font-family: var(--font-mono, monospace); font-size: 0.72rem; letter-spacing: 0.04em; color: var(--cp-accent); }
 :root:not(.dark) .pub-venue { color: color-mix(in oklab, var(--cp-accent) 75%, #000); }
@@ -5078,3 +5078,40 @@ textarea.adm-input { resize: vertical; }
 :root:not(.dark) .cp-page-title-text { color: #a3195b; text-shadow: 0 1px 0 color-mix(in oklab, #ff6b5e 18%, transparent); }
 :root:not(.dark) .cp-page-title-mark { background: linear-gradient(90deg, transparent 0%, #ff6b5e 45%, #a3195b 100%); box-shadow: none; }
 :root:not(.dark) .hm-h2 { color: #5e2590; }
+
+/* ── Opaque cards and panels (a11y) ───────────────────────────────
+   Cards used to be see-through (color-mix with transparent), so the Rothko
+   fields bled into the text, which got hard to read in dark. Every card now
+   sits on a solid base derived from the page background; tints and
+   gradients stay as layers on top of it. */
+:root { --card-solid: color-mix(in oklab, var(--background) 93%, #ffffff); }
+:root:not(.dark) { --card-solid: color-mix(in oklab, var(--background) 35%, #ffffff); }
+.cp-nav-item, .cp-row, .cp-panel { background-color: color-mix(in oklab, var(--cp-accent) 8%, var(--card-solid)) !important; }
+.cp-nav-item:hover, .cp-row:hover { background-color: color-mix(in oklab, var(--cp-accent) 15%, var(--card-solid)) !important; }
+.cp-panel:has(.md-acc) { background-color: transparent !important; }
+.cp-panel:has(.md-acc)::after { background: color-mix(in oklab, var(--cp-accent) 8%, var(--card-solid)); }
+.hm-card, .sc-card, .cs-card, .hm-about, .hm-post, .hm-step, .hm-faq-item, .hm-field, .hm-closing,
+.sv-chip, .dp-answer, .dp-faq, .dp-cta, .gb, .job-card, .pubs, .research-topics,
+.hire-can li, .ref-steps li, .hire-form-card, .blog-card {
+  background-color: var(--card-solid) !important;
+  backdrop-filter: none;
+}
+:root.dark .hire-form-card { background-color: color-mix(in oklab, var(--accent) 7%, var(--card-solid)) !important; }
+
+/* Contrast fixes found by axe (AA) */
+:root.dark .job-card .job-tag { background: color-mix(in oklab, var(--cp-accent) 72%, #ffffff); color: #0b0b12; }
+:root.dark .md-copy .cp-prose-link { color: #ff9f86; }
+
+/* Visible keyboard focus everywhere. Clipped cards (cut corners) would hide an
+   outline, so they get an inset ring instead. */
+:root { --focus-ring: #7dd3fc; }
+:root:not(.dark) { --focus-ring: #5e2590; }
+:where(a, button, summary, [role="button"], [tabindex]:not([tabindex="-1"])):focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+.cp-row:focus-visible, .cp-nav-item:focus-visible, .cp-back-footer:focus-visible, a.cp-panel:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--focus-ring); }
+.hm-faq-item summary:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; border-radius: 8px; }
+
+/* Reduced motion: a site-wide safety net on top of the per-component rules. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}
+.cp-back-footer { background-color: color-mix(in oklab, var(--accent) 10%, var(--card-solid)) !important; }
