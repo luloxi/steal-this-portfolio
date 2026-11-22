@@ -32,3 +32,12 @@ export async function mayLookUpDrafts(
   if (!hasSessionCookie || !editModeFromCookie(cookieHeader)) return false;
   return isAdmin();
 }
+
+/**
+ * The owner opened a blog article with edit mode OFF (for example right after
+ * creating it): show the one-button "Activar modo editor" prompt. Never for
+ * visitors or signed-in non-owners.
+ */
+export function shouldOfferEditMode(isAdmin: boolean, editOn: boolean): boolean {
+  return isAdmin && !editOn;
+}

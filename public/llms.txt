@@ -2,7 +2,7 @@
 
 > Luciano Oliva Bianco ("Lulox") builds AI agents and automations for companies and people, plus custom CRMs and internal tools, so teams stop doing repetitive work by hand. His main engines are Grok, Grok Bot and Hermes. Based in Buenos Aires, Argentina; works remotely with Latin America and worldwide, in Spanish or English. X: @LuloxDev. Site in Spanish at the root and in English under /en.
 
-Automatizo con agentes de IA el trabajo repetitivo de tu equipo, y armo CRMs y sistemas a medida. Si hay cosas repetitivas que hacés a mano, podemos automatizarlas.
+Tu trabajo, sin la parte aburrida. Lo que se repite, lo automatizamos con IA. (Your work, without the boring part. What repeats, we automate with AI.)
 
 ## Services (one page per need, each with use cases, how it works, FAQ and a hire link)
 

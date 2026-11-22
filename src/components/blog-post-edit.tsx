@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { CoverPicker } from "@/components/cover-picker";
 import { useRef, useState, type ReactNode } from "react";
 import { MdWysiwyg, ToolbarButton } from "@/components/md-wysiwyg";
 import { SectionReorder } from "@/components/section-reorder";
@@ -8,7 +9,6 @@ import { joinSections, moveItem, splitSections } from "@/lib/article-sections";
 import type { BlogPost } from "@/content/blog/types";
 import { focusTopics } from "@/content/projects";
 import { useLocale } from "@/i18n/locale-provider";
-import { pickImageFile, uploadMedia } from "@/lib/upload-media";
 import { blogPostPath, slugify } from "@/lib/routes";
 
 export async function putPost(post: BlogPost & { previousSlug?: string }): Promise<{ slug?: string; slugEn?: string | null; error?: string }> {
@@ -163,37 +163,13 @@ export function useBlogPostEditor(post: BlogPost) {
       onChange={setTitle} onFocus={() => setTextFocus(true)} onBlur={() => setTextFocus(false)} />
   );
   const summaryNode = (
-    <InlineText as="p" className="cp-prose" value={post.summary[L]} label={t.blog.fieldSummary} resetKey={resetKey}
+    <InlineText as="p" className="cp-prose blog-dek-edit" value={post.summary[L]} label={t.blog.fieldSummary} resetKey={resetKey}
       onChange={setSummary} onFocus={() => setTextFocus(true)} onBlur={() => setTextFocus(false)} />
   );
 
   // Details edited in place, styled like the surrounding muted text.
-  const [coverBusy, setCoverBusy] = useState(false);
-  const changeCover = async () => {
-    const file = await pickImageFile();
-    if (!file) return;
-    setCoverBusy(true);
-    const r = await uploadMedia(file);
-    setCoverBusy(false);
-    if (r.error || !r.url) window.alert(es ? `No se pudo subir la imagen (${r.error})` : `Couldn't upload the image (${r.error})`);
-    else setMeta((m) => ({ ...m, coverImage: r.url! }));
-  };
   const coverNode: ReactNode = (
-    <button
-      type="button"
-      className={`blog-cover blog-cover-edit${meta.coverImage ? "" : " is-empty"}`}
-      onClick={() => void changeCover()}
-      title={es ? "Cambiar imagen de portada (subir)" : "Change cover image (upload)"}
-      aria-label={es ? "Cambiar imagen de portada" : "Change cover image"}
-      disabled={coverBusy}
-    >
-      {meta.coverImage ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={meta.coverImage} alt="" className="blog-cover-img" />
-      ) : (
-        <span aria-hidden>{coverBusy ? "…" : "+"}</span>
-      )}
-    </button>
+    <CoverPicker value={meta.coverImage} onChange={(url) => setMeta((m) => ({ ...m, coverImage: url }))} es={es} />
   );
   const dateNode: ReactNode = (
     <input
@@ -251,7 +227,8 @@ export function useBlogPostEditor(post: BlogPost) {
     <MdWysiwyg
       markdown={bodies[L]}
       blog
-      className="blog-md"
+      className="blog-md blog-md-page"
+      placeholder={es ? "Escribí tu artículo…" : "Write your article…"}
       forceActive
       extraDirty={extraDirty}
       onCancelExtra={cancelExtra}

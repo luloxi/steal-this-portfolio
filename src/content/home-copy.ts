@@ -24,8 +24,8 @@ export const homeCopy: Record<Locale, {
         "Automatizo con agentes de IA el trabajo repetitivo de tu equipo, y armo CRMs y sistemas a medida.",
       keywords: ["Lulox", "Luciano Oliva Bianco", "automatización", "agentes de IA", "Grok", "Grok Bot", "Hermes", "CRM a medida"],
     },
-    title: "Automatizo con agentes de IA el trabajo repetitivo de tu equipo.",
-    lead: "Si hay cosas repetitivas que hacés a mano, podemos automatizarlas",
+    title: "Tu trabajo, sin la parte aburrida.",
+    lead: "Lo que se repite, lo automatizamos con IA.",
     examples: {
       title: "Por ejemplo, este tipo de trabajo",
       items: [
@@ -90,8 +90,8 @@ export const homeCopy: Record<Locale, {
         "I automate your team's repetitive work with AI agents, and build custom CRMs and systems.",
       keywords: ["Lulox", "Luciano Oliva Bianco", "automation", "AI agents", "Grok", "Grok Bot", "Hermes", "custom CRM"],
     },
-    title: "I automate your team's repetitive work with AI agents.",
-    lead: "If there are repetitive things you do by hand, we can automate them",
+    title: "Your work, without the boring part.",
+    lead: "What repeats, we automate with AI.",
     examples: {
       title: "For example, this kind of work",
       items: [

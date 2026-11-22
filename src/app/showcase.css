@@ -57,13 +57,16 @@
 .hm-more { cursor: pointer; align-self: flex-start; font-size: .92rem; font-weight: 600; color: var(--accent-2); text-decoration: none; border-bottom: 1px solid color-mix(in oklab, var(--accent-2) 40%, transparent); transition: border-color .2s ease, color .2s ease; }
 .hm-more:hover, .hm-more:focus-visible { border-color: var(--accent-2); }
 .hm-more.is-dim { color: var(--muted); border-color: color-mix(in oklab, var(--muted) 35%, transparent); }
-.hm-cta-link { cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 3rem; padding: .7rem 1.4rem; border-radius: 14px; font-weight: 700; text-decoration: none; color: var(--background);
-  background: linear-gradient(120deg, var(--accent), var(--accent-2)); box-shadow: 0 10px 30px -12px var(--accent); transition: transform .2s ease, box-shadow .2s ease; }
-.hm-cta-link:hover, .hm-cta-link:focus-visible { transform: translateY(-2px); box-shadow: 0 16px 36px -12px var(--accent); }
+/* Same look as the header Contratar button (.hh-hire) in both themes: solid accent in dark, the joyful coral-lilac in light. */
+.hm-cta-link { cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 3rem; padding: .7rem 1.4rem; border-radius: 10px; font-size: 1rem; font-weight: 600; text-decoration: none;
+  color: var(--background); background: var(--accent); transition: transform .2s ease, box-shadow .2s ease; }
+.hm-cta-link:hover, .hm-cta-link:focus-visible { transform: translateY(-1px); box-shadow: 0 8px 22px -10px var(--accent); }
 
 .hm-about { display: grid; grid-template-columns: 1fr; gap: 1.1rem; padding: 1rem; border-radius: 18px;
-  background: radial-gradient(90% 120% at 0% 0%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 65%), radial-gradient(80% 120% at 100% 100%, color-mix(in oklab, var(--accent-2) 12%, transparent), transparent 60%), color-mix(in oklab, var(--surface) 50%, transparent);
-  border: 1px solid color-mix(in oklab, var(--border) 80%, transparent); }
+  /* Solid card like the rest (no diagonal gradient), with a faint accent edge glow. */
+  background: var(--card-solid);
+  border: 1px solid color-mix(in oklab, var(--accent) 22%, var(--border));
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent) 6%, transparent), 0 12px 32px -22px color-mix(in oklab, var(--accent) 55%, transparent); }
 /* Photo: full width on top on phones, a tall portrait column filling the card height on wider screens */
 .hm-about-photo { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 22%; border-radius: 14px;
   box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent) 35%, transparent); }
@@ -305,4 +308,4 @@
 :root:not(.dark) .hm-card { border: 1.5px solid color-mix(in oklab, var(--hm-accent) 70%, transparent); }
 :root:not(.dark) .hm-card::before { opacity: 1; width: 3px; }
 :root:not(.dark) .hm-cta-link { background: linear-gradient(90deg, var(--joy-3), var(--joy-5)); color: #14121c; }
-:root:not(.dark) .hm-cta-link:hover, :root:not(.dark) .hm-cta-link:focus-visible { box-shadow: 0 16px 36px -14px var(--joy-5); }
+:root:not(.dark) .hm-cta-link:hover, :root:not(.dark) .hm-cta-link:focus-visible { box-shadow: 0 8px 22px -10px var(--joy-5); }
