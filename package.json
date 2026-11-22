@@ -19,7 +19,8 @@
     "preview": "pnpm cf:build && opennextjs-cloudflare preview",
     "deploy": "pnpm cf:build && opennextjs-cloudflare deploy",
     "audit:cursor": "node scripts/audit-cursor.mjs",
-    "visits:playwright": "tsx scripts/visits-playwright.mts"
+    "visits:playwright": "tsx scripts/visits-playwright.mts",
+    "indexnow": "node scripts/indexnow.mjs"
   },
   "dependencies": {
     "@tiptap/core": "^2.27.3",

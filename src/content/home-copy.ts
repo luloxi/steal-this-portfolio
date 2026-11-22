@@ -82,7 +82,7 @@ export const homeCopy: Record<Locale, {
         },
         {
           q: "¿Trabajás de forma remota?",
-          a: "Sí. Trabajo remoto desde Argentina, en español o en inglés.",
+          a: "Sí. Trabajo remoto desde Buenos Aires, Argentina, con equipos de cualquier país, en español o en inglés.",
         },
       ],
     },
@@ -155,11 +155,83 @@ export const homeCopy: Record<Locale, {
         },
         {
           q: "Do you work remotely?",
-          a: "Yes. I work remotely from Argentina, in Spanish or English.",
+          a: "Yes. I work remotely from Buenos Aires, Argentina, with teams in any country, in Spanish or English.",
         },
       ],
     },
     closing: "If you have a process that depends on someone doing it by hand, write to me and we'll look at it.",
     footer: { services: "Services" },
+  },
+};
+
+/** Home sections added for the Grok Bot showcase (task: "que mi portfolio sea un reflejo de nuestro potencial"). */
+export const homeMore: Record<Locale, {
+  nav: { about: string; showcase: string; cases: string; services: string; projects: string; blog: string; contact: string; hire: string };
+  about: { title: string; body: string; facts: string[]; more: string };
+  showcase: { title: string; lead: string; cta: string; demoLabel: string };
+  cases: { title: string; lead: string; open: string; caseLink: string; all: string };
+  services: { title: string; lead: string };
+  projects: { title: string; all: string };
+  blog: { title: string; all: string };
+}> = {
+  es: {
+    nav: { about: "Sobre mí", showcase: "Grok Bot", cases: "Casos", services: "Servicios", projects: "Proyectos", blog: "Blog", contact: "Contacto", hire: "Contratar" },
+    about: {
+      title: "Sobre mí",
+      body: "Soy Luciano Oliva Bianco (Lulox), de Buenos Aires. Vengo del cine y de años construyendo en blockchain, y hoy armo agentes de IA y sistemas a medida. Trabajo todos los días con una flota de bots de Grok Bot: esta misma web la escriben, prueban y publican ellos, con mi revisión.",
+      facts: [
+        "Buenos Aires, Argentina. Remoto, en español o en inglés",
+        "Research & Development en Input Output Global (2025 a 2026)",
+        "Fullstack Web3 developer en BuidlGuidl (2023 a 2024)",
+        "Embajador de Midnight, la blockchain de privacidad de IOG",
+      ],
+      more: "Leer mi historia",
+    },
+    showcase: {
+      title: "Lo que hacemos con Grok Bot",
+      lead: "Grok Bot es el motor principal: agentes que trabajan solos en tareas reales y te piden el OK antes de lo importante. Esto es lo que ya hacen todos los días en mi propio trabajo.",
+      cta: "Quiero algo así",
+      demoLabel: "Demo de la cola de tareas de la flota de bots",
+    },
+    cases: {
+      title: "Proyectos con demo",
+      lead: "Grabaciones cortas con datos de prueba. Cada uno resuelve un problema concreto.",
+      open: "Abrir",
+      caseLink: "Ver el caso",
+      all: "Todos los casos",
+    },
+    services: { title: "Servicios", lead: "Elegí por dónde empezar. Cada página explica casos, cómo trabajo y preguntas frecuentes." },
+    projects: { title: "Más proyectos", all: "Ver todos los proyectos" },
+    blog: { title: "Del blog", all: "Ver todas las notas" },
+  },
+  en: {
+    nav: { about: "About", showcase: "Grok Bot", cases: "Case studies", services: "Services", projects: "Projects", blog: "Blog", contact: "Contact", hire: "Hire me" },
+    about: {
+      title: "About me",
+      body: "I'm Luciano Oliva Bianco (Lulox), from Buenos Aires. I come from film and years of building on blockchain, and today I build AI agents and custom systems. I work every day with a fleet of Grok Bot bots: they write, test and ship this very website, with my review.",
+      facts: [
+        "Buenos Aires, Argentina. Remote, in Spanish or English",
+        "Research & Development at Input Output Global (2025 to 2026)",
+        "Fullstack Web3 developer at BuidlGuidl (2023 to 2024)",
+        "Ambassador for Midnight, IOG's privacy blockchain",
+      ],
+      more: "Read my story",
+    },
+    showcase: {
+      title: "What we do with Grok Bot",
+      lead: "Grok Bot is the main engine: agents that work on real tasks on their own and ask for your OK before anything important. This is what they already do every day in my own work.",
+      cta: "I want something like this",
+      demoLabel: "Demo of the bot fleet task queue",
+    },
+    cases: {
+      title: "Projects with a demo",
+      lead: "Short recordings with test data. Each one solves a concrete problem.",
+      open: "Open",
+      caseLink: "Read the case",
+      all: "All case studies",
+    },
+    services: { title: "Services", lead: "Pick where to start. Each page covers use cases, how I work and common questions." },
+    projects: { title: "More projects", all: "See all projects" },
+    blog: { title: "From the blog", all: "See all posts" },
   },
 };

@@ -10,7 +10,9 @@ const WAIT = process.env.AUDIT_WAIT ?? "networkidle"; // "load" for sites with l
 // Spanish at the root, English under /en (the URL decides the language, see src/lib/routes.ts).
 const ROUTES = process.env.AUDIT_ROUTES ? process.env.AUDIT_ROUTES.split(",") : [
   "/", "/blog", "/contratar", "/sobre-mi", "/proyectos", "/proyectos/mochi", "/contacto", "/tastes", "/privacidad", "/ingresar", "/referidos", "/admin/referidos", "/admin/visitas", "/rothko", "/no-existe",
+  "/servicios", "/servicios/agentes-de-ia", "/casos", "/casos/garpen",
   "/en", "/en/blog", "/en/hire", "/en/about", "/en/projects", "/en/projects/mochi", "/en/contact", "/en/privacy", "/en/sign-in", "/en/referrals", "/en/no-existe",
+  "/en/services", "/en/services/ai-agents", "/en/case-studies", "/en/case-studies/bot-fleet",
 ];
 
 const probe = () => {
