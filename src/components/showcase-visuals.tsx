@@ -6,44 +6,6 @@ import type { ShowcaseArt } from "@/content/showcase";
 
 const box = { viewBox: "0 0 160 96", "aria-hidden": true, focusable: false } as const;
 
-function Code() {
-  return (
-    <svg className="sc-art" {...box}>
-      <rect x="8" y="10" width="96" height="76" rx="9" className="sc-panel" />
-      <circle cx="18" cy="20" r="2.5" className="sc-dot" />
-      <circle cx="26" cy="20" r="2.5" className="sc-dot" />
-      <circle cx="34" cy="20" r="2.5" className="sc-dot" />
-      {[0, 1, 2, 3].map((i) => (
-        <rect key={i} x={18 + (i % 2) * 8} y={32 + i * 12} width={[60, 44, 52, 30][i]} height="5" rx="2.5" className="sc-type" style={{ animationDelay: `${i * 0.45}s` }} />
-      ))}
-      <g className="sc-pop" style={{ animationDelay: "2s" }}>
-        <rect x="112" y="22" width="40" height="18" rx="9" className="sc-pill" />
-        <text x="132" y="34" textAnchor="middle" className="sc-label">PR ✓</text>
-      </g>
-      <g className="sc-bob">
-        <path d="M118 70 a10 10 0 0 1 4-19 a13 13 0 0 1 24 4 a8 8 0 0 1 0 15 z" className="sc-cloud" />
-        <path d="M132 66 v-12 m-5 5 l5 -5 l5 5" className="sc-stroke" />
-      </g>
-    </svg>
-  );
-}
-
-function Bookmarks() {
-  return (
-    <svg className="sc-art" {...box}>
-      <path d="M96 40 h18 l6 6 h30 v34 a6 6 0 0 1 -6 6 h-42 a6 6 0 0 1 -6 -6 z" className="sc-folder" />
-      <g className="sc-move">
-        <rect x="10" y="20" width="62" height="20" rx="10" className="sc-chip" />
-        <path d="M22 30 h6 m-3 -3 v6" className="sc-stroke" />
-        <rect x="34" y="28" width="30" height="4" rx="2" className="sc-line" />
-      </g>
-      <rect x="10" y="56" width="52" height="16" rx="8" className="sc-chip is-dim" />
-      <rect x="104" y="58" width="36" height="4" rx="2" className="sc-line sc-type" style={{ animationDelay: "1.4s" }} />
-      <rect x="104" y="66" width="26" height="4" rx="2" className="sc-line sc-type" style={{ animationDelay: "1.7s" }} />
-    </svg>
-  );
-}
-
 function Social() {
   return (
     <svg className="sc-art" {...box}>
@@ -106,8 +68,6 @@ function Routines() {
 }
 
 const ARTS: Record<ShowcaseArt, () => React.ReactElement> = {
-  code: Code,
-  bookmarks: Bookmarks,
   social: Social,
   whatsapp: WhatsApp,
   routines: Routines,
