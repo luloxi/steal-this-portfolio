@@ -10,9 +10,9 @@ const WAIT = process.env.AUDIT_WAIT ?? "networkidle"; // "load" for sites with l
 // Spanish at the root, English under /en (the URL decides the language, see src/lib/routes.ts).
 const ROUTES = process.env.AUDIT_ROUTES ? process.env.AUDIT_ROUTES.split(",") : [
   "/", "/blog", "/contratar", "/sobre-mi", "/proyectos", "/proyectos/mochi", "/contacto", "/tastes", "/privacidad", "/ingresar", "/referidos", "/admin/referidos", "/admin/visitas", "/rothko", "/no-existe",
-  "/servicios", "/servicios/agentes-de-ia", "/casos", "/casos/garpen",
+  "/servicios", "/servicios/agentes-de-ia",
   "/en", "/en/blog", "/en/hire", "/en/about", "/en/projects", "/en/projects/mochi", "/en/contact", "/en/privacy", "/en/sign-in", "/en/referrals", "/en/no-existe",
-  "/en/services", "/en/services/ai-agents", "/en/case-studies", "/en/case-studies/bot-fleet",
+  "/en/services", "/en/services/ai-agents",
 ];
 
 const probe = () => {
@@ -27,7 +27,7 @@ const probe = () => {
     const tag = el.tagName.toLowerCase();
     if (tag === "textarea" || (tag === "input" && TEXTY.has(el.getAttribute("type") ?? ""))) continue; // text fields keep the I-beam
     if (tag === "label" && !el.htmlFor && !el.querySelector("input:not([type=text]):not([type=email]):not([type=search]), select")) continue; // wraps a text field
-    if (el.matches("[contenteditable], .sec-reorder-handle, .hm-photo")) continue; // drag handles / easter egg: intentional
+    if (el.matches("[contenteditable], .sec-reorder-handle")) continue; // drag handles: intentional
     if (el.closest("iframe")) continue;
     checked++;
     const disabled = el.matches(":disabled, [aria-disabled=true]");

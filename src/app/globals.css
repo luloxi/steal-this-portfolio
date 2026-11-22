@@ -5061,3 +5061,20 @@ textarea.adm-input { resize: vertical; }
 @media (max-width: 640px) {
   .vist-link { grid-template-columns: 1fr; }
 }
+
+/* Hire form: its own panel, with solid fields in both themes (never see-through). */
+.hire-form-card { padding: clamp(1.1rem, 3vw, 1.75rem); border-radius: 18px;
+  background: color-mix(in oklab, var(--surface) 88%, var(--accent) 6%);
+  border: 1px solid color-mix(in oklab, var(--accent) 28%, var(--border));
+  box-shadow: 0 18px 40px -28px color-mix(in oklab, var(--accent) 60%, transparent); }
+.hire-form-card > .hm-h2 { margin-top: 0; }
+.hire-form-field input, .hire-form-field textarea { background: var(--background); }
+:root:not(.dark) .hire-form-card { background: linear-gradient(160deg, #fff4f1, #f3f0ff 55%, #eefaf6); border-color: #e3d7ff; }
+:root:not(.dark) .hire-form-field input, :root:not(.dark) .hire-form-field textarea { background: #ffffff; }
+:root.dark .hire-form-card { background: color-mix(in oklab, var(--surface) 80%, var(--accent) 8%); }
+:root.dark .hire-form-field input, :root.dark .hire-form-field textarea { background: color-mix(in oklab, var(--background) 85%, black); }
+
+/* Light theme titles: deep berry / plum so they stand out on the pastel fields (AA: berry ≈ 7:1, plum ≈ 9:1 on the light backgrounds). Dark keeps its neon accent. */
+:root:not(.dark) .cp-page-title-text { color: #a3195b; text-shadow: 0 1px 0 color-mix(in oklab, #ff6b5e 18%, transparent); }
+:root:not(.dark) .cp-page-title-mark { background: linear-gradient(90deg, transparent 0%, #ff6b5e 45%, #a3195b 100%); box-shadow: none; }
+:root:not(.dark) .hm-h2 { color: #5e2590; }

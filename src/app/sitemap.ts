@@ -8,7 +8,6 @@ import { isPathHidden, orderRecords } from "@/lib/site-sections";
 import { getSiteOrder } from "@/lib/site-order";
 import type { Locale } from "@/i18n/types";
 import { SERVICE_PAGES } from "@/content/service-pages";
-import { CASE_STUDIES } from "@/content/showcase";
 
 /** Last real content change of the code-driven pages (bump when their copy changes). */
 const PAGES_UPDATED = new Date("2026-11-21T00:00:00-03:00");
@@ -57,9 +56,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const services = SERVICE_PAGES.flatMap((p) =>
     both(settings.url, pathPair(`/servicios/${p.slug}`), { lastModified: PAGES_UPDATED, changeFrequency: "monthly", priority: 0.9 }),
   );
-  const cases = ["/casos", ...CASE_STUDIES.map((c) => `/casos/${c.slug}`)].flatMap((path) =>
-    both(settings.url, pathPair(path), { lastModified: PAGES_UPDATED, changeFrequency: "monthly", priority: 0.8 }),
-  );
   let posts: MetadataRoute.Sitemap = [];
   try {
     posts = (shown("/blog") ? await getPublishedPosts() : []).flatMap((p) =>
@@ -71,5 +67,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   } catch (err) {
     console.error("[sitemap] posts", err);
   }
-  return [...pages, ...services, ...cases, ...projects, ...posts];
+  return [...pages, ...services, ...projects, ...posts];
 }

@@ -123,44 +123,6 @@ export function serviceOfferLd(
   };
 }
 
-/** Case study (/casos/<slug>): the software itself plus its demo clip. */
-export function caseStudyLd(
-  s: SiteSettings,
-  locale: Locale,
-  opts: { name: string; description: string; esPath: string; media: string; stack: string[]; live?: string; github?: string; icon: string; uploadDate: string },
-): Json[] {
-  const url = abs(s, localizePath(locale, opts.esPath));
-  const video = {
-    "@type": "VideoObject",
-    "@id": `${url}#demo`,
-    name: `${opts.name} demo`,
-    description: opts.description,
-    thumbnailUrl: abs(s, `/demos/${opts.media}.webp`),
-    contentUrl: abs(s, `/demos/${opts.media}.mp4`),
-    uploadDate: opts.uploadDate,
-    duration: "PT10S",
-    inLanguage: locale === "es" ? "es-AR" : "en-US",
-  };
-  return [
-    {
-      "@type": ["SoftwareApplication", "CreativeWork"],
-      "@id": `${url}#software`,
-      name: opts.name,
-      description: opts.description,
-      url,
-      image: abs(s, opts.icon),
-      applicationCategory: "BusinessApplication",
-      operatingSystem: "Web",
-      keywords: opts.stack.join(", "),
-      ...(opts.live ? { sameAs: [opts.live, ...(opts.github ? [opts.github] : [])] } : opts.github ? { sameAs: [opts.github] } : {}),
-      author: { "@id": personId(s) },
-      creator: { "@id": personId(s) },
-      video: { "@id": `${url}#demo` },
-    },
-    video,
-  ];
-}
-
 export function faqLd(items: { q: string; a: string }[]): Json {
   return {
     "@type": "FAQPage",

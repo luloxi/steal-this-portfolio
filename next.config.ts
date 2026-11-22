@@ -21,6 +21,8 @@ const nextConfig: NextConfig = {
       statusCode: 301 as const,
     });
     return [
+      r("/servicios/automatizar-finanzas", "/servicios"),
+      r("/en/services/finance-automation", "/en/services"),
       r("/about", "/sobre-mi"),
       r("/tastes", "/sobre-mi"),
       r("/gustos", "/sobre-mi"),
@@ -42,6 +44,11 @@ const nextConfig: NextConfig = {
       r("/en/tastes", "/en/about"),
       r("/en/gustos", "/en/about"),
       r("/en/login", "/en/sign-in"),
+      // Case-study pages were folded into the home Proyectos section.
+      r("/casos", "/#proyectos"),
+      r("/casos/:slug", "/#proyectos"),
+      r("/en/case-studies", "/en#proyectos"),
+      r("/en/case-studies/:slug", "/en#proyectos"),
     ];
   },
   images: {

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
-import { HomeView, type HomePost, type HomeProject } from "@/components/views/home-view";
+import { HomeView, type HomePost } from "@/components/views/home-view";
 import { HOME_PROJECT_IDS, homeCopy } from "@/content/home-copy";
 import { servicesCopy } from "@/content/services-copy";
 import { buildPageMetadata } from "@/lib/page-metadata";
@@ -36,8 +36,8 @@ const KNOWS_ABOUT = {
 } as const;
 
 /**
- * Landing: hero, about, Grok Bot showcase, case studies with demo loops, examples,
- * services, every other visible project (D1), latest posts, process, FAQ, closing CTA.
+ * Landing: hero, about, Automatizando cards, examples, services, featured projects
+ * with demo loops (Malito, Garpen), latest posts, process, FAQ, closing CTA.
  */
 export default async function HomePage() {
   const [locale, all, settings, allPosts] = await Promise.all([
@@ -46,11 +46,9 @@ export default async function HomePage() {
     getSiteSettings(),
     getPublishedPosts().catch(() => []),
   ]);
+  // Only the projects offered on the landing (with a demo) go into its JSON-LD.
   const featured = new Set<string>(HOME_PROJECT_IDS);
-  const pick = (c: { title: string; body: string }) => ({ title: c.title, body: c.body });
-  const toHome = (p: (typeof all)[number]): HomeProject => ({ id: p.id, icon: p.icon, copy: { es: pick(p.copy.es), en: pick(p.copy.en) } });
-  const visible = all.filter((p) => p.visible);
-  const projects: HomeProject[] = visible.filter((p) => !featured.has(p.id)).map(toHome);
+  const shown = all.filter((p) => p.visible && featured.has(p.id));
   const posts: HomePost[] = allPosts.slice(0, 3).map((p) => ({
     slug: p.slug,
     slugEn: p.slugEn ?? null,
@@ -67,13 +65,13 @@ export default async function HomePage() {
     personLd(settings, locale, JOB_TITLE[locale], [...KNOWS_ABOUT[locale]]),
     websiteLd(settings, locale, c.meta.description),
     serviceLd(settings, locale, { name: svc.title, description: c.meta.description, offers: svc.offers }),
-    projectsLd(settings, locale, visible.map(toHome).map((p) => ({ id: p.id, icon: p.icon, ...p.copy[locale] }))),
+    projectsLd(settings, locale, shown.map((p) => ({ id: p.id, icon: p.icon, title: p.copy[locale].title, body: p.copy[locale].body }))),
     faqLd(c.faq.items),
   ];
   return (
     <>
       <JsonLd graph={graph} />
-      <HomeView projects={projects} posts={posts} />
+      <HomeView posts={posts} />
     </>
   );
 }

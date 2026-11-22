@@ -34,7 +34,7 @@ export function HireView() {
           </ul>
           <p className="hire-tools">{c.tools}</p>
         </section>
-        <section aria-labelledby="hire-form-title">
+        <section aria-labelledby="hire-form-title" className="hire-form-card">
           <h2 id="hire-form-title" className="hm-h2">{c.formTitle}</h2>
           <HireForm c={c} callUrl={settings.callBookingUrl || undefined} />
         </section>

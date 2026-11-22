@@ -38,7 +38,7 @@ Spanish: https://lulox.com.ar/servicios/agentes-de-ia · English: https://lulox.
 Q: What does an AI agent do in a business?
 A: An AI agent does tasks a person does today: it reads emails and documents, decides what applies based on your rules, enters data into your systems and flags anything that needs a human decision. I build them with Grok, Grok Bot and Hermes, always with approval before anything goes to third parties.
 
-Use cases (examples, not client work): Handling inquiries: Reads what comes in by email or form, answers the frequent ones and hands you what needs a person. Data entry: Moves information from emails, PDFs and spreadsheets into your CRM or system, without copying by hand. Client follow-up: Remembers who needs a message, prepares the draft and leaves it ready for your approval. Tasks on your machines: With Hermes and a runner queue, it runs processes on your computers while you are not watching.
+Use cases (examples, not client work): Handling inquiries: Reads what comes in by email or form, answers the frequent ones and hands you what needs a person. Data entry: Moves information from emails, PDFs and spreadsheets into your CRM or system, without copying by hand. Client follow-up: Remembers who needs a message, prepares the draft and leaves it ready for your approval. Tasks on your machines: With Hermes and a task queue, it runs processes on your computers while you are not watching.
 
 Q: What is the difference between an AI agent and a chatbot?
 A: A chatbot talks. An AI agent also acts: it opens your tools, reads and writes data, follows steps and retries when something fails. That is why it should have narrow permissions, and sensitive actions like sending messages or moving money should go through your approval before they run.
@@ -90,9 +90,9 @@ A: You do. The system can live in your own Cloudflare account or the infrastruct
 Spanish: https://lulox.com.ar/servicios/grok-bot · English: https://lulox.com.ar/en/services/grok-bot
 
 Q: What can you automate with Grok Bot?
-A: With Grok Bot you can build bots that work on their own: they write and ship code, read and load finances, file links into bookmarks, prepare drafts for social media and WhatsApp, and run routines and reminders. I use a fleet like that every day, and I help you build yours with clear permissions and human approval.
+A: With Grok Bot you can build bots that work on their own: they write and ship code, file links into bookmarks, prepare drafts for social media and WhatsApp, and run routines and reminders. I use a fleet like that every day, and I help you build yours with clear permissions and human approval.
 
-Use cases (examples, not client work): Development and deploys: A bot that makes the change, runs tests, opens the PR and ships. This site is made that way. Finances: Reads statements and receipts, loads them into Tarask and asks for an OK before importing. Links and notes: Whatever you send it lands in the right bookmark folder. Drafts and routines: Posts, WhatsApp messages, daily digests and reminders you review before they go out.
+Use cases (examples, not client work): Development and deploys: A bot that makes the change, runs tests, opens the PR, checks for failures and ships. Links and notes: Whatever you send it lands in the right bookmark folder. Drafts and routines: Posts, WhatsApp messages, daily digests and reminders you review before they go out.
 
 Q: What is Grok Bot?
 A: Grok Bot is an agent that works with Grok and can use tools: browse, read and write files, connect to apps over MCP, run routines and prepare messages. I use it as the main engine of my automations, with written rules so it asks for approval before sending anything or touching sensitive data.
@@ -121,105 +121,35 @@ A: Yes. It connects with Gmail and Google Workspace, or with email on your own d
 Q: What about my clients' privacy?
 A: The agent only reads what it needs for its task and does not share data with third parties. Drafts and information stay in your accounts. To start, we can test with sample messages, so you see how it works before giving it access to real conversations.
 
-### Finance automation with AI
-
-Spanish: https://lulox.com.ar/servicios/automatizar-finanzas · English: https://lulox.com.ar/en/services/finance-automation
-
-Q: How do you automate finances with AI?
-A: An agent imports bank or wallet movements, categorizes them, reads receipts and invoices from a photo or a PDF and shows you where the money goes, in pesos and dollars. You review and approve before anything is loaded. That is what I do with Tarask for my own accounts.
-
-Use cases (examples, not client work): Bank imports: Excel, CSV or PDF statements that load by themselves, without duplicates. Receipts and invoices: A photo or PDF read with AI and entered with amount, date and category. Pesos and dollars: Savings, card debt and net worth per currency, with the month by month trend. Shared expenses: Households or teams that split expenses and see who owes whom.
-
-Q: Is it safe to give my financial data to an agent?
-A: The agent does not need your bank passwords: it works with the statements and files you export. Nothing is imported without your approval and backups are taken before data changes. Testing uses fictional data, like the Tarask demo, before touching real information.
-
-Q: Is it for businesses or only personal finances?
-A: Both. Personally it sorts expenses, savings and debts. In a company or a studio it can load supplier invoices, reconcile movements, flag due dates and build reports for whoever keeps the books, without replacing the accountant.
-
-Q: Does it work with Argentine banks and wallets?
-A: Yes. Tarask already imports statements from Argentine banks and wallets in Excel and CSV, and handles pesos, dollars and USDT. For other banks the export format is added. What matters is that the bank lets you download the movements.
-
 ## What his Grok Bot fleet does every day (his own work, not client results)
 
-- Writes and ships code: Takes the request, makes the change on GitHub, runs the tests, opens the PR and ships to Cloudflare. This site is built that way.
-- Sorts your finances: Reads bank statements and receipts, loads them into Tarask and tells you what changed. Nothing is imported without your OK.
-- Files links into bookmarks: Send it a link or a note and it files it in the right bookmark folder, synced with your browser.
-- Social media drafts: Prepares posts for X and LinkedIn in your voice. You review them and decide when they go out.
-- WhatsApp drafts: Writes replies and follow-ups for your contacts. You do the sending.
-- Routines and reminders: Daily digests, calendar reminders and checks that run by themselves at the time you choose.
-- Your own runner queue: Tasks that run on your machines (Windows or Linux) from a panel in Genki: queued, running, done.
+- Writes and ships code: Takes the request, makes the change, runs the tests, opens the PR, checks for failures and ships.
+- Files links into bookmarks: Send it a link or a note and it saves it in the right folder.
+- Social media drafts: Prepares posts for your social media, in your voice.
+- Clients and errands on WhatsApp: Answers questions, follows up with clients and helps with errands on WhatsApp, so no conversation slips through.
+- Routines and reminders: Daily digests, reminders and checks that run on their own at the time you choose.
 
-## Case studies (real projects, demos recorded with test data)
-
-### Genki
-
-https://lulox.com.ar/casos/genki (English: https://lulox.com.ar/en/case-studies/genki)
-
-Genki is a browser desktop where my apps (Garpen, Tarask, Malito, DjTube and the portfolio) live next to Mochi, an assistant that opens, arranges and reads the windows. It adds a task board, an App Market to install apps and a runners panel that runs tasks on your own machines.
-
-Problem: With every tool in a different tab, information stays scattered and an agent cannot help you with everything at once.
-
-Solution: A desktop with windows and a dock, on computers and phones. Mochi, the assistant, drives the windows and asks for approval before changing anything. An App Market to add or remove apps, official creative apps included. Runners: a task queue that runs on your Windows or Linux machines, never twice at the same time. Your data stays on the device or in the cloud, your choice, with backups.
-
-For whom: People and small teams who want their apps and their agent in one place. Status: In personal use. Private for now. Stack: Next.js 16, Cloudflare Workers, D1, R2, IndexedDB, WebCrypto, Grok, Hermes.
-
-Demo video: https://lulox.com.ar/demos/genki.mp4
+## Featured projects (demo videos recorded with test data)
 
 ### Malito
 
-https://lulox.com.ar/casos/malito (English: https://lulox.com.ar/en/case-studies/malito) · Live: https://malito.lulox.com.ar
+https://lulox.com.ar/proyectos/malito · Live: https://malito.lulox.com.ar
 
-Malito is a self-hosted inbox that receives mail through Cloudflare Email Workers, stores it in D1 and R2, and lets you read, reply and send from your phone or computer. It includes a simple newsletter with lists, campaigns, templates, preview and an unsubscribe link in every email.
-
-Problem: Getting email on your own domain plus a newsletter usually means paying for several tools that do not talk to each other.
-
-Solution: Inbox with received, sent, drafts, spam and labels. Contacts synced with Garpen. Mailchimp-style newsletter: lists, campaigns, templates and automatic unsubscribe. Installable as a phone app.
-
-For whom: Professionals and small businesses who want their email and newsletter in one place. Status: Live at malito.lulox.com.ar. Stack: Next.js, OpenNext, Cloudflare Workers, Email Workers, D1, R2, Resend, PWA.
+Malito is an email tool for work: use your own address on your own domain (you@yourdomain) and send newsletters and campaigns to your lists. Inbox with received, sent, drafts, spam and labels, contacts synced with Garpen, installable as a phone app. Status: live at malito.lulox.com.ar.
 
 Demo video: https://lulox.com.ar/demos/malito.mp4
 
-### Tarask
-
-https://lulox.com.ar/casos/tarask (English: https://lulox.com.ar/en/case-studies/tarask) · Live: https://tarask.lulox.com.ar · Code: https://github.com/luloxi/tarask
-
-Tarask is a personal finance app that imports bank or wallet movements (Excel or CSV), categorizes them and shows month by month totals, card debt and savings per currency (pesos, dollars and USDT). It lets households share expenses and reads receipts with AI.
-
-Problem: Tracking money by hand in a spreadsheet, with pesos and dollars mixed together, takes time and is rarely up to date.
-
-Solution: Statement and movement imports with duplicate detection. Automatic categories and a monthly summary. Net worth and savings per currency, with their trend. Households to share expenses and receipts read with AI.
-
-For whom: People and households who handle pesos and dollars and want their numbers without spreadsheets. Status: Live by invitation at tarask.lulox.com.ar. Open source (AGPL). Stack: Next.js, Cloudflare Workers, D1, R2, Workers AI, Google OAuth, PWA.
-
-Demo video: https://lulox.com.ar/demos/tarask.mp4
-
 ### Garpen
 
-https://lulox.com.ar/casos/garpen (English: https://lulox.com.ar/en/case-studies/garpen) · Live: https://garpen.lulox.com.ar · Code: https://github.com/luloxi/garpen
+https://lulox.com.ar/proyectos/garpen · Live: https://garpen.lulox.com.ar · Code: https://github.com/luloxi/garpen
 
-Garpen is a custom personal CRM and ERP: contacts with relations (client, partner, supplier), an agenda with tasks by urgency, finances with accounts and movements, a billable timer and quotes. It has an MCP endpoint so an agent like Grok Bot can read and create tasks and contacts, plus optional end-to-end encryption.
-
-Problem: Generic CRMs charge for features you do not use and do not adapt to how each person or team works.
-
-Solution: Contacts with relations, automatic photos and the events where you met. Agenda colored by urgency, with undated notes. Finances, billable timer, quotes and invoices. MCP endpoint for agents and portfolio inquiries in one inbox.
-
-For whom: Freelancers and small teams who need a CRM shaped to their work. Status: Live at garpen.lulox.com.ar. Stack: Next.js 16, OpenNext, Cloudflare Workers, D1, Better Auth, Workers AI, MCP, Web Push.
+Garpen is a custom CRM and ERP: contacts with relations (client, partner, supplier), an agenda with tasks by urgency, finances with accounts and movements, a billable timer and quotes. An agent like Grok Bot can read and create tasks and contacts. Status: live at garpen.lulox.com.ar.
 
 Demo video: https://lulox.com.ar/demos/garpen.mp4
 
 ### Bot fleet
 
-https://lulox.com.ar/casos/flota-de-bots (English: https://lulox.com.ar/en/case-studies/bot-fleet)
-
-The fleet is a group of bots I built with Grok Bot as the main engine and Hermes for tasks on my own machines. They write and ship changes to GitHub and Cloudflare, load finances, file links into bookmarks, prepare drafts for social media and WhatsApp, and run routines and reminders. A person approves every message to third parties.
-
-Problem: Everyday repetitive work (deploys, data entry, links, drafts, reminders) eats hours that could go to deciding and creating.
-
-Solution: Bots that build and ship code: this site is made that way. Finances: they read statements and receipts and load them, always with approval. Links and notes that land in the right bookmark folder. Drafts for X, LinkedIn and WhatsApp that you review before sending. Routines, reminders and a self-hosted runner queue in Genki.
-
-For whom: People and teams who want agents to take over repetitive work without losing control. Status: In daily use. Stack: Grok, Grok Bot, Hermes, GitHub, Cloudflare, Genki runners, MCP.
-
-Demo video: https://lulox.com.ar/demos/flota-runners.mp4
+A group of bots built with Grok Bot as the main engine and Hermes for tasks on his own machines. They write and ship code (checking for failures first), file links into bookmarks, prepare social media drafts, help with clients and errands on WhatsApp, and run routines and reminders. Status: in daily use.
 
 ## Example use cases (examples of what can be done, not client work)
 
@@ -233,14 +163,13 @@ Demo video: https://lulox.com.ar/demos/flota-runners.mp4
 ## Automations already running in his own systems
 
 - The contact form on lulox.com.ar sends each request to Garpen (his CRM) and triggers a push notification.
-- Business movements recorded in Tarask pass automatically to Garpen.
 - Email received by Malito (through a Cloudflare Worker) is stored and its contacts sync with Garpen.
 
 ## Projects he built
 
 - Garpen (https://lulox.com.ar/proyectos/garpen, live https://garpen.lulox.com.ar): a personal ERP. Contacts with a relationship (client, partner, supplier, potential or confirmed) and linked tasks, events and notes; an agenda that puts tasks, events and notes on one timeline ordered by urgency; finances with accounts, income, expenses and invoices; a billable timer per task. Installable as a PWA, Google sign-in. Next.js (OpenNext) on Cloudflare Workers, D1 and Better Auth.
-- Tarask (https://lulox.com.ar/proyectos/tarask, live https://tarask.lulox.com.ar): personal finance. Income, expenses, debt and savings with a month-by-month view; shared households that split expenses and show each person's balance; receipts and summaries with AI; import from bank Excel or CSV files. Next.js on Cloudflare Workers, D1 and R2.
-- Malito (https://lulox.com.ar/proyectos/malito, live https://malito.lulox.com.ar): a self-hosted email inbox. Receive, read, reply, forward and compose email (also from any mailto: link), with contacts synced to Garpen. Installable as an app.
+- Personal projects (on https://lulox.com.ar/proyectos and https://lulox.com.ar/sobre-mi): Tarask (https://lulox.com.ar/proyectos/tarask), his personal finance app, and DJ Tube, among others. Tarask: Income, expenses, debt and savings with a month-by-month view; shared households that split expenses and show each person's balance; receipts and summaries with AI; import from bank Excel or CSV files. Next.js on Cloudflare Workers, D1 and R2.
+- Malito (https://lulox.com.ar/proyectos/malito, live https://malito.lulox.com.ar): an email tool for work. Use your own address on your own domain (you@yourdomain) and send newsletters and campaigns to your lists.
 - More projects: https://lulox.com.ar/proyectos
 
 ## Tools he works with

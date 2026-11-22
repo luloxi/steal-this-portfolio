@@ -9,14 +9,6 @@
 .hm-hero-text { display: flex; flex-direction: column; gap: 1.25rem; }
 .hm-hero-art { position: relative; width: 100%; max-width: 30rem; justify-self: center; }
 @media (min-width: 900px) { .hm-hero { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 2.5rem; } .hm-hero-art { max-width: none; } }
-.hm-id { display: flex; align-items: center; gap: .9rem; }
-.hm-photo { flex: none; width: 64px; height: 64px; overflow: hidden; touch-action: manipulation; user-select: none; -webkit-user-select: none;
-  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
-  background: radial-gradient(circle at 50% 40%, color-mix(in oklab, var(--accent) 45%, transparent), transparent 70%), var(--surface);
-  box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent) 40%, transparent); }
-.hm-photo img { width: 100%; height: 100%; object-fit: cover; }
-@media (min-width: 900px) { .hm-photo { width: 76px; height: 76px; } }
-.hm-intro { margin: 0; font-family: var(--font-orbitron), var(--font-display); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); line-height: 1.5; }
 .hm-title { margin: 0; font-size: clamp(1.85rem, 6.4vw, 3.1rem); line-height: 1.12; font-weight: 600; letter-spacing: -.01em; color: var(--foreground); text-wrap: balance;
   text-shadow: 0 0 22px var(--glow-crimson); }
 .hm-lead { margin: 0; max-width: 36rem; font-size: clamp(1.05rem, 2.6vw, 1.25rem); line-height: 1.55; color: color-mix(in oklab, var(--foreground) 78%, transparent); }
