@@ -10,7 +10,8 @@ import { localizePost } from "@/content/blog/types";
 import Link from "next/link";
 import { useSectionShown } from "@/components/site-order-context";
 import { useLocale } from "@/i18n/locale-provider";
-import { useEditMode } from "@/components/admin-context";
+import { useEditModeSwitch, useIsAdmin } from "@/components/admin-context";
+import { shouldOfferEditMode } from "@/lib/edit-mode";
 import { useBlogPostEditor } from "@/components/blog-post-edit";
 import { useRef, useState, type ReactNode } from "react";
 import { ReadingProgress } from "@/components/reading-progress";
@@ -32,8 +33,24 @@ type Slots = { titleNode: ReactNode; summaryNode: ReactNode; bodyNode: ReactNode
 
 /** One post, rendered on the server (D1). Admin edit mode edits it in place. */
 export function BlogPostView({ post }: { post: BlogPost }) {
-  const editOn = useEditMode();
-  return editOn ? <EditablePost post={post} /> : <PostLayout post={post} />;
+  const isAdmin = useIsAdmin();
+  const { on: editOn, set: setEditOn } = useEditModeSwitch();
+  if (editOn) return <EditablePost post={post} />;
+  return <PostLayout post={post} offer={shouldOfferEditMode(isAdmin, editOn) ? () => setEditOn(true) : undefined} />;
+}
+
+/** Owner only, edit mode off: one button to turn it on in place. */
+function EditModeOffer({ onEnable }: { onEnable: () => void }) {
+  const { locale } = useLocale();
+  const es = locale === "es";
+  return (
+    <div className="edit-offer" role="region" aria-label={es ? "Modo editor" : "Editor mode"} data-testid="edit-offer">
+      <p>{es ? "El modo editor está apagado: así ve el artículo un visitante." : "Editor mode is off: this is how a visitor sees the article."}</p>
+      <button type="button" className="cover-btn" onClick={onEnable} data-testid="edit-offer-btn">
+        {es ? "Activar modo editor" : "Turn on editor mode"}
+      </button>
+    </div>
+  );
 }
 
 function EditablePost({ post }: { post: BlogPost }) {
@@ -41,7 +58,7 @@ function EditablePost({ post }: { post: BlogPost }) {
   return <PostLayout post={post} slots={slots} />;
 }
 
-function PostLayout({ post, slots }: { post: BlogPost; slots?: Slots }) {
+function PostLayout({ post, slots, offer }: { post: BlogPost; slots?: Slots; offer?: () => void }) {
   const { t, locale, href } = useLocale();
   const contactShown = useSectionShown("contact");
   const L = localizePost(post, locale);
@@ -58,6 +75,7 @@ function PostLayout({ post, slots }: { post: BlogPost; slots?: Slots }) {
       footerLabel={t.blog.backToBlog}
     >
       <ReadingProgress target={articleRef} />
+      {offer ? <EditModeOffer onEnable={offer} /> : null}
       <article ref={articleRef} className="space-y-6">
         <header
           className="cp-panel"

@@ -335,7 +335,7 @@ function Toolbar({ editor, es, dirty, saving, error, onConfirm, onCancel, extraT
   );
 }
 
-export function MdWysiwyg({ markdown, blog, project, classes, className = "", mode = "inline", onSave, onChange, extraDirty = false, forceActive = false, onCancelExtra, extraTools }: Props) {
+export function MdWysiwyg({ markdown, blog, project, classes, className = "", mode = "inline", onSave, onChange, extraDirty = false, forceActive = false, onCancelExtra, extraTools, placeholder }: Props) {
   const { locale } = useLocale();
   const es = locale === "es";
   const rich = Boolean(blog || project);
@@ -460,7 +460,9 @@ export function MdWysiwyg({ markdown, blog, project, classes, className = "", mo
 
   return (
     <div
-      className={`md-edit ${dropping ? "is-drop" : ""} ${className}`.trim()}
+      className={`md-edit ${dropping ? "is-drop" : ""} ${placeholder ? "has-ph" : ""} ${className}`.trim()}
+      // Placeholder shown by CSS while the document is a single empty paragraph.
+      style={placeholder ? ({ ["--md-ph" as string]: JSON.stringify(placeholder) }) : undefined}
       onDragOver={(e) => {
         if (!rich || !e.dataTransfer?.types?.includes("Files")) return;
         e.preventDefault();

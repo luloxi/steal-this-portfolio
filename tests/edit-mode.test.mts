@@ -43,3 +43,11 @@ test("/en/blog draft lookup: only the admin with edit mode ON (no leak to signed
   assert.equal(await mayLookUpDrafts(true, "lulox-edit-mode=on", admin(true)), true);
   assert.equal(await mayLookUpDrafts(true, null, admin(true)), true);
 });
+
+test("owner on an article with edit mode OFF gets the 'Activar modo editor' prompt; nobody else does", async () => {
+  const { shouldOfferEditMode } = await import("../src/lib/edit-mode.ts");
+  assert.equal(shouldOfferEditMode(true, false), true); // owner, edit off: offer it
+  assert.equal(shouldOfferEditMode(true, true), false); // already editing
+  assert.equal(shouldOfferEditMode(false, false), false); // visitor or signed-in non-owner
+  assert.equal(shouldOfferEditMode(false, true), false);
+});

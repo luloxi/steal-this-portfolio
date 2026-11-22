@@ -99,3 +99,19 @@ export function sniffImage(bytes: Uint8Array): string | null {
   if (s(4, 4) === "ftyp" && /^avi[fs]$/.test(s(8, 4))) return "image/avif";
   return null;
 }
+
+export type UploadCheck = { ok: true; type: string; ext: string } | { ok: false; error: "no_file" | "empty" | "too_large" | "unsupported_type"; status: number };
+
+/**
+ * Server-side gate for one upload: size first (no read past the limit), then the
+ * real type from the first bytes (the browser's MIME is never trusted). SVG and
+ * anything that isn't PNG/JPEG/WebP/GIF/AVIF is refused.
+ */
+export function checkUpload(size: number | null | undefined, head: Uint8Array | null): UploadCheck {
+  if (size == null || head == null) return { ok: false, error: "no_file", status: 400 };
+  if (size === 0) return { ok: false, error: "empty", status: 400 };
+  if (size > MEDIA_MAX) return { ok: false, error: "too_large", status: 413 };
+  const type = sniffImage(head);
+  if (!type || !MEDIA_EXT[type]) return { ok: false, error: "unsupported_type", status: 415 };
+  return { ok: true, type, ext: MEDIA_EXT[type] };
+}

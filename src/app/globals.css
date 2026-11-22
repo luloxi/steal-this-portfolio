@@ -5132,3 +5132,30 @@ html:root:not(.dark) {
 :root:not(.dark) .md-copy li::marker { color: var(--accent); }
 :root:not(.dark) .md-copy .md-quote { border-left-color: var(--accent); }
 :root:not(.dark) .md-acc-btn:focus-visible { outline-color: var(--accent); }
+
+/* Blog cover picker (owner only): drop zone + buttons, thumb-friendly on phones. */
+.cover-picker { display: grid; gap: .6rem; width: 100%; max-width: 26rem; }
+.cover-drop { display: grid; place-items: center; min-height: 7.5rem; padding: .6rem; border-radius: 12px; border: 2px dashed color-mix(in oklab, var(--accent) 45%, var(--border)); background-color: var(--card-solid); transition: border-color .15s ease, background-color .15s ease; }
+.cover-drop.is-over { border-color: var(--accent); background-color: color-mix(in oklab, var(--accent) 10%, var(--card-solid)); }
+.cover-drop.has-image { border-style: solid; }
+.cover-preview { max-width: 100%; max-height: 14rem; object-fit: contain; border-radius: 8px; }
+.cover-hint { color: var(--muted); font-size: .92rem; text-align: center; }
+.cover-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.cover-btn { cursor: pointer; min-height: 44px; padding: .5rem 1rem; border-radius: 10px; font-weight: 600; font-size: .95rem; color: var(--background); background: var(--accent); border: 1px solid var(--accent); }
+.cover-btn.is-quiet { color: var(--foreground); background: transparent; border-color: color-mix(in oklab, var(--foreground) 30%, transparent); }
+.cover-btn:disabled { opacity: .6; cursor: progress; }
+.cover-error { margin: 0; font-size: .88rem; color: #c2185b; }
+:root.dark .cover-error { color: #ff8fab; }
+
+/* Owner prompt on a blog article with edit mode off. */
+.edit-offer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: 1.25rem; padding: .85rem 1rem; border-radius: 12px; background-color: color-mix(in oklab, var(--accent) 10%, var(--card-solid)); border: 1px solid color-mix(in oklab, var(--accent) 40%, var(--border)); }
+.edit-offer p { margin: 0; font-size: .95rem; }
+
+/* Blog editor: the body is a big page to write on (mobile first); the summary
+   ("Bajada (opcional)") is a small secondary line under the title. */
+.blog-md-page .md-pm { min-height: 60vh; padding: .25rem 0 3rem; font-size: 1.02rem; line-height: 1.75; cursor: text; }
+.md-edit.has-ph .md-pm > p:only-child:has(> br.ProseMirror-trailingBreak:only-child)::before,
+.md-edit.has-ph .md-pm > p:only-child:empty::before { content: var(--md-ph); color: var(--muted); opacity: .8; pointer-events: none; float: left; height: 0; }
+.blog-dek-edit { font-size: .9rem !important; color: var(--muted); }
+.blog-dek-edit:empty::before { font-style: italic; }
+@media (min-width: 640px) { .blog-md-page .md-pm { font-size: 1.06rem; } }
