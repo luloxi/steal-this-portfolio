@@ -24,6 +24,19 @@ export function serviceId(s: SiteSettings) {
 }
 
 /** Public profile links already shown on the site (footer, contact page). */
+/** Where Luciano works from: Buenos Aires, Argentina (no street address, he works remotely). */
+export const ADDRESS: Json = { "@type": "PostalAddress", addressLocality: "Buenos Aires", addressRegion: "CABA", addressCountry: "AR" };
+
+/** Remote work for Latin America and the rest of the world. */
+export function areaServed(locale: Locale): Json[] {
+  return [
+    { "@type": "City", name: "Buenos Aires" },
+    { "@type": "Country", name: "Argentina" },
+    { "@type": "Place", name: locale === "es" ? "Latinoamérica" : "Latin America" },
+    { "@type": "Place", name: locale === "es" ? "Todo el mundo (remoto)" : "Worldwide (remote)" },
+  ];
+}
+
 export function sameAs(s: SiteSettings): string[] {
   const links = [...s.socials.map((x) => x.href), s.githubHref].filter(Boolean);
   return [...new Set(links)];
@@ -40,7 +53,8 @@ export function personLd(s: SiteSettings, locale: Locale, jobTitle: string, know
     jobTitle,
     knowsAbout,
     knowsLanguage: ["es", "en"],
-    address: { "@type": "PostalAddress", addressCountry: "AR" },
+    homeLocation: { "@type": "City", name: "Buenos Aires", address: ADDRESS },
+    address: ADDRESS,
     sameAs: sameAs(s),
   };
 }
@@ -71,8 +85,8 @@ export function serviceLd(
     image: abs(s, localizedOgImage(s.ogImage, locale)),
     founder: { "@id": personId(s) },
     provider: { "@id": personId(s) },
-    areaServed: locale === "es" ? "Remoto, desde Argentina" : "Remote, from Argentina",
-    address: { "@type": "PostalAddress", addressCountry: "AR" },
+    areaServed: areaServed(locale),
+    address: ADDRESS,
     availableLanguage: ["es", "en"],
     sameAs: sameAs(s),
     potentialAction: { "@type": "CommunicateAction", target: abs(s, localizePath(locale, "/contratar")) },
@@ -85,6 +99,66 @@ export function serviceLd(
       })),
     },
   };
+}
+
+/** One offering page (/servicios/<slug>): a Service provided by the ProfessionalService and the Person. */
+export function serviceOfferLd(
+  s: SiteSettings,
+  locale: Locale,
+  opts: { name: string; description: string; esPath: string; serviceType: string; image?: string },
+): Json {
+  const url = abs(s, localizePath(locale, opts.esPath));
+  return {
+    "@type": "Service",
+    "@id": `${url}#service`,
+    name: opts.name,
+    serviceType: opts.serviceType,
+    description: opts.description,
+    url,
+    ...(opts.image ? { image: abs(s, opts.image) } : {}),
+    provider: [{ "@id": personId(s) }, { "@id": serviceId(s) }],
+    areaServed: areaServed(locale),
+    availableChannel: { "@type": "ServiceChannel", serviceUrl: abs(s, localizePath(locale, "/contratar")), availableLanguage: ["es", "en"] },
+    inLanguage: locale === "es" ? "es-AR" : "en-US",
+  };
+}
+
+/** Case study (/casos/<slug>): the software itself plus its demo clip. */
+export function caseStudyLd(
+  s: SiteSettings,
+  locale: Locale,
+  opts: { name: string; description: string; esPath: string; media: string; stack: string[]; live?: string; github?: string; icon: string; uploadDate: string },
+): Json[] {
+  const url = abs(s, localizePath(locale, opts.esPath));
+  const video = {
+    "@type": "VideoObject",
+    "@id": `${url}#demo`,
+    name: `${opts.name} demo`,
+    description: opts.description,
+    thumbnailUrl: abs(s, `/demos/${opts.media}.webp`),
+    contentUrl: abs(s, `/demos/${opts.media}.mp4`),
+    uploadDate: opts.uploadDate,
+    duration: "PT10S",
+    inLanguage: locale === "es" ? "es-AR" : "en-US",
+  };
+  return [
+    {
+      "@type": ["SoftwareApplication", "CreativeWork"],
+      "@id": `${url}#software`,
+      name: opts.name,
+      description: opts.description,
+      url,
+      image: abs(s, opts.icon),
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      keywords: opts.stack.join(", "),
+      ...(opts.live ? { sameAs: [opts.live, ...(opts.github ? [opts.github] : [])] } : opts.github ? { sameAs: [opts.github] } : {}),
+      author: { "@id": personId(s) },
+      creator: { "@id": personId(s) },
+      video: { "@id": `${url}#demo` },
+    },
+    video,
+  ];
 }
 
 export function faqLd(items: { q: string; a: string }[]): Json {

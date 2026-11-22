@@ -3,6 +3,7 @@ import { HireButton } from "@/components/hire-button";
 import { JsonLd } from "@/components/json-ld";
 import { PageShell } from "@/components/page-shell";
 import { HOME_PROJECT_IDS } from "@/content/home-copy";
+import { SERVICE_PAGES } from "@/content/service-pages";
 import { servicesCopy } from "@/content/services-copy";
 import { getRequestLocale } from "@/lib/prefs";
 import { getProjects } from "@/lib/projects-db";
@@ -11,6 +12,7 @@ import { breadcrumbLd, serviceLd } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/site-settings-db";
 import { thumb } from "@/lib/thumbs";
 import "../home.css";
+import "../showcase.css";
 
 const accents = ["var(--section-contact)", "var(--section-blog)", "var(--section-projects)"];
 
@@ -36,6 +38,21 @@ export default async function ServicesPage() {
         <div className="hm-page">
           <p className="hm-lead">{c.intro}</p>
           <div className="hm-cta"><HireButton /></div>
+
+          <section className="hm-section" aria-labelledby="sv-intents">
+            <h2 id="sv-intents" className="hm-h2">{locale === "es" ? "Elegí un servicio" : "Pick a service"}</h2>
+            <ul className="sv-chips sv-chips-stack">
+              {SERVICE_PAGES.map((sp) => (
+                <li key={sp.slug}>
+                  <Link href={localizePath(locale, `/servicios/${sp.slug}`)} className="sv-chip">
+                    <span>{sp.copy[locale].label}</span>
+                    <span aria-hidden>▸</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <Link href={localizePath(locale, "/casos")} className="hm-more">{locale === "es" ? "Ver casos reales con demo" : "See real case studies with a demo"} ▸</Link>
+          </section>
 
           <section className="hm-section" aria-labelledby="sv-cases">
             <h2 id="sv-cases" className="hm-h2">{c.useCases.title}</h2>

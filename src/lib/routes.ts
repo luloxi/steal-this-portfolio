@@ -23,7 +23,34 @@ export const SEGMENTS_ES_TO_EN: Readonly<Record<string, string>> = {
   ingresar: "sign-in",
   referidos: "referrals",
   servicios: "services",
+  casos: "case-studies",
 };
+
+/**
+ * Translated second segment for pages whose slug differs per language
+ * (/servicios/agentes-de-ia <-> /en/services/ai-agents). Keyed by the Spanish first segment.
+ */
+export const SUBSEGMENTS_ES_TO_EN: Readonly<Record<string, Readonly<Record<string, string>>>> = {
+  servicios: {
+    "agentes-de-ia": "ai-agents",
+    "automatizacion-de-procesos": "process-automation",
+    "crm-a-medida": "custom-crm",
+    "grok-bot": "grok-bot",
+    "automatizar-whatsapp-y-mail": "whatsapp-and-email-automation",
+    "automatizar-finanzas": "finance-automation",
+  },
+  casos: {
+    genki: "genki",
+    malito: "malito",
+    tarask: "tarask",
+    garpen: "garpen",
+    "flota-de-bots": "bot-fleet",
+  },
+};
+
+const SUBSEGMENTS_EN_TO_ES: Readonly<Record<string, Readonly<Record<string, string>>>> = Object.fromEntries(
+  Object.entries(SUBSEGMENTS_ES_TO_EN).map(([seg, map]) => [seg, Object.fromEntries(Object.entries(map).map(([es, en]) => [en, es]))]),
+);
 
 const SEGMENTS_EN_TO_ES: Readonly<Record<string, string>> = Object.fromEntries(
   Object.entries(SEGMENTS_ES_TO_EN).map(([es, en]) => [en, es]),
@@ -50,7 +77,10 @@ export function esToEnPath(esPath: string): string | null {
   if (!parts.length) return EN_PREFIX;
   const en = SEGMENTS_ES_TO_EN[parts[0]];
   if (!en) return null;
-  return [EN_PREFIX, en, ...parts.slice(1)].join("/");
+  const rest = parts.slice(1);
+  const sub = rest[0] ? SUBSEGMENTS_ES_TO_EN[parts[0]]?.[rest[0]] : undefined;
+  if (sub) rest[0] = sub;
+  return [EN_PREFIX, en, ...rest].join("/");
 }
 
 /** English path (/en/...) -> internal Spanish path. null when it isn't an /en path or the segment is unknown. */
@@ -60,7 +90,10 @@ export function enToEsPath(enPath: string): string | null {
   if (parts.length === 1) return "/";
   const es = SEGMENTS_EN_TO_ES[parts[1]];
   if (!es) return null;
-  return "/" + [es, ...parts.slice(2)].join("/");
+  const rest = parts.slice(2);
+  const sub = rest[0] ? SUBSEGMENTS_EN_TO_ES[es]?.[rest[0]] : undefined;
+  if (sub) rest[0] = sub;
+  return "/" + [es, ...rest].join("/");
 }
 
 /**

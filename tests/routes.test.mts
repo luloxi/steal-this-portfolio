@@ -31,6 +31,13 @@ const MAP: [string, string][] = [
   ["/blog", "/en/blog"],
   ["/ingresar", "/en/sign-in"],
   ["/referidos", "/en/referrals"],
+  ["/servicios", "/en/services"],
+  ["/servicios/agentes-de-ia", "/en/services/ai-agents"],
+  ["/servicios/crm-a-medida", "/en/services/custom-crm"],
+  ["/servicios/grok-bot", "/en/services/grok-bot"],
+  ["/casos", "/en/case-studies"],
+  ["/casos/flota-de-bots", "/en/case-studies/bot-fleet"],
+  ["/casos/garpen", "/en/case-studies/garpen"],
 ];
 
 test("route map es <-> en is symmetric", () => {
@@ -43,6 +50,18 @@ test("route map es <-> en is symmetric", () => {
   assert.equal(enToEsPath("/en/no-existe"), null);
   assert.equal(enToEsPath("/contratar"), null); // not an /en path
   assert.equal(enToEsPath("/english"), null);
+});
+
+test("every service and case page has a translated slug both ways", async () => {
+  const { SERVICE_PAGES } = await import("../src/content/service-pages.ts");
+  const { CASE_STUDIES } = await import("../src/content/showcase.ts");
+  for (const es of [...SERVICE_PAGES.map((p) => `/servicios/${p.slug}`), ...CASE_STUDIES.map((c) => `/casos/${c.slug}`)]) {
+    const en = esToEnPath(es);
+    assert.ok(en && en.startsWith("/en/"), es);
+    assert.equal(enToEsPath(en), es, en);
+  }
+  // Project ids and blog slugs under a segment without a sub-map stay as they are.
+  assert.equal(esToEnPath("/proyectos/garpen"), "/en/projects/garpen");
 });
 
 test("the URL alone decides the language", () => {
