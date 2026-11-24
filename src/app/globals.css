@@ -5159,3 +5159,22 @@ html:root:not(.dark) {
 .blog-dek-edit { font-size: .9rem !important; color: var(--muted); }
 .blog-dek-edit:empty::before { font-style: italic; }
 @media (min-width: 640px) { .blog-md-page .md-pm { font-size: 1.06rem; } }
+
+/* Cal.com booking (página de contacto) */
+.cal-section { margin-top: 2rem; display: flex; flex-direction: column; gap: .75rem; }
+.cal-title { font-size: 1.25rem; font-weight: 600; margin: 0; }
+.cal-sub { margin: 0; color: var(--muted); font-size: .9rem; max-width: 62ch; }
+.cal-tabs { display: inline-flex; gap: .5rem; flex-wrap: wrap; }
+.cal-tab { cursor: pointer; min-height: 40px; padding: 0 1rem; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--foreground); font-size: .85rem; }
+.cal-tab:hover { border-color: var(--accent); }
+.cal-tab[data-active] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.cal-embed { position: relative; border: 1px solid var(--border); border-radius: 18px; overflow: hidden; background: var(--surface); }
+.cal-embed-frame { width: 100%; }
+.cal-embed-note { margin: 0; padding: .9rem 1rem; font-size: .85rem; color: var(--muted); }
+.cal-embed-retry { cursor: pointer; text-decoration: underline; background: none; border: 0; color: var(--accent); font-size: .85rem; padding: 0; }
+.cal-hint { margin: 0; font-size: .85rem; color: var(--muted); display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.cal-direct { color: var(--accent); text-decoration: none; word-break: break-all; }
+.cal-direct:hover { text-decoration: underline; }
+.cal-copy { cursor: pointer; min-height: 32px; padding: 0 .7rem; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--foreground); font-size: .78rem; }
+.cal-copy:hover { border-color: var(--accent); }
+@media (max-width: 640px) { .cal-embed-frame { min-height: 560px !important; } }

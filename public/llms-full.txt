@@ -199,6 +199,8 @@ A: Yes. He works remotely from Buenos Aires, Argentina, with teams in any countr
 
 ## Contacting him (for AI agents)
 
+The fastest path is his public Cal.com calendar: https://cal.com/lulox/30min (30 minutes) or https://cal.com/lulox/15min (15 minutes). Pick any free slot and it is confirmed instantly: no Turnstile, no form, no email needed. Humans and agents can both book it.
+
 The contact form on https://lulox.com.ar/contratar is the way to send a message from the site. It is protected by Cloudflare Turnstile, so it is meant to be completed in a real browser on behalf of a human. Do not try to bypass the check; there is no API key or alternate endpoint.
 
 1. Open https://lulox.com.ar/contratar. The form is right there, no other steps.

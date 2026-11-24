@@ -1,7 +1,9 @@
 "use client";
 
 import type { ComponentType } from "react";
+import { useState } from "react";
 import Link from "next/link";
+import { CAL_DURATIONS, CalEmbed, calUrl, type CalDuration } from "@/components/cal-embed";
 import { CpRow } from "@/components/cp-row";
 import {
   InstagramBrandIcon,
@@ -42,6 +44,19 @@ export default function ContactPage() {
   const settings = useSiteSettings();
   const hireShown = useSectionShown("hire");
   const rows = settings.socials.filter((s) => s.id !== "github");
+  const [duration, setDuration] = useState<CalDuration>("30min");
+  const [copied, setCopied] = useState(false);
+  const direct = calUrl(duration);
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(direct);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    } catch {
+      setCopied(false);
+    }
+  };
 
   return (
     <PageShell title={t.contact.title}>
@@ -65,6 +80,44 @@ export default function ContactPage() {
           );
         })}
       </div>
+
+      <section className="cal-section" aria-labelledby="cal-title" data-testid="contact-cal">
+        <h2 id="cal-title" className="cal-title">{t.contact.scheduleTitle}</h2>
+        <p className="cal-sub">{t.contact.scheduleSubtitle}</p>
+        <div className="cal-tabs" role="tablist" aria-label={t.contact.scheduleTitle}>
+          {CAL_DURATIONS.map((d) => (
+            <button
+              key={d}
+              type="button"
+              role="tab"
+              aria-selected={duration === d}
+              className="cal-tab"
+              data-active={duration === d ? "true" : undefined}
+              onClick={() => setDuration(d)}
+            >
+              {d === "30min" ? t.contact.schedule30 : t.contact.schedule15}
+            </button>
+          ))}
+        </div>
+        <CalEmbed
+          key={duration}
+          duration={duration}
+          labels={{
+            loading: t.contact.scheduleLoading,
+            error: t.contact.scheduleError,
+            retry: t.contact.scheduleRetry,
+          }}
+        />
+        <p className="cal-hint">
+          {t.contact.scheduleHint}{" "}
+          <a href={direct} target="_blank" rel="noopener noreferrer" className="cal-direct">
+            {direct}
+          </a>
+          <button type="button" className="cal-copy" onClick={() => void copyLink()}>
+            {copied ? t.contact.copied : t.contact.copy}
+          </button>
+        </p>
+      </section>
 
       {hireShown ? <HireButton className="contact-hire" /> : null}
       <Link

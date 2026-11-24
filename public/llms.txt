@@ -26,4 +26,5 @@ Tu trabajo, sin la parte aburrida. Lo que se repite, lo automatizamos con IA. (Y
 - [Full details for AI assistants](https://lulox.com.ar/llms-full.txt)
 - [About / Sobre mí](https://lulox.com.ar/sobre-mi)
 - [Blog](https://lulox.com.ar/blog)
+- [Book a call](https://cal.com/lulox/30min): public calendar, 30 minutes (or 15 at https://cal.com/lulox/15min). Instant confirmation, works for humans and agents.
 - [Contact / Contacto](https://lulox.com.ar/contacto)
