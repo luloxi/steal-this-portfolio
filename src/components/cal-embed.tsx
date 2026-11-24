@@ -3,18 +3,25 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Cal.com inline booking. Loads the official embed once and re-renders it when
- * the visitor switches duration. Everything stays on cal.com — we only host the
- * iframe, so agents and people can both book from the same public link.
+ * Cal.com inline booking. The embed script does NOT define window.Cal: it drains
+ * the queue we create first (that is what the official snippet does). So we set
+ * up the queue, enqueue init/inline, and cal.com injects the iframe. Everything
+ * stays on cal.com, so agents and people book from the same public link.
  */
 const CAL_ORIGIN = "https://cal.com";
 const CAL_USER = "lulox";
 const EMBED_SRC = "https://app.cal.com/embed/embed.js";
+/** How long we wait for cal.com to inject the iframe before offering a retry. */
+const READY_TIMEOUT_MS = 9000;
 
 export const CAL_DURATIONS = ["30min", "15min"] as const;
 export type CalDuration = (typeof CAL_DURATIONS)[number];
 
-type CalFn = ((action: string, data?: Record<string, unknown>) => void) & { loaded?: boolean };
+type CalFn = ((...args: unknown[]) => void) & {
+  loaded?: boolean;
+  ns: Record<string, CalFn>;
+  q: unknown[][];
+};
 
 declare global {
   interface Window {
@@ -22,24 +29,29 @@ declare global {
   }
 }
 
-let loading: Promise<CalFn> | null = null;
+let scriptStarted = false;
 
-function loadCal(): Promise<CalFn> {
-  if (window.Cal?.loaded) return Promise.resolve(window.Cal);
-  if (loading) return loading;
-  loading = new Promise<CalFn>((resolve, reject) => {
+function ensureCal(): CalFn {
+  if (window.Cal) return window.Cal;
+  const cal = ((...args: unknown[]) => {
+    cal.q.push(args);
+  }) as CalFn;
+  cal.q = [];
+  cal.ns = {};
+  cal.loaded = false;
+  window.Cal = cal;
+  if (!scriptStarted) {
+    scriptStarted = true;
     const script = document.createElement("script");
     script.src = EMBED_SRC;
     script.async = true;
     script.dataset.calEmbed = "1";
     script.onload = () => {
-      if (window.Cal) resolve(window.Cal);
-      else reject(new Error("Cal no quedó disponible"));
+      if (window.Cal) window.Cal.loaded = true;
     };
-    script.onerror = () => reject(new Error("No pude cargar cal.com"));
     document.head.appendChild(script);
-  });
-  return loading;
+  }
+  return cal;
 }
 
 export function calLink(duration: CalDuration): string {
@@ -62,24 +74,19 @@ export function CalEmbed({
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
-    let cancelled = false;
-    loadCal()
-      .then((cal) => {
-        if (cancelled || !holder.current) return;
-        cal("init", { origin: CAL_ORIGIN });
-        cal("inline", {
-          elementOrSelector: holder.current,
-          calLink: calLink(duration),
-          config: { theme: "auto", layout: "month_view" },
-        });
-        setState("ready");
-      })
-      .catch(() => {
-        if (!cancelled) setState("error");
-      });
-    return () => {
-      cancelled = true;
-    };
+    if (!holder.current) return;
+    const cal = ensureCal();
+    cal("init", { origin: CAL_ORIGIN });
+    cal("inline", {
+      elementOrSelector: holder.current,
+      calLink: calLink(duration),
+      config: { theme: "auto", layout: "month_view" },
+    });
+
+    const timer = window.setTimeout(() => {
+      setState(holder.current?.querySelector("iframe") ? "ready" : "error");
+    }, READY_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
   }, [duration, attempt]);
 
   return (
