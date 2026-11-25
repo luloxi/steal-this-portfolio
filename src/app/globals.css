@@ -3244,7 +3244,9 @@ span.md-copy { display: inline; }
   display: inline-flex; align-items: center; justify-content: center;
   background: transparent; border: 1px solid transparent; color: var(--foreground);
   font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.8rem; font-weight: 700;
+  cursor: pointer;
 }
+.ie-tb:disabled { cursor: not-allowed; }
 .ie-tb:hover, .ie-tb:focus-visible { border-color: color-mix(in srgb, #a4503f 50%, transparent); color: #a4503f; }
 .ie-tb[aria-pressed="true"] { background: #a4503f; color: #fff; }
 .ie-tb-sep { width: 1px; align-self: stretch; background: var(--border); margin: 4px 2px; }
@@ -3399,8 +3401,8 @@ body.ie-off .ie-row-pencil { display: none; }
   color: var(--foreground); border: 1px solid var(--border);
 }
 .blog-pager { display: flex; align-items: center; justify-content: center; gap: 14px; padding-top: 6px; font-family: ui-monospace, monospace; font-size: 0.8rem; }
-.blog-pager button { min-height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--foreground); }
-.blog-pager button:disabled { opacity: 0.35; }
+.blog-pager button { min-height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--foreground); cursor: pointer; }
+.blog-pager button:disabled { opacity: 0.35; cursor: not-allowed; }
 
 /* In-place editing: the page looks exactly like the published one */
 .md-edit .ProseMirror { outline: none; white-space: pre-wrap; word-wrap: break-word; caret-color: #a4503f; }
@@ -3656,6 +3658,7 @@ body.ie-off .ie-row-pencil { display: none; }
   width: 56px; height: 56px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
   color: #fff; background: #a4503f; box-shadow: 0 8px 24px color-mix(in oklab, #a4503f 45%, transparent), 0 2px 6px rgb(0 0 0 / .25);
   transition: transform .2s ease, box-shadow .2s ease;
+  cursor: pointer;
 }
 .blog-fab:hover, .blog-fab:focus-visible { transform: translateY(-2px) rotate(90deg); box-shadow: 0 12px 30px color-mix(in oklab, #a4503f 55%, transparent); }
 .blog-fab:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
@@ -5050,3 +5053,45 @@ html:root:not(.dark) {
 .faq-edit-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 4px; }
 .faq-edit-add { border-style: dashed; }
 .faq-edit-msg, .faq-edit-empty { font-size: 0.82rem; color: var(--muted); }
+
+/* Owner-only Publicados / Borradores selector on /blog */
+.blog-list-filter {
+  display: inline-flex; gap: 4px; padding: 4px;
+  border: 1px solid var(--border); border-radius: 999px;
+  background: color-mix(in oklab, var(--background) 88%, transparent);
+}
+.blog-list-filter button {
+  appearance: none; margin: 0; min-height: 36px; padding: 0 14px;
+  border: 0; border-radius: 999px; background: transparent;
+  color: var(--muted); font: inherit; font-size: 0.85rem; font-weight: 700;
+  letter-spacing: 0.02em; cursor: pointer;
+}
+.blog-list-filter button.is-on,
+.blog-list-filter button[aria-selected="true"] {
+  background: var(--foreground); color: var(--background);
+}
+.blog-list-filter button:focus-visible { outline: 2px solid var(--section-blog); outline-offset: 2px; }
+
+/* In-page confirm for deleting an article (window.confirm is unreliable on the phone). */
+.blog-del-confirm {
+  margin: 0 0 1rem; padding: 1rem 1.1rem;
+  border: 1px solid color-mix(in oklab, #e0001b 45%, var(--border));
+  border-radius: 16px;
+  background: color-mix(in oklab, #e0001b 8%, var(--background));
+}
+.blog-del-title { margin: 0; font-weight: 800; font-size: 1.05rem; }
+.blog-del-undo { margin: 0.35rem 0 0; color: var(--muted); font-size: 0.9rem; }
+.blog-del-error { margin: 0.5rem 0 0; color: #e0001b; font-weight: 700; font-size: 0.9rem; }
+.blog-del-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.85rem; }
+.blog-del-yes, .blog-del-no {
+  appearance: none; min-height: 44px; padding: 0 16px; border-radius: 999px;
+  font: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer;
+}
+.blog-del-yes {
+  border: 0; background: #e0001b; color: #fff;
+}
+.blog-del-no {
+  border: 1px solid var(--border); background: transparent; color: var(--foreground);
+}
+.blog-del-yes:disabled, .blog-del-no:disabled { opacity: 0.45; cursor: not-allowed; }
+.blog-del-yes:focus-visible, .blog-del-no:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }

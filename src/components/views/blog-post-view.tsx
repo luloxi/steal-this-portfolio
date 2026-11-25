@@ -29,7 +29,7 @@ function formatDate(iso: string, locale: string) {
   }
 }
 
-type Slots = { titleNode: ReactNode; summaryNode: ReactNode; bodyNode: ReactNode; metaPanel: ReactNode; coverNode: ReactNode; dateNode: ReactNode };
+type Slots = { titleNode: ReactNode; summaryNode: ReactNode; bodyNode: ReactNode; metaPanel: ReactNode; coverNode: ReactNode; dateNode: ReactNode; confirmNode?: ReactNode };
 
 /** One post, rendered on the server (D1). Admin edit mode edits it in place. */
 export function BlogPostView({ post }: { post: BlogPost }) {
@@ -76,6 +76,7 @@ function PostLayout({ post, slots, offer }: { post: BlogPost; slots?: Slots; off
     >
       <ReadingProgress target={articleRef} />
       {offer ? <EditModeOffer onEnable={offer} /> : null}
+      {slots?.confirmNode}
       <article ref={articleRef} className="space-y-6">
         <header
           className="cp-panel"
