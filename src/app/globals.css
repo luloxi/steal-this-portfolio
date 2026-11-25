@@ -5031,3 +5031,22 @@ html:root:not(.dark) {
 .pm-pill { font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
 .pm-pill.is-on { color: var(--background); background: var(--accent); border-color: var(--accent); }
 .pm-menu { min-width: 12rem; }
+
+/* Landing FAQ in edit mode: every question open, big tap targets for the phone. */
+.faq-edit-item { display: grid; gap: 8px; padding: 12px; }
+.faq-edit-text { display: grid; gap: 6px; min-width: 0; }
+.faq-edit-text .hm-faq-q { margin: 0; padding: 0; font-weight: 700; display: block; }
+.faq-edit .hm-faq-q::after { content: none; }
+.faq-edit-text .hm-faq-a { padding: 0; }
+.faq-edit-text .hm-faq-a { margin: 0; }
+.faq-edit-tools, .faq-edit-confirm { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px; }
+.faq-edit-confirm span { font-size: 0.85rem; margin-right: auto; }
+.faq-edit-btn { cursor: pointer; min-height: 40px; padding: 0 12px; font: inherit; font-size: 0.85rem; font-weight: 600; color: var(--foreground); background: transparent; border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent); border-radius: 10px; }
+.faq-edit-btn:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.faq-edit-btn:disabled { opacity: 0.35; cursor: default; }
+.faq-edit-icon { width: 44px; padding: 0; font-size: 1.05rem; }
+.faq-edit-btn.is-danger { border-color: color-mix(in srgb, #d0435b 60%, transparent); }
+.faq-edit-btn.is-danger:hover:not(:disabled) { background: color-mix(in srgb, #d0435b 16%, transparent); }
+.faq-edit-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 4px; }
+.faq-edit-add { border-style: dashed; }
+.faq-edit-msg, .faq-edit-empty { font-size: 0.82rem; color: var(--muted); }
