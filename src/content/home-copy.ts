@@ -11,10 +11,10 @@ export const homeCopy: Record<Locale, {
   meta: { title: string; description: string; keywords: string[] };
   title: string;
   lead: string;
-  examples: { title: string; items: { title: string; body: string }[] };
   process: { title: string; steps: string[] };
   faq: { title: string; items: { q: string; a: string }[] };
   closing: string;
+  agents: { lead: string; link: string };
   footer: { services: string };
 }> = {
   es: {
@@ -26,53 +26,36 @@ export const homeCopy: Record<Locale, {
     },
     title: "Tu trabajo, sin la parte aburrida.",
     lead: "Lo que se repite, lo automatizamos con IA.",
-    examples: {
-      title: "Por ejemplo, este tipo de trabajo",
-      items: [
-        {
-          title: "El correo",
-          body: "clasificar mails, armar respuestas que se repiten y avisar cuando llega algo que no puede esperar.",
-        },
-        {
-          title: "Pasar datos de un lado al otro",
-          body: "llevar lo que llega en un Excel, un formulario o un mail a un CRM, una agenda o una planilla, sin copiarlo a mano.",
-        },
-        {
-          title: "Tickets, facturas y reportes",
-          body: "sacar la información de una foto o un archivo y cargarla, en vez de transcribirla cada vez.",
-        },
-      ],
-    },
     process: {
       title: "Cómo es trabajar conmigo",
       steps: [
-        "Me contás qué hace tu equipo a mano.",
-        "Lo charlamos en una llamada y te paso un presupuesto.",
-        "50% de anticipo y 50% al entregar.",
+        "Me contás qué tarea te come horas cada semana.",
+        "En una llamada corta vemos si conviene automatizarla y te paso un presupuesto.",
+        "La armo con tus herramientas y la probás con tu trabajo real. 50% al empezar, 50% al entregar.",
       ],
     },
     faq: {
       title: "Preguntas frecuentes",
       items: [
         {
-          q: "¿Qué se puede automatizar con agentes de IA?",
-          a: "Casi todo lo que se repite y sigue más o menos las mismas reglas: clasificar y responder mails, pasar datos entre planillas, formularios y agendas, leer tickets y facturas desde una foto o un PDF, armar reportes y mandar avisos. Si alguien de tu equipo lo hace a mano una y otra vez, probablemente se pueda automatizar.",
+          q: "¿Qué se puede automatizar?",
+          a: "Lo que se repite con las mismas reglas: ordenar el correo y contestar lo de siempre, pasar lo que llega por mail o formulario a una planilla o una agenda, cargar facturas y tickets desde una foto, armar reportes y avisarte cuando algo no puede esperar. Si alguien lo hace a mano todas las semanas, seguro se puede.",
         },
         {
           q: "¿Cuánto cuesta automatizar un proceso?",
-          a: "Depende de qué tan grande sea el proceso. Me contás qué hace tu equipo a mano y lo estimamos juntos en una llamada.",
-        },
-        {
-          q: "¿Cómo es el proceso de trabajo?",
-          a: "Me contás qué hace tu equipo a mano, lo charlamos en una llamada y te paso un presupuesto. Se paga 50% de anticipo y 50% al entregar.",
+          a: "Depende del tamaño de la tarea. Después de una llamada corta te paso un presupuesto.",
         },
         {
           q: "¿Con qué herramientas trabajás?",
-          a: "Con las que ya usás: mail, planillas, WhatsApp, tu agenda o tu sistema de clientes. Elijo lo que mejor encaje con tu caso.",
+          a: "Con las que ya usás: mail, planillas, WhatsApp, tu agenda o tu sistema de clientes. No tenés que cambiar nada.",
         },
         {
           q: "¿Hacés CRMs y sistemas a medida?",
           a: "Sí. Sistemas de clientes y herramientas internas pensadas para cómo trabaja tu equipo.",
+        },
+        {
+          q: "¿Un agente de IA puede usar lo que armás?",
+          a: "Sí. Puedo dejar tu sistema de clientes, tu agenda o tu mail listos para que un agente los use, con permisos acotados y tu aprobación antes de enviar algo.",
         },
         {
           q: "¿Trabajás de forma remota?",
@@ -80,7 +63,8 @@ export const homeCopy: Record<Locale, {
         },
       ],
     },
-    closing: "Si tenés un proceso que hoy depende de que alguien lo haga a mano, escribime y lo vemos.",
+    closing: "¿Qué tarea te sacarías de encima mañana? Contámela y vemos cómo automatizarla.",
+    agents: { lead: "¿Sos un agente de IA y buscás esto para alguien?", link: "Cómo pedir un trabajo" },
     footer: { services: "Servicios" },
   },
   en: {
@@ -92,53 +76,36 @@ export const homeCopy: Record<Locale, {
     },
     title: "Your work, without the boring part.",
     lead: "What repeats, we automate with AI.",
-    examples: {
-      title: "For example, this kind of work",
-      items: [
-        {
-          title: "Email",
-          body: "sort incoming mail, draft the replies you keep writing and flag what can't wait.",
-        },
-        {
-          title: "Moving data around",
-          body: "take what arrives in a spreadsheet, a form or an email into a CRM, a calendar or a sheet, without copying it by hand.",
-        },
-        {
-          title: "Receipts, invoices and reports",
-          body: "pull the information out of a photo or a file and load it, instead of typing it every time.",
-        },
-      ],
-    },
     process: {
       title: "How working with me goes",
       steps: [
-        "You tell me what your team does by hand.",
-        "We talk it over on a call and I send you a quote.",
-        "50% upfront and 50% on delivery.",
+        "You tell me which task eats hours every week.",
+        "On a short call we see if it's worth automating and I send you a quote.",
+        "I build it with your tools and you test it on your real work. 50% to start, 50% on delivery.",
       ],
     },
     faq: {
       title: "Frequently asked questions",
       items: [
         {
-          q: "What can be automated with AI agents?",
-          a: "Almost anything that repeats and follows roughly the same rules: sorting and answering email, moving data between spreadsheets, forms and calendars, reading receipts and invoices from a photo or a PDF, building reports and sending alerts. If someone on your team does it by hand over and over, it can probably be automated.",
+          q: "What can be automated?",
+          a: "Anything that repeats with the same rules: sorting email and answering the usual questions, moving what arrives by email or form into a sheet or a calendar, logging invoices and receipts from a photo, building reports and flagging what can't wait. If someone does it by hand every week, it can almost certainly be automated.",
         },
         {
           q: "How much does it cost to automate a process?",
-          a: "It depends on how big the process is. You tell me what your team does by hand and we estimate it together on a call.",
-        },
-        {
-          q: "How does the work go?",
-          a: "You tell me what your team does by hand, we talk it over on a call and I send you a quote. Payment is 50% upfront and 50% on delivery.",
+          a: "It depends on the size of the task. After a short call I send you a quote.",
         },
         {
           q: "What tools do you work with?",
-          a: "The ones you already use: email, spreadsheets, WhatsApp, your calendar or your client system. I pick whatever fits your case best.",
+          a: "The ones you already use: email, spreadsheets, WhatsApp, your calendar or your client system. You don't have to switch anything.",
         },
         {
           q: "Do you build custom CRMs and systems?",
           a: "Yes. Client systems and internal tools made for the way your team works.",
+        },
+        {
+          q: "Can an AI agent use what you build?",
+          a: "Yes. I can set up your client system, calendar or email so an agent can use them, with narrow permissions and your approval before anything goes out.",
         },
         {
           q: "Do you work remotely?",
@@ -146,7 +113,8 @@ export const homeCopy: Record<Locale, {
         },
       ],
     },
-    closing: "If you have a process that depends on someone doing it by hand, write to me and we'll look at it.",
+    closing: "Which task would you drop tomorrow? Tell me about it and we'll see how to automate it.",
+    agents: { lead: "Are you an AI agent looking for this on someone's behalf?", link: "How to request work" },
     footer: { services: "Services" },
   },
 };
@@ -164,12 +132,12 @@ export const homeMore: Record<Locale, {
     nav: { about: "Sobre mí", showcase: "Automatizando", services: "Servicios", projects: "Proyectos", blog: "Blog", contact: "Contacto", hire: "Contratar" },
     about: {
       title: "Sobre mí",
-      body: "Soy Luciano Oliva Bianco, me dicen Lulox. Vivo en Buenos Aires y ayudo a personas y equipos a sacarse de encima el trabajo repetitivo.",
+      body: "Soy Luciano Oliva Bianco, me dicen Lulox. Vivo en Buenos Aires y armo sistemas que hacen el trabajo repetitivo, para que vos te ocupes del resto.",
       more: "Leer mi historia",
     },
     showcase: {
-      title: "Automatizando procesos",
-      lead: "Tareas de todos los días que pueden hacerse solas.",
+      title: "Lo que ya automatizo",
+      lead: "Lo uso todos los días. Te lo armo a vos.",
       cta: "Quiero algo así",
     },
     services: { title: "Servicios", lead: "Elegí por dónde empezar." },
@@ -180,12 +148,12 @@ export const homeMore: Record<Locale, {
     nav: { about: "About", showcase: "Automating", services: "Services", projects: "Projects", blog: "Blog", contact: "Contact", hire: "Hire me" },
     about: {
       title: "About me",
-      body: "I'm Luciano Oliva Bianco, people call me Lulox. I live in Buenos Aires and help people and teams get repetitive work off their plate.",
+      body: "I'm Luciano Oliva Bianco, people call me Lulox. I live in Buenos Aires and build systems that do the repetitive work, so you can focus on the rest.",
       more: "Read my story",
     },
     showcase: {
-      title: "Automating processes",
-      lead: "Everyday tasks that can run on their own.",
+      title: "What I already automate",
+      lead: "I use it every day. I can set it up for you.",
       cta: "I want something like this",
     },
     services: { title: "Services", lead: "Pick where to start." },

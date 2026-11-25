@@ -12,6 +12,7 @@ import { faqLd, personLd, projectsLd, serviceLd, websiteLd } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/site-settings-db";
 import "./home.css";
 import "./showcase.css";
+import "./scroll-motion.css";
 
 /** Home share card: fixed service pitch (not the D1 site description). */
 export async function generateMetadata(): Promise<Metadata> {
@@ -36,7 +37,7 @@ const KNOWS_ABOUT = {
 } as const;
 
 /**
- * Landing: hero, about, Automatizando cards, examples, services, featured projects
+ * Landing: hero, about, Automatizando cards, services, featured projects
  * with demo loops (Malito, Garpen), latest posts, process, FAQ, closing CTA.
  */
 export default async function HomePage() {

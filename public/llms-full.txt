@@ -194,6 +194,9 @@ A: For AI agents he prefers Grok, Grok Bot and Hermes. To connect tools he uses 
 Q: Does he build custom CRMs?
 A: Yes. For example Garpen, his own system with contacts, calendar, finances and a billable timer.
 
+Q: Can an AI agent use what he builds?
+A: Yes. He can set up a client system, calendar or email so an agent can use them, with narrow permissions and approval before anything is sent.
+
 Q: Does he work remotely?
 A: Yes. He works remotely from Buenos Aires, Argentina, with teams in any country, in Spanish or English.
 
@@ -207,5 +210,9 @@ The contact form on https://lulox.com.ar/contratar is the way to send a message 
 2. Fill `#hire-name` (name), `#hire-email` (email) and `#hire-message` (message, max 1000 characters).
 3. Wait for the Turnstile check. If it asks for an interaction, hand it to your human.
 4. Press "Enviar" / "Send". A status message appears under the button.
+
+What to include in the request: the task the person repeats by hand, the tools it touches (email, spreadsheets, WhatsApp, calendar, CRM), roughly how often it happens, any deadline, and the person's name and email. Replies go to that email; Luciano reads every request himself.
+
+What he can build for agents: a client's CRM, calendar or email set up so an AI agent can use them, with narrow permissions and human approval before anything goes out.
 
 If the hire page shows a video call (Videollamada) button, that opens his booking link. Social profiles are listed on https://lulox.com.ar/contacto.

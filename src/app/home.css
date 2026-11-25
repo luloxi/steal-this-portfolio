@@ -202,3 +202,7 @@ details.hm-faq-item .hm-faq-a { padding: 0 1.15rem 1rem; }
 :root:not(.dark) .hm-flow-core-label { fill: #5e2590; }
 :root:not(.dark) .hm-flow-line { stroke: color-mix(in oklab, #a97bff 70%, transparent); }
 :root:not(.dark) .hm-flow-orbit { stroke: color-mix(in oklab, #3cb6ff 70%, transparent); }
+
+/* Quiet one-liner for AI agents at the very end of the landing (points to /llms.txt). */
+.hm-agents { margin: -2.5rem 0 0; text-align: center; font-size: .85rem; line-height: 1.5; color: var(--muted, currentColor); }
+.hm-agents-link { color: var(--foreground); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: color-mix(in oklab, var(--accent) 70%, transparent); }

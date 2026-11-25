@@ -4,7 +4,8 @@ import Link from "next/link";
 import type { ComponentType } from "react";
 import { HandCoins, MessageSquareText, PhoneCall } from "lucide-react";
 import { HireButton } from "@/components/hire-button";
-import { AgentFlow, DataMove, MailSort, ReceiptScan } from "@/components/home-visuals";
+import { ScrollRevealFallback } from "@/components/scroll-reveal-fallback";
+import { AgentFlow } from "@/components/home-visuals";
 import { HomeHeader } from "@/components/home-header";
 import { GitHubIcon, InstagramBrandIcon, LinkedInIcon, TelegramIcon, XIcon } from "@/components/icons/social";
 import { useSiteSettings } from "@/components/site-settings-context";
@@ -35,7 +36,6 @@ const socialIcons: Record<string, ComponentType<{ className?: string }>> = {
 };
 
 const accents = ["var(--joy-1)", "var(--joy-2)", "var(--joy-3)", "var(--joy-4)", "var(--joy-5)"];
-const exampleArt = [MailSort, DataMove, ReceiptScan];
 const stepIcons = [MessageSquareText, PhoneCall, HandCoins];
 
 /** Scrolling landing page. Theme and language controls stay fixed in the layout. */
@@ -59,7 +59,8 @@ export function HomeView({ posts }: { posts: HomePost[] }) {
   ];
 
   return (
-    <div className="hm">
+    <div className="hm hm-landing">
+      <ScrollRevealFallback />
       <HomeHeader items={nav} label={locale === "es" ? "Secciones" : "Sections"} menuLabel={locale === "es" ? "Menú" : "Menu"} homeHref={href("/")} />
       <main className="hm-main">
         <header className="hm-hero">
@@ -98,7 +99,7 @@ export function HomeView({ posts }: { posts: HomePost[] }) {
                   key={item.art}
                   className="sc-card"
                   data-reveal
-                  style={{ ["--hm-accent" as string]: accents[i % accents.length] }}
+                  style={{ ["--hm-accent" as string]: accents[i % accents.length], ["--i" as string]: i }}
                 >
                   <div className="sc-stage">
                     <ShowcaseVisual art={item.art} />
@@ -114,28 +115,12 @@ export function HomeView({ posts }: { posts: HomePost[] }) {
           </div>
         </section>
 
-        <section className="hm-section" aria-labelledby="hm-examples">
-          <h2 id="hm-examples" className="hm-h2">{c.examples.title}</h2>
-          <ul className="hm-cards">
-            {c.examples.items.map((item, i) => (
-              <li key={item.title} className="hm-card" data-reveal style={{ ["--hm-accent" as string]: accents[i % accents.length] }}>
-                {(() => {
-                  const Art = exampleArt[i % exampleArt.length];
-                  return <Art />;
-                })()}
-                <h3 className="hm-card-title">{item.title}</h3>
-                <p className="hm-card-body">{item.body}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
-
         <section id="servicios" className="hm-section hm-anchor" aria-labelledby="hm-services">
           <h2 id="hm-services" className="hm-h2">{m.services.title}</h2>
           <p className="hm-sublead">{m.services.lead}</p>
           <ul className="sv-chips">
-            {SERVICE_PAGES.map((sp) => (
-              <li key={sp.slug} data-reveal>
+            {SERVICE_PAGES.map((sp, i) => (
+              <li key={sp.slug} data-reveal style={{ ["--i" as string]: i % 3 }}>
                 <Link href={href(`/servicios/${sp.slug}`)} className="sv-chip">
                   <span>{sp.copy[locale].label}</span>
                   <span aria-hidden>▸</span>
@@ -148,11 +133,11 @@ export function HomeView({ posts }: { posts: HomePost[] }) {
         <section id="proyectos" className="hm-section hm-anchor" aria-labelledby="hm-built">
           <h2 id="hm-built" className="hm-h2">{m.projects.title}</h2>
           <ul className="cs-grid">
-            {FEATURED_PROJECTS.map((fp) => {
+            {FEATURED_PROJECTS.map((fp, i) => {
               const copy = fp.copy[locale];
               const media = <DemoVideo name={fp.media} label={copy.mediaAlt} />;
               return (
-                <li key={fp.media} className="cs-card" data-reveal style={{ ["--hm-accent" as string]: fp.accent }}>
+                <li key={fp.media} className="cs-card" data-reveal style={{ ["--hm-accent" as string]: fp.accent, ["--i" as string]: i }}>
                   {fp.projectId ? (
                     <Link href={href(`/proyectos/${fp.projectId}`)} className="cs-media" aria-label={copy.name}>{media}</Link>
                   ) : (
@@ -176,11 +161,11 @@ export function HomeView({ posts }: { posts: HomePost[] }) {
           <section className="hm-section" aria-labelledby="hm-blog">
             <h2 id="hm-blog" className="hm-h2">{m.blog.title}</h2>
             <ul className="hm-posts">
-              {posts.map((post) => {
+              {posts.map((post, i) => {
                 const copy = post.copy[locale] ?? post.copy.es;
                 const slug = locale === "en" && post.slugEn ? post.slugEn : post.slug;
                 return (
-                  <li key={post.slug} data-reveal>
+                  <li key={post.slug} data-reveal style={{ ["--i" as string]: i }}>
                     <Link href={href(`/blog/${slug}`)} className="hm-post">
                       {post.cover ? (
                         // eslint-disable-next-line @next/next/no-img-element
@@ -202,7 +187,7 @@ export function HomeView({ posts }: { posts: HomePost[] }) {
           <h2 id="hm-process" className="hm-h2">{c.process.title}</h2>
           <ol className="hm-steps">
             {c.process.steps.map((step, i) => (
-              <li key={step} className="hm-step" data-reveal>
+              <li key={step} className="hm-step" data-reveal style={{ ["--i" as string]: i }}>
                 <span className="hm-step-icon" aria-hidden>
                   {(() => {
                     const Icon = stepIcons[i % stepIcons.length];
@@ -234,6 +219,10 @@ export function HomeView({ posts }: { posts: HomePost[] }) {
             <HireButton />
           </div>
         </section>
+
+        <p className="hm-agents">
+          {c.agents.lead} <a href="/llms.txt" className="hm-agents-link">{c.agents.link}</a>
+        </p>
       </main>
 
       <footer className="hm-footer">
