@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
-import { HomeView, type HomePost } from "@/components/views/home-view";
-import { HOME_PROJECT_IDS, homeCopy } from "@/content/home-copy";
+import { HomeView } from "@/components/views/home-view";
+import { homeCopy } from "@/content/home-copy";
 import { servicesCopy } from "@/content/services-copy";
 import { buildPageMetadata } from "@/lib/page-metadata";
 import { getRequestLocale } from "@/lib/prefs";
-import { getPublishedPosts } from "@/lib/blog";
-import { getProjects } from "@/lib/projects-db";
 import { pathPair } from "@/lib/routes";
-import { faqLd, personLd, projectsLd, serviceLd, websiteLd } from "@/lib/seo";
+import { faqLd, personLd, serviceLd, websiteLd } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/site-settings-db";
 import "./home.css";
 import "./showcase.css";
@@ -37,42 +35,23 @@ const KNOWS_ABOUT = {
 } as const;
 
 /**
- * Landing: hero, about, services (3 steps + examples), featured projects
- * with demo loops (Malito, Garpen), latest posts, process, FAQ, closing CTA.
+ * Landing: hero, services (3 steps + examples), FAQ, about, closing CTA.
+ * Projects, blog and the full story live on their own pages.
  */
 export default async function HomePage() {
-  const [locale, all, settings, allPosts] = await Promise.all([
-    getRequestLocale(),
-    getProjects(),
-    getSiteSettings(),
-    getPublishedPosts().catch(() => []),
-  ]);
-  // Only the projects offered on the landing (with a demo) go into its JSON-LD.
-  const featured = new Set<string>(HOME_PROJECT_IDS);
-  const shown = all.filter((p) => p.visible && featured.has(p.id));
-  const posts: HomePost[] = allPosts.slice(0, 3).map((p) => ({
-    slug: p.slug,
-    slugEn: p.slugEn ?? null,
-    date: p.publishedAt.slice(0, 10),
-    cover: p.coverImage,
-    copy: {
-      es: { title: p.title.es, summary: p.summary.es },
-      en: { title: p.title.en || p.title.es, summary: p.summary.en || p.summary.es },
-    },
-  }));
+  const [locale, settings] = await Promise.all([getRequestLocale(), getSiteSettings()]);
   const c = homeCopy[locale];
   const svc = servicesCopy[locale];
   const graph = [
     personLd(settings, locale, JOB_TITLE[locale], [...KNOWS_ABOUT[locale]]),
     websiteLd(settings, locale, c.meta.description),
     serviceLd(settings, locale, { name: svc.title, description: c.meta.description, offers: svc.offers }),
-    projectsLd(settings, locale, shown.map((p) => ({ id: p.id, icon: p.icon, title: p.copy[locale].title, body: p.copy[locale].body }))),
     faqLd(c.faq.items),
   ];
   return (
     <>
       <JsonLd graph={graph} />
-      <HomeView posts={posts} />
+      <HomeView />
     </>
   );
 }

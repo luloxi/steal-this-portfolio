@@ -114,13 +114,11 @@ export const homeCopy: Record<Locale, {
   },
 };
 
-/** Home sections: header nav, about, services (the offer in 3 steps + light examples), projects, blog. Plain words, no stack names. */
+/** Home sections: header nav, services (the offer in 3 steps + light examples), about. Plain words, no stack names. */
 export const homeMore: Record<Locale, {
   nav: { about: string; services: string; projects: string; blog: string; contact: string; hire: string };
   about: { title: string; body: string; more: string };
   services: { title: string; lead: string; steps: { title: string; body: string }[]; casesTitle: string; cta: string; more: string };
-  projects: { title: string };
-  blog: { title: string; all: string };
 }> = {
   es: {
     nav: { about: "Sobre mí", services: "Servicios", projects: "Proyectos", blog: "Blog", contact: "Contacto", hire: "Contratar" },
@@ -141,8 +139,6 @@ export const homeMore: Record<Locale, {
       cta: "Empezar por el diagnóstico",
       more: "Ver los servicios en detalle",
     },
-    projects: { title: "Proyectos" },
-    blog: { title: "Del blog", all: "Ver todas las notas" },
   },
   en: {
     nav: { about: "About", services: "Services", projects: "Projects", blog: "Blog", contact: "Contact", hire: "Hire me" },
@@ -163,7 +159,5 @@ export const homeMore: Record<Locale, {
       cta: "Start with the diagnosis",
       more: "See the services in detail",
     },
-    projects: { title: "Projects" },
-    blog: { title: "From the blog", all: "See all posts" },
   },
 };

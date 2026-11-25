@@ -44,11 +44,11 @@ const nextConfig: NextConfig = {
       r("/en/tastes", "/en/about"),
       r("/en/gustos", "/en/about"),
       r("/en/login", "/en/sign-in"),
-      // Case-study pages were folded into the home Proyectos section.
-      r("/casos", "/#proyectos"),
-      r("/casos/:slug", "/#proyectos"),
-      r("/en/case-studies", "/en#proyectos"),
-      r("/en/case-studies/:slug", "/en#proyectos"),
+      // Old case-study pages: projects live on their own page now.
+      r("/casos", "/proyectos"),
+      r("/casos/:slug", "/proyectos"),
+      r("/en/case-studies", "/en/projects"),
+      r("/en/case-studies/:slug", "/en/projects"),
     ];
   },
   images: {

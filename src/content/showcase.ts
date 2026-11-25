@@ -1,44 +1,9 @@
 import type { Locale } from "@/i18n/types";
 
 /**
- * Home content: featured projects with a short demo clip (inside the Proyectos section)
- * and the home Servicios examples. Real projects only, no invented clients or metrics.
- * Clips live in public/demos and were captured from local or test data (never real accounts).
- * Plain words, no stack names, no em dashes.
+ * Home Servicios examples. Real things only, no invented clients or metrics.
+ * Project previews live in src/content/project-media.ts. Plain words, no stack names, no em dashes.
  */
-
-export type FeaturedProject = {
-  /** Base name in public/demos (.webm, .mp4, .webp poster). */
-  media: string;
-  /** D1 project id when the project has a page under /proyectos. */
-  projectId?: string;
-  icon: string;
-  accent: string;
-  copy: Record<Locale, { name: string; tagline: string; mediaAlt: string }>;
-};
-
-export const FEATURED_PROJECTS: FeaturedProject[] = [
-  {
-    media: "malito",
-    projectId: "malito",
-    icon: "/projects/malito.v5.png",
-    accent: "var(--section-contact)",
-    copy: {
-      es: { name: "Malito", tagline: "Herramienta de mail para trabajar: usá tu propia dirección con tu dominio y mandá boletines y campañas a tus listas.", mediaAlt: "Malito con datos de prueba: bandeja de entrada, lectura de un mail y una campaña del boletín." },
-      en: { name: "Malito", tagline: "An email tool for work: use your own address on your own domain and send newsletters and campaigns to your lists.", mediaAlt: "Malito with test data: inbox, reading an email and a newsletter campaign." },
-    },
-  },
-  {
-    media: "garpen",
-    projectId: "garpen",
-    icon: "/projects/garpen.v8.png",
-    accent: "var(--section-projects)",
-    copy: {
-      es: { name: "Garpen", tagline: "Un sistema a medida para clientes, agenda, finanzas y facturas, todo en un lugar.", mediaAlt: "Garpen con una cuenta de prueba local: resumen, contactos, agenda y finanzas." },
-      en: { name: "Garpen", tagline: "A custom system for clients, calendar, finances and invoices, all in one place.", mediaAlt: "Garpen with a local test account: summary, contacts, agenda and finances." },
-    },
-  },
-];
 
 export type ShowcaseArt = "social" | "whatsapp" | "routines";
 
