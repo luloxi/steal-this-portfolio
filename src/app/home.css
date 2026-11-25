@@ -66,6 +66,7 @@
 .hm-social:hover { background: color-mix(in oklab, var(--accent) 10%, transparent); }
 .hm-steal { cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; font-family: var(--font-mono, monospace); font-size: .72rem; letter-spacing: .05em; color: var(--muted); text-decoration: none; opacity: .8; }
 .hm-steal:hover { opacity: 1; color: var(--accent-2); }
+:root:not(.dark) .hm-steal { opacity: 1; color: #4a4754; }
 .hm-steal-icon { width: 14px; height: 14px; }
 .hm a:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: 6px; }
 @media (prefers-reduced-motion: reduce) { .hm-social { transition: none; } }
@@ -191,17 +192,20 @@ details.hm-faq-item .hm-faq-a { padding: 0 1.15rem 1rem; }
 .hm-flow-field { fill: var(--accent); opacity: .10; }
 .hm-flow-core-ring { stroke: var(--accent); stroke-opacity: .5; }
 :root:not(.dark) .hm-flow {
-  --core-0: #fffef9;
-  --core-1: #fff4c8;
-  --core-2: #ffdcae;
-  --core-3: #bfe7ff;
+  --core-0: #fff;
+  --core-1: #ffe08a;
+  --core-2: #ffb36b;
+  --core-3: #7cc8ff;
 }
-:root:not(.dark) .hm-flow-field { fill: #ffe7a0; opacity: .45; }
-:root:not(.dark) .hm-flow-pulse { filter: drop-shadow(0 0 12px #ffd76e) drop-shadow(0 0 22px rgb(150 215 255 / .55)); }
-:root:not(.dark) .hm-flow-core-ring { stroke: #a97bff; stroke-opacity: .75; }
-:root:not(.dark) .hm-flow-core-label { fill: #5e2590; }
-:root:not(.dark) .hm-flow-line { stroke: color-mix(in oklab, #a97bff 70%, transparent); }
-:root:not(.dark) .hm-flow-orbit { stroke: color-mix(in oklab, #3cb6ff 70%, transparent); }
+:root:not(.dark) .hm-flow-field { fill: #ffd76e; opacity: .28; }
+:root:not(.dark) .hm-flow-pulse { filter: drop-shadow(0 0 8px #ffb36b); }
+:root:not(.dark) .hm-flow-core-ring { stroke: #7d4fe6; stroke-opacity: 1; stroke-width: 2; }
+:root:not(.dark) .hm-flow-core-label { fill: #3d1670; }
+:root:not(.dark) .hm-flow-line { stroke: #7d4fe6; stroke-width: 2; }
+:root:not(.dark) .hm-flow-orbit { stroke: #1786d6; stroke-width: 1.6; }
+:root:not(.dark) .hm-flow-chip-icon { fill: color-mix(in oklab, var(--chip) 28%, #fff); stroke: color-mix(in oklab, var(--chip) 85%, #1f1d26); stroke-width: 1.4; }
+:root:not(.dark) .hm-flow-chip-label { fill: color-mix(in oklab, var(--chip) 65%, #1f1d26); }
+:root:not(.dark) .hm-flow-chip-line { fill: color-mix(in oklab, #1f1d26 55%, transparent); }
 
 /* Quiet one-liner for AI agents at the very end of the landing (points to /llms.txt). */
 .hm-agents { margin: -2.5rem 0 0; text-align: center; font-size: .85rem; line-height: 1.5; color: var(--muted, currentColor); }

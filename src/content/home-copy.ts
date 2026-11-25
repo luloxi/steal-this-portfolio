@@ -118,7 +118,7 @@ export const homeCopy: Record<Locale, {
 export const homeMore: Record<Locale, {
   nav: { about: string; services: string; projects: string; blog: string; contact: string; hire: string };
   about: { title: string; body: string; more: string };
-  services: { title: string; lead: string; steps: { title: string; body: string }[]; casesTitle: string; cta: string; more: string };
+  services: { title: string; steps: { title: string; body: string }[]; casesTitle: string; cta: string; more: string };
 }> = {
   es: {
     nav: { about: "Sobre mí", services: "Servicios", projects: "Proyectos", blog: "Blog", contact: "Contacto", hire: "Contactar" },
@@ -128,8 +128,7 @@ export const homeMore: Record<Locale, {
       more: "Leer mi historia",
     },
     services: {
-      title: "Servicios",
-      lead: "Tres pasos, de la primera charla a algo que ya funciona.",
+      title: "Cómo puedo ayudarte",
       steps: [
         { title: "Diagnóstico", body: "Una charla para encontrar dónde se traba tu trabajo." },
         { title: "Decisión", body: "Qué conviene resolver y cómo. Te paso un presupuesto." },
@@ -148,8 +147,7 @@ export const homeMore: Record<Locale, {
       more: "Read my story",
     },
     services: {
-      title: "Services",
-      lead: "Three steps, from the first chat to something that already works.",
+      title: "How I can help",
       steps: [
         { title: "Diagnosis", body: "A chat to find where your work gets stuck." },
         { title: "Decision", body: "What's worth solving and how. I send you a quote." },

@@ -276,18 +276,20 @@
   --joy-5: var(--section-hire);
 }
 :root:not(.dark) .hm, :root:not(.dark) .dp, :root:not(.dark) .hh {
-  --joy-1: #2ed39b; /* mint */
-  --joy-2: #3cb6ff; /* sky */
-  --joy-3: #ff6b5e; /* coral */
-  --joy-4: #ffc83a; /* lemon */
-  --joy-5: #a97bff; /* lilac */
+  /* Same hues, deeper (Coral firme) so icons, lines and illustrations read on the page. */
+  --joy-1: #0fa874; /* mint */
+  --joy-2: #1786d6; /* sky */
+  --joy-3: #ec4a36; /* coral */
+  --joy-4: #e0a000; /* lemon */
+  --joy-5: #7d4fe6; /* lilac */
   --section-contact: var(--joy-1);
   --section-blog: var(--joy-2);
   --section-projects: var(--joy-3);
   --section-hire: var(--joy-5);
 }
 :root:not(.dark) .hm-card { --hm-accent: var(--joy-5); }
-:root:not(.dark) .hm-h2::after { height: 2px; border-radius: 2px; background: linear-gradient(90deg, var(--joy-3), var(--joy-4) 30%, var(--joy-1) 60%, var(--joy-2) 80%, transparent); }
+:root:not(.dark) .hm-h2 { color: #1f1d26; }
+:root:not(.dark) .hm-h2::after { height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--joy-3), var(--joy-4) 30%, var(--joy-1) 60%, var(--joy-2) 80%, transparent); }
 :root:not(.dark) .hm-tile-title,
 :root:not(.dark) .cs-title { color: color-mix(in oklab, var(--hm-accent) 42%, #14121c); }
 :root:not(.dark) .hm-tile-go,
@@ -298,7 +300,28 @@
 :root:not(.dark) .hh-link::after { background: linear-gradient(90deg, var(--joy-3), var(--joy-5)); height: 3px; }
 :root:not(.dark) .hm-faq-q::after,
 :root:not(.dark) .dp-kicker { color: color-mix(in oklab, var(--joy-3) 55%, #14121c); }
-:root:not(.dark) .hm-card { border: 1.5px solid color-mix(in oklab, var(--hm-accent) 70%, transparent); }
+:root:not(.dark) :is(.hm-card, .hm-step, .hm-faq-item, .hm-about, .hm-closing, .sc-card, .cs-card) {
+  border: 1.5px solid #d9cdd8; box-shadow: inset 0 1px 0 rgb(255 255 255 / .9), 0 6px 20px -14px rgb(60 30 50 / .35);
+}
+:root:not(.dark) :is(.hm-lead, .hm-sublead, .hm-text, .hm-card-body, .hm-case-text, .hm-faq-a, .hm-about-text p, .hm-step) { color: #34323d; }
+:root:not(.dark) .hm-agents { color: #4a4754; }
+:root:not(.dark) .hm-faq-q::after { color: #b53a26; }
+:root:not(.dark) .hm-agents-link { text-decoration-color: #b53a26; }
+:root:not(.dark) .hm-step-icon { border-width: 1.5px; }
+/* Illustrations: darker strokes, fuller fills. */
+:root:not(.dark) .sc-stage { background: color-mix(in oklab, var(--hm-accent) 13%, #fff); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--hm-accent) 35%, transparent); }
+:root:not(.dark) .sc-panel { fill: #fff; stroke: color-mix(in oklab, var(--hm-accent) 85%, #1f1d26); stroke-width: 1.5; }
+:root:not(.dark) .sc-line { fill: color-mix(in oklab, #1f1d26 60%, transparent); }
+:root:not(.dark) .sc-line.is-dim { fill: color-mix(in oklab, #1f1d26 35%, transparent); }
+:root:not(.dark) :is(.sc-type, .sc-typing circle) { fill: var(--hm-accent); }
+:root:not(.dark) :is(.sc-stroke, .sc-ring) { stroke: color-mix(in oklab, var(--hm-accent) 85%, #1f1d26); stroke-width: 1.8; }
+:root:not(.dark) .sc-pill { fill: color-mix(in oklab, var(--hm-accent) 22%, #fff); stroke: color-mix(in oklab, var(--hm-accent) 80%, #1f1d26); stroke-width: 1.3; }
+:root:not(.dark) .sc-label { fill: color-mix(in oklab, var(--hm-accent) 70%, #1f1d26); }
+:root:not(.dark) .sc-avatar { fill: var(--joy-5); }
+:root:not(.dark) .sc-bubble { fill: color-mix(in oklab, #1f1d26 16%, #fff); }
+:root:not(.dark) .sc-bubble.is-me { fill: color-mix(in oklab, var(--joy-1) 45%, #fff); }
+:root:not(.dark) .sc-chip { stroke: color-mix(in oklab, var(--hm-accent) 85%, #1f1d26); }
+:root:not(.dark) .sc-coin { fill: var(--joy-3); filter: none; }
 :root:not(.dark) .hm-card::before { opacity: 1; width: 3px; }
 
 /* Buttons under full-width content sit centered at every width. The hero button stays

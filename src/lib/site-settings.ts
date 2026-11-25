@@ -95,9 +95,9 @@ const LIGHT: Palette = {
   // porque se usan como color de texto (AA); los pastel puros van en rellenos, bordes e íconos.
   // Las section* son tintas más hondas de cada pastel: se usan como color de título (AA texto grande).
   background: "#fbf8f4",
-  foreground: "#2b2a33",
-  muted: "#6e6b7b",
-  border: "#ece6ef",
+  foreground: "#1f1d26",
+  muted: "#55525f",
+  border: "#ddd3dc",
   accent: "#a4503f",
   accent2: "#5a47ad",
   surface: "#ffffff",
