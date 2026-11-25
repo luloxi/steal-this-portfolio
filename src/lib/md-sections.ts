@@ -109,3 +109,24 @@ export function insertSection(md: string, at: number, title: string, body: strin
   split.sections.splice(at0, 0, { heading: `## ${t}`, title: t, lines: bodyLines(body, false) });
   return joinSections(split);
 }
+
+/**
+ * Swap two "## " sections, keeping every line of both. Each section that ends
+ * up before another one ends with a blank line, so headings stay separated;
+ * the last one keeps the body's original trailing whitespace.
+ */
+export function swapSections(md: string, a: number, b: number): string {
+  const split = splitSections(md);
+  const n = split.sections.length;
+  if (a === b || a < 0 || b < 0 || a >= n || b >= n) return md;
+  const trailOf = (lines: string[]) => {
+    let k = lines.length;
+    while (k > 0 && lines[k - 1].trim() === "") k--;
+    return { core: lines.slice(0, k), trail: lines.slice(k) };
+  };
+  const lastTrail = trailOf(split.sections[n - 1].lines).trail;
+  const secs = split.sections.map((s) => ({ ...s, lines: trailOf(s.lines).core }));
+  [secs[a], secs[b]] = [secs[b], secs[a]];
+  split.sections = secs.map((s, i) => ({ ...s, lines: i === n - 1 ? [...s.lines, ...lastTrail] : [...s.lines, ""] }));
+  return joinSections(split);
+}

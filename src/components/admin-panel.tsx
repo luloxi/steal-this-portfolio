@@ -12,12 +12,13 @@ import { defaultOrder, moveItem, SECTION_KEYS, type OrderItem, type OrderKind, t
 import { useRouter } from "next/navigation";
 
 type Labels = Record<string, { es: string; en: string }>;
-type Tab = "sections" | SettingsTab | "projects";
+type Tab = "pages" | SettingsTab;
 
 /**
- * Admin panel, opened from the profile menu ("Personalizar"). One modal with
- * four tabs: Secciones, Apariencia, Info personal, Proyectos. Help text only
- * lives in tooltips (hover, or long-press on touch). Changes save to D1.
+ * Site settings, opened from the profile menu ("Ajustes del sitio"). One modal
+ * with four tabs: Páginas (which pages exist, projects and their order),
+ * Perfil (name, photo, links), Colores and Acceso. Edit mode itself is a
+ * switch in the profile menu, not here. Changes save to D1.
  */
 export function AdminPanel({ projectLabels }: { projectLabels: Labels }) {
   const { open, setOpen } = useAdminPanel();
@@ -33,7 +34,7 @@ function PanelBody({ projectLabels, onClose }: { projectLabels: Labels; onClose:
   const order = useSiteOrder();
   const { projects, save } = order;
   const sections = order.sections.length ? order.sections : defaultOrder(SECTION_KEYS);
-  const [tab, setTab] = useState<Tab>("sections");
+  const [tab, setTab] = useState<Tab>("pages");
   const [error, setError] = useState("");
   const [live, setLive] = useState("");
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -54,10 +55,10 @@ function PanelBody({ projectLabels, onClose }: { projectLabels: Labels; onClose:
   }, [onClose]);
 
   const tabs: [Tab, string, string][] = [
-    ["sections", es ? "Secciones" : "Sections", es ? "Mostrar, ocultar, ordenar y editar las secciones del sitio" : "Show, hide, reorder and edit the site sections"],
-    ["appearance", es ? "Apariencia" : "Appearance", es ? "Colores del sitio en modo oscuro y claro" : "Site colors in dark and light mode"],
-    ["info", es ? "Info personal" : "Personal info", es ? "Tu nombre, tu foto, tus links y tu contacto" : "Your name, photo, links and contact"],
-    ["projects", es ? "Proyectos" : "Projects", es ? "Mostrar, ocultar, ordenar y editar tus proyectos" : "Show, hide, reorder and edit your projects"],
+    ["pages", es ? "Páginas" : "Pages", es ? "Qué páginas y proyectos se ven" : "Which pages and projects are shown"],
+    ["info", es ? "Perfil" : "Profile", es ? "Tu nombre, tu foto, tus links y tu contacto" : "Your name, photo, links and contact"],
+    ["appearance", es ? "Colores" : "Colors", es ? "Colores del sitio en modo oscuro y claro" : "Site colors in dark and light mode"],
+    ["access", es ? "Acceso" : "Access", es ? "Quién no tiene límite de pedidos" : "Who has no request limit"],
   ];
 
   const sectionLabel = useCallback((key: string) => t.sections[key as SectionKey] ?? key, [t]);
@@ -82,7 +83,8 @@ function PanelBody({ projectLabels, onClose }: { projectLabels: Labels; onClose:
     onClose();
   };
 
-  const row = (kind: OrderKind, items: OrderItem[], idx: number, label: string, editHref: string) => {
+  /** reorder: only projects (the landing menu is fixed, so page order no longer does anything). */
+  const row = (kind: OrderKind, items: OrderItem[], idx: number, label: string, editHref: string, reorder = false) => {
     const it = items[idx];
     return (
       <li className={`adm-row${it.visible ? "" : " is-off"}`} key={it.key} data-key={it.key}>
@@ -103,7 +105,7 @@ function PanelBody({ projectLabels, onClose }: { projectLabels: Labels; onClose:
             {it.visible ? (es ? "Visible" : "Visible") : (es ? "Oculta" : "Hidden")}
           </button>
         </Tip>
-        <span className="adm-move">
+        {reorder ? <span className="adm-move">
           <button
             type="button"
             className="adm-btn adm-icon"
@@ -124,21 +126,21 @@ function PanelBody({ projectLabels, onClose }: { projectLabels: Labels; onClose:
           >
             ↓
           </button>
-        </span>
+        </span> : null}
       </li>
     );
   };
 
   return (
     <div className="adm-backdrop" data-inline-editor="skip" onPointerDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="adm-panel" role="dialog" aria-modal="true" aria-label={es ? "Personalizar el sitio" : "Customize the site"} tabIndex={-1} ref={dialogRef}>
+      <div className="adm-panel" role="dialog" aria-modal="true" aria-label={es ? "Ajustes del sitio" : "Site settings"} tabIndex={-1} ref={dialogRef}>
         <header className="adm-head">
-          <h2 className="adm-title">{es ? "Personalizar" : "Customize"}</h2>
+          <h2 className="adm-title">{es ? "Ajustes del sitio" : "Site settings"}</h2>
           <button type="button" className="adm-btn adm-icon" aria-label={es ? "Cerrar" : "Close"} title={es ? "Cerrar" : "Close"} onClick={onClose}>
             ✕
           </button>
         </header>
-        <div className="adm-tabs" role="tablist" aria-label={es ? "Qué personalizar" : "What to customize"}>
+        <div className="adm-tabs" role="tablist" aria-label={es ? "Qué ajustar" : "What to adjust"}>
           {tabs.map(([k, text, tip]) => (
             <Tip text={tip} key={k}>
               <button type="button" role="tab" aria-selected={tab === k} className="adm-tab" onClick={() => setTab(k)}>
@@ -148,37 +150,30 @@ function PanelBody({ projectLabels, onClose }: { projectLabels: Labels; onClose:
           ))}
         </div>
         <div className="adm-body" role="tabpanel">
-          {tab === "sections" ? (
+          {tab === "pages" ? (
             <div className="adm-stack">
-              <div className="adm-line">
-                <Tip text={es ? "Con esto activado podés tocar los textos de cada página para cambiarlos" : "When on, you can tap the text on each page to change it"}>
-                  <button type="button" role="switch" aria-checked={edit.on} className="adm-switch" onClick={() => edit.set(!edit.on)}>
-                    {es ? "Editar textos en la página" : "Edit text on the page"}: {edit.on ? (es ? "sí" : "on") : (es ? "no" : "off")}
-                  </button>
-                </Tip>
-              </div>
-              <ul className="adm-list" aria-label={es ? "Secciones" : "Sections"}>
-                {sections.map((s, i) => row("sections", sections, i, sectionLabel(s.key), href(sectionHref[s.key] ?? "/")))}
-              </ul>
-            </div>
-          ) : null}
-          {tab === "projects" ? (
-            <div className="adm-stack">
-              {projects.length === 0 ? <p className="adm-empty">{es ? "Todavía no hay proyectos." : "No projects yet."}</p> : (
-                <ul className="adm-list" aria-label={es ? "Proyectos" : "Projects"}>
-                  {projects.map((p, i) => row("projects", projects, i, projectLabel(p.key), href(`/proyectos/${p.key}`)))}
+              <section className="adm-group" aria-label={es ? "Páginas" : "Pages"}>
+                <h3 className="adm-h">{es ? "Páginas" : "Pages"}</h3>
+                <ul className="adm-list" aria-label={es ? "Páginas" : "Pages"}>
+                  {sections.map((s, i) => row("sections", sections, i, sectionLabel(s.key), href(sectionHref[s.key] ?? "/")))}
                 </ul>
-              )}
-              <div className="adm-line">
-                <Tip text={es ? "Ahí podés agregar proyectos nuevos y editar todos sus datos" : "Add new projects there and edit all their details"}>
+              </section>
+              <section className="adm-group" aria-label={es ? "Proyectos" : "Projects"}>
+                <h3 className="adm-h">{es ? "Proyectos" : "Projects"}</h3>
+                {projects.length === 0 ? <p className="adm-empty">{es ? "Todavía no hay proyectos." : "No projects yet."}</p> : (
+                  <ul className="adm-list" aria-label={es ? "Proyectos" : "Projects"}>
+                    {projects.map((p, i) => row("projects", projects, i, projectLabel(p.key), href(`/proyectos/${p.key}`), true))}
+                  </ul>
+                )}
+                <div className="adm-line">
                   <Link href={href("/proyectos")} className="adm-btn" onClick={goEdit}>
                     {es ? "Agregar o editar proyectos" : "Add or edit projects"}
                   </Link>
-                </Tip>
-              </div>
+                </div>
+              </section>
             </div>
           ) : null}
-          <AdminSettings tab={tab === "appearance" || tab === "info" ? tab : null} />
+          <AdminSettings tab={tab === "pages" ? null : tab} />
           {error ? <p className="adm-msg is-bad" role="alert">{error}</p> : null}
         </div>
         <span className="sr-only" aria-live="polite">{live}</span>

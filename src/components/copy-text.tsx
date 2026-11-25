@@ -11,6 +11,7 @@ import { useLocale } from "@/i18n/locale-provider";
  * One line of site copy (a site_copy key) rendered as plain text. In admin
  * edit mode the text itself becomes editable in place (same element, same
  * look); a ✓/✕ bar appears while it differs. Enter saves, Esc cancels.
+ * Visitors (and the owner with edit mode off) get the plain element.
  */
 export function CopyText({
   copyKey,
@@ -70,6 +71,8 @@ export function CopyText({
         aria-label={label ?? copyKey ?? "text"}
         spellCheck
         data-inline-editor="skip"
+        // Inside a link or a FAQ <summary>: a click places the caret instead of navigating or toggling.
+        onClick={(e: React.MouseEvent<HTMLElement>) => e.preventDefault()}
         onInput={(e: React.FormEvent<HTMLElement>) => setDraft((e.currentTarget.textContent ?? "").replace(/\s+/g, " ").trim())}
         onKeyDown={(e: React.KeyboardEvent<HTMLElement>) => {
           if (e.key === "Enter") {

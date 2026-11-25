@@ -1,20 +1,26 @@
 import { isGrowableListKey } from "@/i18n/copy-overrides";
 import { cache } from "react";
 import { messages } from "@/i18n/messages";
+import { landingCopy } from "@/i18n/landing";
 import { flattenCopy, type CopyOverrides } from "@/i18n/copy-overrides";
 import type { Locale } from "@/i18n/types";
 import { getDb, nowIso, requireDb } from "@/lib/db";
 
+/** Editable keys: the messages tree plus the landing texts under "landing.". */
 const known: Record<Locale, Record<string, string>> = {
-  es: flattenCopy(messages.es),
-  en: flattenCopy(messages.en),
+  es: flattenCopy({ ...messages.es, landing: landingCopy("es") }),
+  en: flattenCopy({ ...messages.en, landing: landingCopy("en") }),
 };
 
-/** Per isolate. React cache() only dedupes within one request. */
+/**
+ * Per isolate. React cache() only dedupes within one request. Kept on
+ * globalThis: the API route and the pages can be separate module instances
+ * in one isolate, and a save must clear the cache the pages read.
+ */
 const COPY_TTL_MS = 60_000;
-let copyCache: { value: CopyOverrides; at: number } | null = null;
-/** Bumped on write so an in-flight read cannot store a value from before the write. */
-let copyEpoch = 0;
+type CopyCacheState = { value: CopyOverrides; at: number } | null;
+const store = globalThis as typeof globalThis & { __luloxCopy?: { cache: CopyCacheState; epoch: number } };
+const shared = (store.__luloxCopy ??= { cache: null, epoch: 0 });
 
 export function isKnownCopyKey(key: string, locale: string): locale is Locale {
   if (locale !== "es" && locale !== "en") return false;
@@ -22,12 +28,16 @@ export function isKnownCopyKey(key: string, locale: string): locale is Locale {
   return isGrowableListKey(key, known[locale]);
 }
 
-/** D1 site_copy rows that differ from the code defaults (code is the fallback). */
-export const getCopyOverrides = cache(async (): Promise<CopyOverrides> => {
-  const hit = copyCache;
-  if (hit && Date.now() - hit.at < COPY_TTL_MS) return hit.value;
+/**
+ * D1 site_copy rows that differ from the code defaults (code is the fallback).
+ * fresh: skip the isolate cache (the owner always reads what is in D1, so an
+ * edit or a reorder never starts from text that is up to a minute old).
+ */
+export const getCopyOverrides = cache(async (fresh = false): Promise<CopyOverrides> => {
+  const hit = shared.cache;
+  if (!fresh && hit && Date.now() - hit.at < COPY_TTL_MS) return hit.value;
 
-  const epoch = copyEpoch;
+  const epoch = shared.epoch;
   const out: CopyOverrides = {};
   try {
     const db = await getDb();
@@ -40,7 +50,7 @@ export const getCopyOverrides = cache(async (): Promise<CopyOverrides> => {
       if (known[r.locale][r.key] === r.value) continue;
       (out[r.locale] ??= {})[r.key] = r.value;
     }
-    if (epoch === copyEpoch) copyCache = { value: out, at: Date.now() };
+    if (epoch === shared.epoch) shared.cache = { value: out, at: Date.now() };
   } catch (err) {
     console.error("[copy] overrides fallback to code:", err);
   }
@@ -56,6 +66,6 @@ export async function setCopy(key: string, locale: Locale, value: string) {
     )
     .bind(key, locale, value, nowIso())
     .run();
-  copyEpoch += 1;
-  copyCache = null;
+  shared.epoch += 1;
+  shared.cache = null;
 }

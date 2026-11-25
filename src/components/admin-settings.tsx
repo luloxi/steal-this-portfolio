@@ -11,7 +11,7 @@ import { useLocale } from "@/i18n/locale-provider";
 import type { Palette, SocialLink } from "@/lib/site-settings";
 import { pickImageFile, uploadMedia } from "@/lib/upload-media";
 
-export type SettingsTab = "appearance" | "info";
+export type SettingsTab = "appearance" | "info" | "access";
 
 type ColorField = { key: keyof Palette; es: string; en: string; tipEs: string; tipEn: string };
 
@@ -21,13 +21,13 @@ const COLOR_FIELDS: ColorField[] = [
   { key: "muted", es: "Texto suave", en: "Soft text", tipEs: "Textos secundarios y aclaraciones", tipEn: "Secondary text and captions" },
   { key: "accent", es: "Acento", en: "Accent", tipEs: "Color de enlaces y detalles", tipEn: "Links and highlights" },
   { key: "accent2", es: "Acento 2", en: "Accent 2", tipEs: "Segundo color de detalles", tipEn: "Second highlight color" },
-  { key: "sectionAbout", es: "Botón Sobre mí", en: "About button", tipEs: "Color del botón Sobre mí en el inicio", tipEn: "Color of the About button on the home page" },
-  { key: "sectionProjects", es: "Botón Proyectos", en: "Projects button", tipEs: "Color del botón Proyectos en el inicio", tipEn: "Color of the Projects button on the home page" },
-  { key: "sectionBlog", es: "Botón Blog", en: "Blog button", tipEs: "Color del botón Blog en el inicio", tipEn: "Color of the Blog button on the home page" },
-  { key: "sectionTastes", es: "Botón Gustos", en: "Tastes button", tipEs: "Color del botón Gustos", tipEn: "Color of the Tastes button" },
-  { key: "sectionContact", es: "Botón Contacto", en: "Contact button", tipEs: "Color del botón Contacto en el inicio", tipEn: "Color of the Contact button on the home page" },
-  { key: "sectionHire", es: "Botón Contratar", en: "Hire button", tipEs: "Color del botón Contratar en el inicio", tipEn: "Color of the Hire button on the home page" },
-  { key: "sectionReferrals", es: "Botón Referidos", en: "Referrals button", tipEs: "Color del botón Referidos en el inicio", tipEn: "Color of the Referrals button on the home page" },
+  { key: "sectionAbout", es: "Sobre mí", en: "About", tipEs: "Detalles de la página Sobre mí", tipEn: "Accents on the About page" },
+  { key: "sectionProjects", es: "Proyectos", en: "Projects", tipEs: "Detalles de Proyectos", tipEn: "Accents on Projects" },
+  { key: "sectionBlog", es: "Blog", en: "Blog", tipEs: "Detalles del Blog", tipEn: "Accents on the Blog" },
+  { key: "sectionTastes", es: "Gustos", en: "Tastes", tipEs: "Detalles de gustos y temas del blog", tipEn: "Accents for tastes and blog topics" },
+  { key: "sectionContact", es: "Contacto", en: "Contact", tipEs: "Detalles de Contacto", tipEn: "Accents on Contact" },
+  { key: "sectionHire", es: "Contratar", en: "Hire", tipEs: "Detalles de Contratar", tipEn: "Accents on Hire" },
+  { key: "sectionReferrals", es: "Referidos", en: "Referrals", tipEs: "Detalles de Referidos", tipEn: "Accents on Referrals" },
 ];
 
 const HEX = /^#[0-9a-fA-F]{6}$/;
@@ -62,8 +62,8 @@ function parseSocialLines(text: string, previous: SocialLink[]): { ok: true; jso
 /** The values the form saves, as they are now in D1 (same keys as the PUT body). */
 function initialValues(s: ReturnType<typeof useSiteSettings>): Record<string, string> {
   const out: Record<string, string> = {
-    name: s.name, tagline: s.tagline, legal_name: s.legalName, description_es: s.descriptionEs, description_en: s.descriptionEn,
-    ens: s.ens, url: s.url, x_handle: s.xHandle, avatar: s.avatar, hero_photo: s.heroPhoto, og_image: s.ogImage,
+    name: s.name, legal_name: s.legalName, description_es: s.descriptionEs, description_en: s.descriptionEn,
+    url: s.url, x_handle: s.xHandle, avatar: s.avatar, hero_photo: s.heroPhoto, og_image: s.ogImage,
     github_href: s.githubHref, github_handle: s.githubHandle, call_booking_url: s.callBookingUrl,
     contact_email: s.contactEmail, taste_letterboxd: s.tasteLetterboxd, taste_lastfm: s.tasteLastfm, taste_spotify: s.tasteSpotify,
     socials: JSON.stringify(s.socials.map(({ id, label, href }) => ({ id, label, href }))),
@@ -89,7 +89,7 @@ async function putSettings(values: Record<string, string>): Promise<string | nul
 }
 
 /**
- * The "Apariencia" and "Info personal" tabs of the admin panel. All the form
+ * The "Perfil", "Colores" and "Acceso" tabs of the settings panel. All the form
  * state lives here (mounted while the panel is open), so switching tabs keeps
  * unsaved edits. One Save writes the known site_settings keys to D1.
  */
@@ -100,8 +100,8 @@ export function AdminSettings({ tab }: { tab: SettingsTab | null }) {
   const router = useRouter();
   const edit = useEditModeSwitch();
   const [text, setText] = useState({
-    name: settings.name, tagline: settings.tagline, legal: settings.legalName,
-    descEs: settings.descriptionEs, descEn: settings.descriptionEn, ens: settings.ens, url: settings.url,
+    name: settings.name, legal: settings.legalName,
+    descEs: settings.descriptionEs, descEn: settings.descriptionEn, url: settings.url,
     xHandle: settings.xHandle, avatar: settings.avatar, hero: settings.heroPhoto, og: settings.ogImage,
     githubHref: settings.githubHref, githubHandle: settings.githubHandle, booking: settings.callBookingUrl,
     email: settings.contactEmail, letterboxd: settings.tasteLetterboxd, lastfm: settings.tasteLastfm, spotify: settings.tasteSpotify,
@@ -125,8 +125,8 @@ export function AdminSettings({ tab }: { tab: SettingsTab | null }) {
       return;
     }
     const all: Record<string, string> = {
-      name: text.name, tagline: text.tagline, legal_name: text.legal, description_es: text.descEs, description_en: text.descEn,
-      ens: text.ens, url: text.url, x_handle: text.xHandle, avatar: text.avatar, hero_photo: text.hero, og_image: text.og,
+      name: text.name, legal_name: text.legal, description_es: text.descEs, description_en: text.descEn,
+      url: text.url, x_handle: text.xHandle, avatar: text.avatar, hero_photo: text.hero, og_image: text.og,
       github_href: text.githubHref, github_handle: text.githubHandle, call_booking_url: text.booking,
       contact_email: text.email, taste_letterboxd: text.letterboxd, taste_lastfm: text.lastfm, taste_spotify: text.spotify,
       socials: parsed.json,
@@ -145,6 +145,8 @@ export function AdminSettings({ tab }: { tab: SettingsTab | null }) {
     }
     setBusy(true);
     setMsg(null);
+    // The server only saves with edit mode on: saving from here turns it on.
+    if (!edit.on) edit.set(true);
     const err = await putSettings(values);
     setBusy(false);
     if (err) return fail(err);
@@ -165,6 +167,7 @@ export function AdminSettings({ tab }: { tab: SettingsTab | null }) {
       setMsg({ ok: false, text: up.error === "type" ? (es ? "Usá PNG, JPG, WebP, GIF o AVIF." : "Use PNG, JPG, WebP, GIF or AVIF.") : up.error === "size" ? (es ? "Pesa más de 8 MB." : "Over 8 MB.") : (es ? `No se pudo subir (${up.error}).` : `Upload failed (${up.error}).`) });
       return;
     }
+    if (!edit.on) edit.set(true);
     const err = await putSettings({ hero_photo: up.url });
     setBusy(false);
     if (err) return fail(err);
@@ -228,13 +231,13 @@ export function AdminSettings({ tab }: { tab: SettingsTab | null }) {
       ) : null}
       {tab === "info" ? (
         <div className="adm-stack">
-          <section className="adm-group" aria-label={es ? "Foto principal" : "Main photo"}>
-            <h3 className="adm-h">{es ? "Foto principal" : "Main photo"}</h3>
+          <section className="adm-group" aria-label={es ? "Tu foto" : "Your photo"}>
+            <h3 className="adm-h">{es ? "Tu foto" : "Your photo"}</h3>
             <div className="adm-photo">
-              <Image src={text.hero || settings.heroPhoto} alt={es ? "Foto principal actual" : "Current main photo"} width={96} height={96} className="adm-photo-img" unoptimized />
+              <Image src={text.hero || settings.heroPhoto} alt={es ? "Tu foto actual" : "Your current photo"} width={96} height={96} className="adm-photo-img" unoptimized />
               <div className="adm-photo-side">
                 <Tip text={es ? "Sube una imagen nueva y se guarda al toque. La actual queda de respaldo." : "Upload a new image and it saves right away. The current one stays as a backup."}>
-                  <button type="button" className="adm-btn" disabled={busy || !edit.on} onClick={() => void changeHero()}>
+                  <button type="button" className="adm-btn" disabled={busy} onClick={() => void changeHero()}>
                     {es ? "Cambiar foto" : "Change photo"}
                   </button>
                 </Tip>
@@ -245,7 +248,6 @@ export function AdminSettings({ tab }: { tab: SettingsTab | null }) {
           <section className="adm-group" aria-label={es ? "Identidad" : "Identity"}>
             <h3 className="adm-h">{es ? "Identidad" : "Identity"}</h3>
             {field(es ? "Nombre" : "Name", es ? "El título grande del inicio y de la pestaña del navegador" : "The big title on the home page and the browser tab", "name")}
-            {field(es ? "Frase corta" : "Tagline", es ? "Una línea debajo de tu nombre" : "One line under your name", "tagline")}
             {field(es ? "Nombre legal" : "Legal name", es ? "Aparece como autor del sitio" : "Shown as the site author", "legal")}
             {area(es ? "Descripción (español)" : "Description (Spanish)", es ? "Lo que se ve al compartir el link en español" : "What shows when the link is shared in Spanish", "descEs")}
             {area(es ? "Descripción (inglés)" : "Description (English)", es ? "Lo que se ve al compartir el link en inglés" : "What shows when the link is shared in English", "descEn")}
@@ -255,7 +257,6 @@ export function AdminSettings({ tab }: { tab: SettingsTab | null }) {
             {field(es ? "Avatar" : "Avatar", es ? "Imagen chica del sitio (icono)" : "Small site image (icon)", "avatar")}
             {field(es ? "Imagen para compartir" : "Share image", es ? "La vista previa cuando pegás el link en redes" : "The preview when the link is pasted on social networks", "og")}
             {field(es ? "Dirección del sitio" : "Site address", es ? "La URL pública, con https://" : "The public URL, with https://", "url", "https://")}
-            {field("ENS", es ? "Tu nombre ENS, si tenés" : "Your ENS name, if any", "ens")}
           </section>
           <section className="adm-group" aria-label={es ? "Links y contacto" : "Links and contact"}>
             <h3 className="adm-h">{es ? "Links y contacto" : "Links and contact"}</h3>
@@ -272,16 +273,18 @@ export function AdminSettings({ tab }: { tab: SettingsTab | null }) {
             {field("Last.fm", es ? "Tu usuario de Last.fm" : "Your Last.fm username", "lastfm")}
             {field("Spotify", es ? "Link a tu perfil de Spotify" : "Link to your Spotify profile", "spotify")}
           </section>
+        </div>
+      ) : null}
+      {tab === "access" ? (
+        <div className="adm-stack">
           <AdminPrivileged />
         </div>
       ) : null}
-      {tab ? (
+      {tab === "info" || tab === "appearance" ? (
         <div className="adm-foot">
-          <Tip text={edit.on ? (es ? "Guardar los cambios en el sitio" : "Save the changes to the site") : (es ? "Activá «Editar textos en la página» en la pestaña Secciones para guardar" : "Turn on \"Edit text on the page\" in the Sections tab to save")}>
-            <button type="button" className="adm-btn is-primary" disabled={busy || !edit.on} onClick={() => void save()}>
-              {busy ? "…" : (es ? "Guardar" : "Save")}
-            </button>
-          </Tip>
+          <button type="button" className="adm-btn is-primary" disabled={busy} onClick={() => void save()}>
+            {busy ? "…" : (es ? "Guardar" : "Save")}
+          </button>
           {msg ? <span className={`adm-msg${msg.ok ? " is-ok" : " is-bad"}`} role="status">{msg.text}</span> : null}
         </div>
       ) : null}

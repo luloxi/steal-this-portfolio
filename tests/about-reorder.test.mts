@@ -1,0 +1,57 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { moveBlock, parseLayout, serializeLayout } from "../src/lib/page-layout.ts";
+import { splitSections, swapSections } from "../src/lib/md-sections.ts";
+import { applyCopy, flattenCopy } from "../src/i18n/copy-overrides.ts";
+import { landingCopy } from "../src/i18n/landing.ts";
+
+const md = "Intro line *\n\n## A\n\nalpha **one**\n\n## B\n\nbeta\n\n- x\n- y\n\n## C\n\ngamma";
+const chars = (s: string) => s.replace(/\s+/g, "").split("").sort().join("");
+
+test("swapSections trades two chapters and keeps every character", () => {
+  const out = swapSections(md, 0, 1);
+  assert.deepEqual(splitSections(out).sections.map((s) => s.title), ["B", "A", "C"]);
+  assert.equal(chars(out), chars(md));
+  assert.ok(out.startsWith("Intro line *\n\n## B\n\nbeta\n\n- x\n- y\n\n## A\n\nalpha **one**\n\n## C"));
+  // The last chapter moving up still gets a blank line before the next heading.
+  const last = swapSections(md, 1, 2);
+  assert.match(last, /gamma\n\n## B/);
+  assert.equal(chars(last), chars(md));
+  // Swapping back restores the same chapters in the same order.
+  assert.deepEqual(splitSections(swapSections(out, 0, 1)).sections.map((s) => s.title), ["A", "B", "C"]);
+  assert.equal(swapSections(md, 0, 9), md);
+});
+
+test("talks block: unplaced goes last, placed stays put", () => {
+  assert.equal(serializeLayout(parseLayout("story:0,story:1", 2, 1, 1, 1)), "story:0,story:1,pubs:0,job:0,talks:0");
+  assert.equal(serializeLayout(parseLayout("talks:0,story:0,story:1", 2, 0, 0, 1)), "talks:0,story:0,story:1");
+  assert.doesNotMatch(serializeLayout(parseLayout("talks:0,story:0", 1, 0)), /talks/);
+});
+
+test("moveBlock: records swap places, two stories ask for a body swap", () => {
+  const l = parseLayout("story:0,job:0,story:1,pubs:0", 2, 1, 1, 1);
+  const a = moveBlock(l, 1, 1)!;
+  assert.equal(serializeLayout(a.items), "story:0,story:1,job:0,pubs:0,talks:0");
+  assert.equal(a.swapStories, null);
+  const b = moveBlock(parseLayout("story:0,story:1,job:0", 2, 1), 0, 1)!;
+  assert.deepEqual(b.swapStories, [0, 1]);
+  assert.equal(serializeLayout(b.items), "story:0,story:1,job:0");
+  assert.equal(moveBlock(l, 0, -1), null);
+  assert.equal(moveBlock(l, l.length - 1, 1), null);
+});
+
+test("landing texts are editable keys with code fallback, both languages", () => {
+  for (const loc of ["es", "en"] as const) {
+    const keys = flattenCopy({ landing: landingCopy(loc) });
+    for (const k of ["landing.home.title", "landing.home.lead", "landing.more.services.steps.0.title", "landing.cases.2.body", "landing.home.faq.items.0.q", "landing.more.about.body", "landing.home.closing"]) {
+      assert.ok(k in keys, `${loc} ${k}`);
+    }
+    // SEO meta stays in code.
+    assert.ok(!Object.keys(keys).some((k) => k.startsWith("landing.home.meta")));
+    const edited = applyCopy({ landing: landingCopy(loc) }, { "landing.home.title": "Nuevo", "about.body": "x" }).landing;
+    assert.equal(edited.home.title, "Nuevo");
+    assert.equal(landingCopy(loc).home.title !== "Nuevo", true);
+  }
+  // The English landing says AI, never IA.
+  assert.doesNotMatch(Object.values(flattenCopy(landingCopy("en"))).join(" "), /\bIA\b/);
+});

@@ -3444,7 +3444,12 @@ body.ie-off .ie-row-pencil { display: none; }
 .ie-pill-select option { color: #111; background: #fff; }
 .blog-draft-icon { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border); }
 .blog-card-draft .cp-panel-inner { padding-top: 0.7rem; padding-bottom: 0.7rem; }
-.ie-inline-text { outline: none; cursor: text; }
+/* Edit mode: every editable text shows a dashed outline on hover (always, faintly, on touch screens); click to edit. */
+.ie-inline-text { outline: 1.5px dashed transparent; outline-offset: 3px; border-radius: 4px; cursor: text; transition: outline-color 0.15s ease; }
+.ie-inline-text:not(:focus) { cursor: pointer; }
+.ie-inline-text:hover { outline-color: color-mix(in srgb, var(--accent) 75%, transparent); }
+.ie-inline-text:focus { outline: 2px solid var(--accent); }
+@media (hover: none) { .ie-inline-text:not(:focus) { outline-color: color-mix(in srgb, var(--accent) 40%, transparent); } }
 .ie-inline-text:empty::before { content: attr(aria-label); opacity: 0.45; }
 .ie-tb-wide { width: auto !important; padding: 0 8px !important; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
 .ie-meta { display: grid; gap: 8px; padding: 10px; border-radius: 10px; border: 1px dashed color-mix(in srgb, #a4503f 50%, transparent); font-size: 12px; }
@@ -5188,4 +5193,32 @@ html:root:not(.dark) {
 .talk-link:focus-visible { outline: 2px solid var(--cp-accent); outline-offset: 2px; border-radius: 3px; }
 .talk-photos { display: grid; gap: 0.6rem; margin-top: 0.7rem; grid-template-columns: 1fr; }
 @media (min-width: 640px) { .talk-photos[data-count="2"] { grid-template-columns: 1fr 1fr; } }
+.talk-row { display: flex; gap: 0.85rem; align-items: flex-start; }
+.talk-logo { flex: 0 0 auto; display: block; width: 3.5rem; height: 3.5rem; border-radius: 12px; object-fit: cover; }
+@media (min-width: 640px) { .talk-logo { width: 4.5rem; height: 4.5rem; } }
 .talk-photo { display: block; width: 100%; height: auto; max-height: 22rem; object-fit: cover; border-radius: 12px; }
+
+/* Sobre mí: reorder blocks (edit mode only). Big tap targets for the phone. */
+.ab-order { display: flex; justify-content: flex-end; }
+.ab-order-open, .ab-order-done, .ab-order-btn { cursor: pointer; font: inherit; color: var(--foreground); background: transparent; border: 1px solid color-mix(in srgb, var(--section-about) 55%, transparent); border-radius: 999px; }
+.ab-order-open { min-height: 40px; padding: 0 14px; font-size: 0.85rem; font-weight: 600; }
+.ab-order-open:hover, .ab-order-done:hover, .ab-order-btn:hover:not(:disabled) { background: color-mix(in srgb, var(--section-about) 14%, transparent); }
+.ab-order-panel { width: 100%; padding: 12px; border-radius: 14px; border: 1px dashed color-mix(in srgb, var(--section-about) 60%, transparent); background: color-mix(in srgb, var(--background) 92%, var(--section-about)); }
+.ab-order-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.ab-order-title { margin: 0; font-weight: 700; }
+.ab-order-done { min-height: 36px; padding: 0 14px; font-size: 0.85rem; font-weight: 600; }
+.ab-order-hint { margin: 6px 0 10px; font-size: 0.82rem; color: var(--muted); }
+.ab-order-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.ab-order-item { display: grid; grid-template-columns: 1.6rem 1fr 44px 44px; align-items: center; gap: 6px; padding: 4px 6px; border-radius: 10px; background: color-mix(in srgb, var(--foreground) 4%, transparent); }
+.ab-order-item:not(.is-story) .ab-order-label { font-style: italic; }
+.ab-order-n { font-family: ui-monospace, monospace; font-size: 0.75rem; color: var(--muted); text-align: center; }
+.ab-order-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.9rem; }
+.ab-order-btn { width: 44px; height: 40px; border-radius: 10px; font-size: 1.05rem; }
+.ab-order-btn:disabled { opacity: 0.3; cursor: default; }
+.ab-order-msg { margin: 8px 0 0; font-size: 0.82rem; color: var(--muted); }
+
+/* Profile menu: edit mode switch. */
+.pm-switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pm-pill { font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
+.pm-pill.is-on { color: var(--background); background: var(--accent); border-color: var(--accent); }
+.pm-menu { min-width: 12rem; }

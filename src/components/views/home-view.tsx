@@ -7,10 +7,10 @@ import { HireButton } from "@/components/hire-button";
 import { ScrollRevealFallback } from "@/components/scroll-reveal-fallback";
 import { AgentFlow } from "@/components/home-visuals";
 import { HomeHeader } from "@/components/home-header";
+import { CopyText } from "@/components/copy-text";
 import { GitHubIcon, InstagramBrandIcon, LinkedInIcon, TelegramIcon, XIcon } from "@/components/icons/social";
 import { useSiteSettings } from "@/components/site-settings-context";
 import { ShowcaseVisual } from "@/components/showcase-visuals";
-import { homeCopy, homeMore } from "@/content/home-copy";
 import { GROK_BOT_SHOWCASE } from "@/content/showcase";
 import { useLocale } from "@/i18n/locale-provider";
 
@@ -29,10 +29,11 @@ const offerIcons = [Search, Signpost, Hammer];
 
 /** Scrolling landing page. Theme and language controls stay fixed in the layout. */
 export function HomeView() {
-  const { t, href, locale } = useLocale();
+  const { t, href, locale, landing } = useLocale();
   const site = useSiteSettings();
-  const c = homeCopy[locale];
-  const m = homeMore[locale];
+  // Code defaults + edits saved from edit mode (D1 site_copy "landing.*").
+  const c = landing.home;
+  const m = landing.more;
   const nav: { label: string; to: string; hire?: boolean }[] = [
     { label: m.nav.services, to: "#servicios" },
     { label: m.nav.projects, to: href("/proyectos") },
@@ -58,8 +59,8 @@ export function HomeView() {
       <main className="hm-main">
         <header className="hm-hero">
           <div className="hm-hero-text">
-          <h1 className="hm-title">{c.title}</h1>
-          <p className="hm-lead">{c.lead}</p>
+          <CopyText as="h1" className="hm-title" copyKey="landing.home.title" value={c.title} />
+          <CopyText as="p" className="hm-lead" copyKey="landing.home.lead" value={c.lead} />
           <div className="hm-cta">
             <HireButton />
           </div>
@@ -70,14 +71,14 @@ export function HomeView() {
         </header>
 
         <section id="servicios" className="hm-section hm-anchor" aria-labelledby="hm-services">
-          <h2 id="hm-services" className="hm-h2">{m.services.title}</h2>
-          <p className="hm-sublead">{m.services.lead}</p>
+          <h2 id="hm-services" className="hm-h2"><CopyText copyKey="landing.more.services.title" value={m.services.title} /></h2>
+          <CopyText as="p" className="hm-sublead" copyKey="landing.more.services.lead" value={m.services.lead} />
           <ol className="sc-grid hm-offer">
             {m.services.steps.map((step, i) => {
               const Icon = offerIcons[i % offerIcons.length];
               return (
                 <li
-                  key={step.title}
+                  key={i}
                   className="sc-card hm-offer-step"
                   data-reveal
                   style={{ ["--hm-accent" as string]: accents[i % accents.length], ["--i" as string]: i }}
@@ -86,73 +87,75 @@ export function HomeView() {
                     <Icon />
                     <span className="hm-offer-n">{i + 1}</span>
                   </span>
-                  <h3 className="hm-card-title">{step.title}</h3>
-                  <p className="hm-card-body">{step.body}</p>
+                  <CopyText as="h3" className="hm-card-title" copyKey={`landing.more.services.steps.${i}.title`} value={step.title} />
+                  <CopyText as="p" className="hm-card-body" copyKey={`landing.more.services.steps.${i}.body`} value={step.body} />
                 </li>
               );
             })}
           </ol>
-          <h3 id="hm-cases" className="hm-cases-title">{m.services.casesTitle}</h3>
+          <h3 id="hm-cases" className="hm-cases-title"><CopyText copyKey="landing.more.services.casesTitle" value={m.services.casesTitle} /></h3>
           <ul className="hm-cases" aria-labelledby="hm-cases">
             {GROK_BOT_SHOWCASE.map((item, i) => {
-              const copy = item.copy[locale];
+              const copy = landing.cases[i] ?? item.copy[locale];
               return (
                 <li key={item.art} className="hm-case" data-reveal style={{ ["--hm-accent" as string]: accents[(i + 2) % accents.length], ["--i" as string]: i }}>
                   <div className="sc-stage hm-case-art">
                     <ShowcaseVisual art={item.art} />
                   </div>
                   <p className="hm-case-text">
-                    <strong>{copy.title}.</strong> {copy.body}
+                    <strong><CopyText copyKey={`landing.cases.${i}.title`} value={copy.title} />.</strong>{" "}
+                    <CopyText copyKey={`landing.cases.${i}.body`} value={copy.body} />
                   </p>
                 </li>
               );
             })}
           </ul>
           <div className="hm-cta">
-            <Link href={href("/contratar")} className="hm-cta-link">{m.services.cta}</Link>
+            <Link href={href("/contratar")} className="hm-cta-link"><CopyText copyKey="landing.more.services.cta" value={m.services.cta} /></Link>
           </div>
-          <Link href={href("/servicios")} className="hm-more hm-more-center">{m.services.more} ▸</Link>
+          <Link href={href("/servicios")} className="hm-more hm-more-center"><CopyText copyKey="landing.more.services.more" value={m.services.more} /> ▸</Link>
         </section>
 
         <section className="hm-section" aria-labelledby="hm-faq">
-          <h2 id="hm-faq" className="hm-h2">{c.faq.title}</h2>
+          <h2 id="hm-faq" className="hm-h2"><CopyText copyKey="landing.home.faq.title" value={c.faq.title} /></h2>
           <div className="hm-faq">
-            {c.faq.items.map((item) => (
-              <details key={item.q} className="hm-faq-item" data-reveal>
-                <summary className="hm-faq-q">{item.q}</summary>
-                <p className="hm-faq-a">{item.a}</p>
+            {c.faq.items.map((item, i) => (
+              <details key={i} className="hm-faq-item" data-reveal>
+                <summary className="hm-faq-q"><CopyText copyKey={`landing.home.faq.items.${i}.q`} value={item.q} /></summary>
+                <CopyText as="p" className="hm-faq-a" copyKey={`landing.home.faq.items.${i}.a`} value={item.a} />
               </details>
             ))}
           </div>
         </section>
 
         <section id="sobre-mi" className="hm-section hm-anchor" aria-labelledby="hm-about">
-          <h2 id="hm-about" className="hm-h2">{m.about.title}</h2>
+          <h2 id="hm-about" className="hm-h2"><CopyText copyKey="landing.more.about.title" value={m.about.title} /></h2>
           <div className="hm-about" data-reveal>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/avatar-portrait.webp" alt={site.legalName} width={600} height={800} loading="lazy" decoding="async" className="hm-about-photo" />
             <div className="hm-about-text">
-              <p className="hm-about-body">{m.about.body}</p>
-              <Link href={href("/sobre-mi")} className="hm-more">{m.about.more} ▸</Link>
+              <CopyText as="p" className="hm-about-body" copyKey="landing.more.about.body" value={m.about.body} />
+              <Link href={href("/sobre-mi")} className="hm-more"><CopyText copyKey="landing.more.about.more" value={m.about.more} /> ▸</Link>
             </div>
           </div>
         </section>
 
         <section className="hm-closing" data-reveal>
-          <p>{c.closing}</p>
+          <CopyText as="p" copyKey="landing.home.closing" value={c.closing} />
           <div className="hm-cta">
             <HireButton />
           </div>
         </section>
 
         <p className="hm-agents">
-          {c.agents.lead} <a href="/llms.txt" className="hm-agents-link">{c.agents.link}</a>
+          <CopyText copyKey="landing.home.agents.lead" value={c.agents.lead} />{" "}
+          <a href="/llms.txt" className="hm-agents-link"><CopyText copyKey="landing.home.agents.link" value={c.agents.link} /></a>
         </p>
       </main>
 
       <footer className="hm-footer">
         <nav className="hm-footer-links" aria-label="Social">
-          <Link href={href("/servicios")} className="hm-footer-blog">{c.footer.services}</Link>
+          <Link href={href("/servicios")} className="hm-footer-blog"><CopyText copyKey="landing.home.footer.services" value={c.footer.services} /></Link>
           <Link href={href("/blog")} className="hm-footer-blog">{t.sections.blog}</Link>
           {socials.map((s) => {
             const Icon = socialIcons[s.id];

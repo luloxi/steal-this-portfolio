@@ -8,7 +8,7 @@ test("talks link out over https and the English copy never says IA", () => {
     assert.match(t.url, /^https:\/\//);
     const en = `${t.en.before}${t.en.link}${t.en.after}`;
     assert.doesNotMatch(en, /\bIA\b/);
-    for (const ph of t.photos) {
+    for (const ph of t.image ? [t.image, ...t.photos] : t.photos) {
       assert.match(ph.src, /\.webp$/);
       assert.ok(ph.alt.es.trim() && ph.alt.en.trim());
     }

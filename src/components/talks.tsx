@@ -21,14 +21,20 @@ export function Talks({ items = TALKS }: { items?: readonly Talk[] }) {
           const c = talk[lang];
           return (
             <li key={talk.url} className="talk">
-              <p className="talk-text">
-                {c.before}
-                <a href={talk.url} target="_blank" rel="noopener noreferrer" className="talk-link">
-                  {c.link}
-                  <span className="sr-only"> ({L.open})</span>
-                </a>
-                {c.after}
-              </p>
+              <div className="talk-row">
+                {talk.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={talk.image.src} alt={talk.image.alt[lang]} width={talk.image.width} height={talk.image.height} loading="lazy" decoding="async" className="talk-logo" />
+                ) : null}
+                <p className="talk-text">
+                  {c.before}
+                  <a href={talk.url} target="_blank" rel="noopener noreferrer" className="talk-link">
+                    {c.link}
+                    <span className="sr-only"> ({L.open})</span>
+                  </a>
+                  {c.after}
+                </p>
+              </div>
               {talk.photos.length > 0 ? (
                 <div className="talk-photos" data-count={talk.photos.length}>
                   {talk.photos.map((ph) => (
