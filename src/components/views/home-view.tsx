@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { ComponentType } from "react";
-import { HandCoins, MessageSquareText, PhoneCall } from "lucide-react";
+import { Hammer, Search, Signpost } from "lucide-react";
 import { HireButton } from "@/components/hire-button";
 import { ScrollRevealFallback } from "@/components/scroll-reveal-fallback";
 import { AgentFlow } from "@/components/home-visuals";
@@ -12,7 +12,6 @@ import { useSiteSettings } from "@/components/site-settings-context";
 import { DemoVideo } from "@/components/demo-video";
 import { ShowcaseVisual } from "@/components/showcase-visuals";
 import { homeCopy, homeMore } from "@/content/home-copy";
-import { SERVICE_PAGES } from "@/content/service-pages";
 import { FEATURED_PROJECTS, GROK_BOT_SHOWCASE } from "@/content/showcase";
 import { useLocale } from "@/i18n/locale-provider";
 import type { Locale } from "@/i18n/types";
@@ -36,7 +35,7 @@ const socialIcons: Record<string, ComponentType<{ className?: string }>> = {
 };
 
 const accents = ["var(--joy-1)", "var(--joy-2)", "var(--joy-3)", "var(--joy-4)", "var(--joy-5)"];
-const stepIcons = [MessageSquareText, PhoneCall, HandCoins];
+const offerIcons = [Search, Signpost, Hammer];
 
 /** Scrolling landing page. Theme and language controls stay fixed in the layout. */
 export function HomeView({ posts }: { posts: HomePost[] }) {
@@ -46,8 +45,7 @@ export function HomeView({ posts }: { posts: HomePost[] }) {
   const m = homeMore[locale];
   const nav: { label: string; to: string; hire?: boolean }[] = [
     { label: m.nav.about, to: "#sobre-mi" },
-    { label: m.nav.showcase, to: "#automatizando" },
-    { label: m.nav.services, to: href("/servicios") },
+    { label: m.nav.services, to: "#servicios" },
     { label: m.nav.projects, to: "#proyectos" },
     { label: m.nav.blog, to: href("/blog") },
     { label: m.nav.contact, to: href("/contacto") },
@@ -88,46 +86,49 @@ export function HomeView({ posts }: { posts: HomePost[] }) {
           </div>
         </section>
 
-        <section id="automatizando" className="hm-section hm-anchor" aria-labelledby="hm-showcase">
-          <h2 id="hm-showcase" className="hm-h2">{m.showcase.title}</h2>
-          <p className="hm-sublead">{m.showcase.lead}</p>
-          <ul className="sc-grid">
-            {GROK_BOT_SHOWCASE.map((item, i) => {
-              const copy = item.copy[locale];
+        <section id="servicios" className="hm-section hm-anchor" aria-labelledby="hm-services">
+          <h2 id="hm-services" className="hm-h2">{m.services.title}</h2>
+          <p className="hm-sublead">{m.services.lead}</p>
+          <ol className="sc-grid hm-offer">
+            {m.services.steps.map((step, i) => {
+              const Icon = offerIcons[i % offerIcons.length];
               return (
                 <li
-                  key={item.art}
-                  className="sc-card"
+                  key={step.title}
+                  className="sc-card hm-offer-step"
                   data-reveal
                   style={{ ["--hm-accent" as string]: accents[i % accents.length], ["--i" as string]: i }}
                 >
-                  <div className="sc-stage">
+                  <span className="hm-offer-icon" aria-hidden>
+                    <Icon />
+                    <span className="hm-offer-n">{i + 1}</span>
+                  </span>
+                  <h3 className="hm-card-title">{step.title}</h3>
+                  <p className="hm-card-body">{step.body}</p>
+                </li>
+              );
+            })}
+          </ol>
+          <h3 id="hm-cases" className="hm-cases-title">{m.services.casesTitle}</h3>
+          <ul className="hm-cases" aria-labelledby="hm-cases">
+            {GROK_BOT_SHOWCASE.map((item, i) => {
+              const copy = item.copy[locale];
+              return (
+                <li key={item.art} className="hm-case" data-reveal style={{ ["--hm-accent" as string]: accents[(i + 2) % accents.length], ["--i" as string]: i }}>
+                  <div className="sc-stage hm-case-art">
                     <ShowcaseVisual art={item.art} />
                   </div>
-                  <h3 className="hm-card-title">{copy.title}</h3>
-                  <p className="hm-card-body">{copy.body}</p>
+                  <p className="hm-case-text">
+                    <strong>{copy.title}.</strong> {copy.body}
+                  </p>
                 </li>
               );
             })}
           </ul>
           <div className="hm-cta">
-            <Link href={href("/contratar")} className="hm-cta-link">{m.showcase.cta}</Link>
+            <Link href={href("/contratar")} className="hm-cta-link">{m.services.cta}</Link>
           </div>
-        </section>
-
-        <section id="servicios" className="hm-section hm-anchor" aria-labelledby="hm-services">
-          <h2 id="hm-services" className="hm-h2">{m.services.title}</h2>
-          <p className="hm-sublead">{m.services.lead}</p>
-          <ul className="sv-chips">
-            {SERVICE_PAGES.map((sp, i) => (
-              <li key={sp.slug} data-reveal style={{ ["--i" as string]: i % 3 }}>
-                <Link href={href(`/servicios/${sp.slug}`)} className="sv-chip">
-                  <span>{sp.copy[locale].label}</span>
-                  <span aria-hidden>▸</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <Link href={href("/servicios")} className="hm-more hm-more-center">{m.services.more} ▸</Link>
         </section>
 
         <section id="proyectos" className="hm-section hm-anchor" aria-labelledby="hm-built">
@@ -182,24 +183,6 @@ export function HomeView({ posts }: { posts: HomePost[] }) {
             <Link href={href("/blog")} className="hm-more">{m.blog.all} ▸</Link>
           </section>
         ) : null}
-
-        <section className="hm-section" aria-labelledby="hm-process">
-          <h2 id="hm-process" className="hm-h2">{c.process.title}</h2>
-          <ol className="hm-steps">
-            {c.process.steps.map((step, i) => (
-              <li key={step} className="hm-step" data-reveal style={{ ["--i" as string]: i }}>
-                <span className="hm-step-icon" aria-hidden>
-                  {(() => {
-                    const Icon = stepIcons[i % stepIcons.length];
-                    return <Icon />;
-                  })()}
-                  <span className="hm-step-n">{i + 1}</span>
-                </span>
-                <span>{step}</span>
-              </li>
-            ))}
-          </ol>
-        </section>
 
         <section className="hm-section" aria-labelledby="hm-faq">
           <h2 id="hm-faq" className="hm-h2">{c.faq.title}</h2>

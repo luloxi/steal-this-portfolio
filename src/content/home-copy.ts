@@ -1,6 +1,10 @@
 import type { Locale } from "@/i18n/types";
 
-/** Home landing copy (ES is the source text; EN mirrors it). No em dashes. */
+/**
+ * Home landing copy (ES is the source text; EN mirrors it). No em dashes.
+ * Audience: freelancers and independent professionals. Message: I understand the
+ * problem, decide what's worth doing and automate it (AI comes last, never first).
+ */
 /**
  * D1 projects offered on the sales pages (home Proyectos with a demo, /servicios).
  * Personal projects (Tarask, DJ Tube, Mochi...) live only on /proyectos and /sobre-mi.
@@ -11,7 +15,6 @@ export const homeCopy: Record<Locale, {
   meta: { title: string; description: string; keywords: string[] };
   title: string;
   lead: string;
-  process: { title: string; steps: string[] };
   faq: { title: string; items: { q: string; a: string }[] };
   closing: string;
   agents: { lead: string; link: string };
@@ -19,31 +22,27 @@ export const homeCopy: Record<Locale, {
 }> = {
   es: {
     meta: {
-      title: "Lulox · Automatización con agentes de IA",
+      title: "Lulox · Menos tareas, más trabajo de verdad",
       description:
-        "Automatizo con agentes de IA el trabajo repetitivo de tu equipo, y armo CRMs y sistemas a medida.",
-      keywords: ["Lulox", "Luciano Oliva Bianco", "automatización", "agentes de IA", "Grok", "Grok Bot", "Hermes", "CRM a medida"],
+        "Para independientes y freelancers: encuentro dónde se traba tu trabajo, decido qué conviene y automatizo lo que se repite con IA.",
+      keywords: ["Lulox", "Luciano Oliva Bianco", "automatización", "freelancers", "independientes", "automatizar tareas", "IA", "CRM a medida"],
     },
-    title: "Tu trabajo, sin la parte aburrida.",
-    lead: "Lo que se repite, lo automatizamos con IA.",
-    process: {
-      title: "Cómo es trabajar conmigo",
-      steps: [
-        "Me contás qué tarea te come horas cada semana.",
-        "En una llamada corta vemos si conviene automatizarla y te paso un presupuesto.",
-        "La armo con tus herramientas y la probás con tu trabajo real. 50% al empezar, 50% al entregar.",
-      ],
-    },
+    title: "Menos tareas, más trabajo de verdad.",
+    lead: "Entiendo qué te come el tiempo y lo saco de encima.",
     faq: {
       title: "Preguntas frecuentes",
       items: [
         {
-          q: "¿Qué se puede automatizar?",
-          a: "Lo que se repite con las mismas reglas: ordenar el correo y contestar lo de siempre, pasar lo que llega por mail o formulario a una planilla o una agenda, cargar facturas y tickets desde una foto, armar reportes y avisarte cuando algo no puede esperar. Si alguien lo hace a mano todas las semanas, seguro se puede.",
+          q: "¿Y si no sé qué automatizar?",
+          a: "Para eso está el diagnóstico. Me contás cómo es tu semana y encontramos juntos dónde se te va el tiempo.",
         },
         {
-          q: "¿Cuánto cuesta automatizar un proceso?",
-          a: "Depende del tamaño de la tarea. Después de una llamada corta te paso un presupuesto.",
+          q: "¿Qué se puede automatizar?",
+          a: "Lo que se repite con las mismas reglas: ordenar el correo y contestar lo de siempre, pasar lo que llega por mail o formulario a una planilla o una agenda, cargar facturas y tickets desde una foto, armar reportes y avisarte cuando algo no puede esperar. Si lo hacés a mano todas las semanas, seguro se puede.",
+        },
+        {
+          q: "¿Cuánto cuesta?",
+          a: "Depende de la tarea. Después del diagnóstico te paso un presupuesto. Se paga 50% al empezar y 50% al entregar.",
         },
         {
           q: "¿Con qué herramientas trabajás?",
@@ -51,7 +50,7 @@ export const homeCopy: Record<Locale, {
         },
         {
           q: "¿Hacés CRMs y sistemas a medida?",
-          a: "Sí. Sistemas de clientes y herramientas internas pensadas para cómo trabaja tu equipo.",
+          a: "Sí. Sistemas de clientes y herramientas pensadas para cómo trabajás.",
         },
         {
           q: "¿Un agente de IA puede usar lo que armás?",
@@ -69,31 +68,27 @@ export const homeCopy: Record<Locale, {
   },
   en: {
     meta: {
-      title: "Lulox · Automation with AI agents",
+      title: "Lulox · Fewer chores, more real work",
       description:
-        "I automate your team's repetitive work with AI agents, and build custom CRMs and systems.",
-      keywords: ["Lulox", "Luciano Oliva Bianco", "automation", "AI agents", "Grok", "Grok Bot", "Hermes", "custom CRM"],
+        "For freelancers and independent professionals: I find where your work gets stuck, decide what's worth doing and automate what repeats with AI.",
+      keywords: ["Lulox", "Luciano Oliva Bianco", "automation", "freelancers", "independent professionals", "automate tasks", "AI", "custom CRM"],
     },
-    title: "Your work, without the boring part.",
-    lead: "What repeats, we automate with AI.",
-    process: {
-      title: "How working with me goes",
-      steps: [
-        "You tell me which task eats hours every week.",
-        "On a short call we see if it's worth automating and I send you a quote.",
-        "I build it with your tools and you test it on your real work. 50% to start, 50% on delivery.",
-      ],
-    },
+    title: "Fewer chores, more real work.",
+    lead: "I figure out what eats your time and take it off your plate.",
     faq: {
       title: "Frequently asked questions",
       items: [
         {
-          q: "What can be automated?",
-          a: "Anything that repeats with the same rules: sorting email and answering the usual questions, moving what arrives by email or form into a sheet or a calendar, logging invoices and receipts from a photo, building reports and flagging what can't wait. If someone does it by hand every week, it can almost certainly be automated.",
+          q: "What if I don't know what to automate?",
+          a: "That's what the diagnosis is for. You tell me what your week looks like and we find where your time goes, together.",
         },
         {
-          q: "How much does it cost to automate a process?",
-          a: "It depends on the size of the task. After a short call I send you a quote.",
+          q: "What can be automated?",
+          a: "Anything that repeats with the same rules: sorting email and answering the usual questions, moving what arrives by email or form into a sheet or a calendar, logging invoices and receipts from a photo, building reports and flagging what can't wait. If you do it by hand every week, it can almost certainly be automated.",
+        },
+        {
+          q: "How much does it cost?",
+          a: "It depends on the task. After the diagnosis I send you a quote. Payment is 50% to start and 50% on delivery.",
         },
         {
           q: "What tools do you work with?",
@@ -101,7 +96,7 @@ export const homeCopy: Record<Locale, {
         },
         {
           q: "Do you build custom CRMs and systems?",
-          a: "Yes. Client systems and internal tools made for the way your team works.",
+          a: "Yes. Client systems and tools made for the way you work.",
         },
         {
           q: "Can an AI agent use what you build?",
@@ -119,44 +114,55 @@ export const homeCopy: Record<Locale, {
   },
 };
 
-/** Home sections: header nav, about, automations showcase, cases, services, projects, blog. Plain words, no stack names. */
+/** Home sections: header nav, about, services (the offer in 3 steps + light examples), projects, blog. Plain words, no stack names. */
 export const homeMore: Record<Locale, {
-  nav: { about: string; showcase: string; services: string; projects: string; blog: string; contact: string; hire: string };
+  nav: { about: string; services: string; projects: string; blog: string; contact: string; hire: string };
   about: { title: string; body: string; more: string };
-  showcase: { title: string; lead: string; cta: string };
-  services: { title: string; lead: string };
+  services: { title: string; lead: string; steps: { title: string; body: string }[]; casesTitle: string; cta: string; more: string };
   projects: { title: string };
   blog: { title: string; all: string };
 }> = {
   es: {
-    nav: { about: "Sobre mí", showcase: "Automatizando", services: "Servicios", projects: "Proyectos", blog: "Blog", contact: "Contacto", hire: "Contratar" },
+    nav: { about: "Sobre mí", services: "Servicios", projects: "Proyectos", blog: "Blog", contact: "Contacto", hire: "Contratar" },
     about: {
       title: "Sobre mí",
-      body: "Soy Luciano Oliva Bianco, me dicen Lulox. Vivo en Buenos Aires y armo sistemas que hacen el trabajo repetitivo, para que vos te ocupes del resto.",
+      body: "Soy Luciano Oliva Bianco, me dicen Lulox. Antes programaba; hoy me dedico a entender problemas, encontrar dónde se traba el trabajo, decidir qué conviene y automatizarlo.",
       more: "Leer mi historia",
     },
-    showcase: {
-      title: "Lo que ya automatizo",
-      lead: "Lo uso todos los días. Te lo armo a vos.",
-      cta: "Quiero algo así",
+    services: {
+      title: "Servicios",
+      lead: "Para independientes y freelancers. Tres pasos, de la primera charla a algo que ya funciona.",
+      steps: [
+        { title: "Diagnóstico", body: "Una charla para encontrar dónde se traba tu trabajo." },
+        { title: "Decisión", body: "Qué conviene resolver y cómo. Te paso un presupuesto." },
+        { title: "Armado", body: "Lo dejo andando con tus herramientas y lo probás con tu trabajo real." },
+      ],
+      casesTitle: "Por ejemplo",
+      cta: "Empezar por el diagnóstico",
+      more: "Ver los servicios en detalle",
     },
-    services: { title: "Servicios", lead: "Elegí por dónde empezar." },
     projects: { title: "Proyectos" },
     blog: { title: "Del blog", all: "Ver todas las notas" },
   },
   en: {
-    nav: { about: "About", showcase: "Automating", services: "Services", projects: "Projects", blog: "Blog", contact: "Contact", hire: "Hire me" },
+    nav: { about: "About", services: "Services", projects: "Projects", blog: "Blog", contact: "Contact", hire: "Hire me" },
     about: {
       title: "About me",
-      body: "I'm Luciano Oliva Bianco, people call me Lulox. I live in Buenos Aires and build systems that do the repetitive work, so you can focus on the rest.",
+      body: "I'm Luciano Oliva Bianco, people call me Lulox. I used to code; now I work on understanding problems, finding where work gets stuck, deciding what's worth doing and automating it.",
       more: "Read my story",
     },
-    showcase: {
-      title: "What I already automate",
-      lead: "I use it every day. I can set it up for you.",
-      cta: "I want something like this",
+    services: {
+      title: "Services",
+      lead: "For freelancers and independent professionals. Three steps, from the first chat to something that already works.",
+      steps: [
+        { title: "Diagnosis", body: "A chat to find where your work gets stuck." },
+        { title: "Decision", body: "What's worth solving and how. I send you a quote." },
+        { title: "Build", body: "I set it up with your tools and you try it on your real work." },
+      ],
+      casesTitle: "For example",
+      cta: "Start with the diagnosis",
+      more: "See the services in detail",
     },
-    services: { title: "Services", lead: "Pick where to start." },
     projects: { title: "Projects" },
     blog: { title: "From the blog", all: "See all posts" },
   },

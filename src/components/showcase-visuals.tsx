@@ -1,5 +1,5 @@
 /**
- * Mini demos for "Automatizando procesos" (SVG + CSS keyframes in home.css, no JS).
+ * Mini demos for the home Servicios examples (SVG + CSS keyframes in home.css, no JS).
  * aria-hidden: the card text says what each one shows. Everything stops under reduced motion.
  */
 import type { ShowcaseArt } from "@/content/showcase";

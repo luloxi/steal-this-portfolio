@@ -1,8 +1,8 @@
 # Lulox (Luciano Oliva Bianco)
 
-> Luciano Oliva Bianco ("Lulox") builds AI agents and automations for companies and people, plus custom CRMs and internal tools, so teams stop doing repetitive work by hand. His main engines are Grok, Grok Bot and Hermes. Based in Buenos Aires, Argentina; works remotely with Latin America and worldwide, in Spanish or English. X: @LuloxDev. Site in Spanish at the root and in English under /en.
+> Luciano Oliva Bianco ("Lulox") helps freelancers and independent professionals get chores off their plate. He used to write code; now he works on understanding the problem, finding where the work gets stuck, deciding what is worth doing and automating it, with AI where it helps. He also builds custom CRMs and tools. Based in Buenos Aires, Argentina; works remotely with Latin America and worldwide, in Spanish or English. X: @LuloxDev. Site in Spanish at the root and in English under /en.
 
-Tu trabajo, sin la parte aburrida. Lo que se repite, lo automatizamos con IA. (Your work, without the boring part. What repeats, we automate with AI.)
+Menos tareas, más trabajo de verdad. Entiendo qué te come el tiempo y lo saco de encima. (Fewer chores, more real work. I figure out what eats your time and take it off your plate.)
 
 ## Services (one page per need, each with use cases, how it works, FAQ and a hire link)
 
@@ -12,7 +12,7 @@ Tu trabajo, sin la parte aburrida. Lo que se repite, lo automatizamos con IA. (Y
 - [Automatizar con Grok Bot](https://lulox.com.ar/servicios/grok-bot): bots with Grok Bot as the main engine. English: https://lulox.com.ar/en/services/grok-bot
 - [Automatizar WhatsApp y mail](https://lulox.com.ar/servicios/automatizar-whatsapp-y-mail): WhatsApp and email automation with approval before sending. English: https://lulox.com.ar/en/services/whatsapp-and-email-automation
 - [All services](https://lulox.com.ar/servicios) · [Hire / Contratar](https://lulox.com.ar/contratar): a simple form (name, email, message up to 1000 characters).
-- How it works: 1) you describe what your team does by hand, 2) a short call with a ballpark estimate, 3) he builds and tests it with your data, 4) it stays running with support. 50% upfront and 50% on delivery. No public price list.
+- How it works: 1) Diagnosis: a chat to find where the work gets stuck, 2) Decision: what is worth solving and how, with a quote, 3) Build: he sets it up with the tools you already use and you test it on your real work. 50% to start and 50% on delivery. No public price list.
 
 ## Featured projects (each with a short demo video recorded with test data)
 
