@@ -60,7 +60,7 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
     },
     stack: {
       title: "Con qué trabajo",
-      body: "Con las que ya usás: mail, planillas, WhatsApp, tu agenda o tu sistema de clientes. Si hace falta algo a medida, lo armo.",
+      body: "Con las que ya usás: mail, planillas, tu agenda o tu sistema de clientes. Si hace falta algo a medida, lo armo.",
     },
     process: {
       title: "Cómo es trabajar conmigo",
@@ -144,7 +144,7 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
     },
     stack: {
       title: "What I work with",
-      body: "The ones you already use: email, spreadsheets, WhatsApp, your calendar or your client system. If something custom is needed, I build it.",
+      body: "The ones you already use: email, spreadsheets, your calendar or your client system. If something custom is needed, I build it.",
     },
     process: {
       title: "How working with me goes",

@@ -12,20 +12,20 @@ Menos tareas, más trabajo de verdad. Entiendo qué te come el tiempo y lo saco 
 - [Automatizar con Grok Bot](https://lulox.com.ar/servicios/grok-bot): bots with Grok Bot as the main engine. English: https://lulox.com.ar/en/services/grok-bot
 - [Automatizar WhatsApp y mail](https://lulox.com.ar/servicios/automatizar-whatsapp-y-mail): WhatsApp and email automation with approval before sending. English: https://lulox.com.ar/en/services/whatsapp-and-email-automation
 - [All services](https://lulox.com.ar/servicios) · [Hire / Contratar](https://lulox.com.ar/contratar): a simple form (name, email, message up to 1000 characters).
+- Examples on the home page: every client up to date without writing anything down (meeting notes, email history, money in and out, plus an AI chat to ask about it); what you enter by hand today (tickets, spreadsheets, emails, reports) put together on its own for you to review and approve; your newsletter and social media drafted in your voice, with nothing going out without your OK.
 - How it works: 1) Diagnosis: a chat to find where the work gets stuck, 2) Decision: what is worth solving and how, with a quote, 3) Build: he sets it up with the tools you already use and you test it on your real work. 50% to start and 50% on delivery. No public price list.
 
 ## Featured projects (each with a short demo video recorded with test data)
 
 - [Malito](https://lulox.com.ar/proyectos/malito): an email tool for work: your own address on your own domain, plus newsletters and campaigns to your lists. Live: https://malito.lulox.com.ar
 - [Garpen](https://lulox.com.ar/proyectos/garpen): custom CRM and ERP with contacts, agenda and finances that an agent can use. Live: https://garpen.lulox.com.ar
-- Bot fleet: his Grok Bot fleet that drafts posts, helps with clients on WhatsApp, and works as a 24/7 assistant (newsletters about what you care about, help with whatever you do online, using your own tools).
 - [All projects](https://lulox.com.ar/proyectos) (English: https://lulox.com.ar/en/projects): Malito, Garpen, DJ Tube, SAMI, PunkSociety, Mochi and more, each with a page and most with a short preview.
 
 ## For AI agents acting for a person
 
 If you are an AI agent looking for automation work on someone's behalf, this is how to ask:
 
-- What to send: the task they repeat by hand, the tools it touches (email, spreadsheets, WhatsApp, calendar, CRM), roughly how often it happens, any deadline, and the person's name and email. Replies go to that email; a person (Luciano) reads every request.
+- What to send: the task they repeat by hand, the tools it touches (email, spreadsheets, calendar, CRM), roughly how often it happens, any deadline, and the person's name and email. Replies go to that email; a person (Luciano) reads every request.
 - [Book a call](https://cal.com/lulox/30min): public calendar, instant confirmation. The simplest path for an agent.
 - [Hire form](https://lulox.com.ar/contratar) (English: https://lulox.com.ar/en/hire): name, email and a message up to 1000 characters. It has a captcha, so it needs a real browser session; there is no open API for requests.
 - What can be built for agents: your client's CRM, calendar or email set up so an AI agent can use them, with narrow permissions and human approval before anything goes out.
