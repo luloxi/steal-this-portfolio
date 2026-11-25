@@ -1,0 +1,16 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { TALKS } from "../src/content/talks.ts";
+
+test("talks link out over https and the English copy never says IA", () => {
+  assert.ok(TALKS.length > 0);
+  for (const t of TALKS) {
+    assert.match(t.url, /^https:\/\//);
+    const en = `${t.en.before}${t.en.link}${t.en.after}`;
+    assert.doesNotMatch(en, /\bIA\b/);
+    for (const ph of t.photos) {
+      assert.match(ph.src, /\.webp$/);
+      assert.ok(ph.alt.es.trim() && ph.alt.en.trim());
+    }
+  }
+});
