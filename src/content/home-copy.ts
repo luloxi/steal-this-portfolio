@@ -129,7 +129,7 @@ export const homeMore: Record<Locale, {
     },
     services: {
       title: "Servicios",
-      lead: "Para independientes y freelancers. Tres pasos, de la primera charla a algo que ya funciona.",
+      lead: "Tres pasos, de la primera charla a algo que ya funciona.",
       steps: [
         { title: "Diagnóstico", body: "Una charla para encontrar dónde se traba tu trabajo." },
         { title: "Decisión", body: "Qué conviene resolver y cómo. Te paso un presupuesto." },
@@ -149,7 +149,7 @@ export const homeMore: Record<Locale, {
     },
     services: {
       title: "Services",
-      lead: "For freelancers and independent professionals. Three steps, from the first chat to something that already works.",
+      lead: "Three steps, from the first chat to something that already works.",
       steps: [
         { title: "Diagnosis", body: "A chat to find where your work gets stuck." },
         { title: "Decision", body: "What's worth solving and how. I send you a quote." },
