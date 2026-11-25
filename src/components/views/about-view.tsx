@@ -16,11 +16,11 @@ import { CopyText } from "@/components/copy-text";
 import { useSiteSettings } from "@/components/site-settings-context";
 import { useLocale } from "@/i18n/locale-provider";
 import { insertSection, splitSections } from "@/lib/md-sections";
-import { insertJob, insertStory, parseLayout, recordsAfterStory, serializeLayout, type LayoutItem } from "@/lib/page-layout";
+import { insertJob, insertStory, parseLayout, recordsAfterStory, serializeLayout, talksInTimeline, type LayoutItem } from "@/lib/page-layout";
 import { Publications } from "@/components/publications";
-import { Talks } from "@/components/talks";
+import { TalkMilestone, Talks } from "@/components/talks";
 import { AboutReorder } from "@/components/about-reorder";
-import { TALKS } from "@/content/talks";
+import { TALKS, type Talk } from "@/content/talks";
 import { DEFAULT_PUBLICATIONS, stripPublicationLinksInBody, type Publication } from "@/lib/publications";
 import { saveCopy, useEditMode } from "@/components/admin-context";
 import { useRouter } from "next/navigation";
@@ -90,8 +90,9 @@ export function AboutView({ publications }: { publications: readonly Publication
   const pubUrls = [...publications, ...DEFAULT_PUBLICATIONS].map((p) => p.url);
   const body = editOn ? about.body : stripPublicationLinksInBody(about.body, pubUrls);
   const storyCount = splitSections(about.body.replace(/\r\n?/g, "\n")).sections.length;
-  const layout = parseLayout(about.layout, storyCount, about.timeline.length, 1, TALKS.length > 0 ? 1 : 0);
+  const layout = parseLayout(about.layout, storyCount, about.timeline.length, 1, TALKS.length > 0 ? 1 : 0, TALKS.length);
   const recordsBySection = recordsAfterStory(layout);
+  const talksPlaced = talksInTimeline(layout);
 
   return (
     <PageShell title={about.title}>
@@ -113,9 +114,26 @@ export function AboutView({ publications }: { publications: readonly Publication
               sections
               afterSection={(si) => (
                 <>
-                  {(recordsBySection.get(si) ?? []).map((r) => {
+                  {(recordsBySection.get(si) ?? []).map((r, ri, recs) => {
                     if (r.kind === "pubs") return <Publications key={`pubs-${r.index}`} items={publications} />;
-                    if (r.kind === "talks") return <Talks key={`talks-${r.index}`} />;
+                    if (r.kind === "talk") {
+                      const talk = TALKS[r.index];
+                      if (!talk) return null;
+                      if (talksPlaced.has(r.index)) return <TalkMilestone key={`talk-${r.index}`} talk={talk} />;
+                      const prev = recs[ri - 1];
+                      if (prev?.kind === "talk" && !talksPlaced.has(prev.index)) return null;
+                      const run: Talk[] = [];
+                      for (let j = ri; j < recs.length && recs[j].kind === "talk" && !talksPlaced.has(recs[j].index); j++) {
+                        const item = TALKS[recs[j].index];
+                        if (item) run.push(item);
+                      }
+                      return run.length ? <Talks key={`talks-${r.index}`} items={run} /> : null;
+                    }
+                    if (r.kind === "talks") {
+                      const placed = new Set([...talksPlaced, ...recs.filter((x) => x.kind === "talk").map((x) => x.index)]);
+                      const leftover = TALKS.filter((_, i) => !placed.has(i));
+                      return leftover.length ? <Talks key={`talks-${r.index}`} items={leftover} /> : null;
+                    }
                     const item = about.timeline[r.index];
                     return item ? <JobCard key={`job-${r.index}`} item={item} i={r.index} label={t.ui.experience} /> : null;
                   })}

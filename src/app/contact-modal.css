@@ -121,17 +121,57 @@
   .cm-dialog { scroll-behavior: auto; }
 }
 
-.cm-page-choices {
-  margin: 2.2rem 0 0;
+.contact-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2.75rem;
+  padding-bottom: 3.5rem;
+}
+.contact-ways {
   max-width: 28rem;
 }
-.cm-page-choices .cm-choices { margin-top: 1rem; }
-.cm-page-choices .hire-btn,
-.contact-form-section a,
-.contact-form-section button { cursor: pointer; }
-.contact-form-section {
-  margin: 2.4rem 0 0;
-  max-width: 36rem;
+.cm-pick {
+  display: grid;
+  gap: 0.85rem;
 }
-#hire-form-panel,
-#cal-title { scroll-margin-top: 5.5rem; }
+.cm-pick-btn {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.7rem 1.15rem;
+  border-radius: 999px;
+  border: 1.5px solid color-mix(in srgb, var(--foreground) 28%, transparent);
+  background: transparent;
+  color: var(--foreground);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+.cm-pick-btn:hover,
+.cm-pick-btn:focus-visible {
+  border-color: var(--foreground);
+  outline: none;
+}
+.cm-pick-btn:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--foreground) 28%, transparent);
+}
+/* Inverted pill: foreground on background, so both themes stay readable.
+   The old /contacto "30 minutos" tab used white on magenta and failed in dark. */
+.cm-pick-btn[data-active="true"],
+.cm-pick-btn[aria-pressed="true"] {
+  background: var(--foreground);
+  color: var(--background);
+  border-color: var(--foreground);
+}
+.contact-ways .hire-form-panel {
+  margin-top: 1.75rem;
+  opacity: 1;
+  grid-template-rows: 1fr;
+}
+.contact-ways .hire-form-foot a,
+.contact-ways button { cursor: pointer; }
+#hire-form-panel { scroll-margin-top: 5.5rem; }

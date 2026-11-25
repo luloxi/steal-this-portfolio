@@ -10,6 +10,20 @@ type TalkCopy = { before: string; link: string; after: string };
 /** image: the event's own artwork (e.g. its logo), shown small next to the text. */
 export type Talk = { url: string; date: string; es: TalkCopy; en: TalkCopy; image?: TalkPhoto; photos: readonly TalkPhoto[] };
 
+
+const MONTHS = {
+  es: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+  en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+} as const;
+
+/** "2025-04-10" → "Abr 2025" / "Apr 2025", same style as experience periods. */
+export function formatTalkPeriod(date: string, locale: "es" | "en"): string {
+  const m = /^(\d{4})-(\d{2})/.exec(date);
+  if (!m) return date;
+  const month = MONTHS[locale][Number(m[2]) - 1];
+  return month ? `${month} ${m[1]}` : date;
+}
+
 export const TALKS: readonly Talk[] = [
   {
     url: "https://luma.com/4ehgix94",

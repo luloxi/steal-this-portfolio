@@ -12,6 +12,7 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
+import { usePathname } from "next/navigation";
 import { calUrl } from "@/components/cal-embed";
 import { HIRE_COPY } from "@/components/hire-copy";
 import { HireForm } from "@/components/hire-form";
@@ -79,16 +80,113 @@ export function ContactTrigger({
 export function ContactModalProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>("choice");
+  const pathname = usePathname();
+  const pathRef = useRef(pathname);
   const openModal = useCallback(() => {
     setStep("choice");
     setOpen(true);
   }, []);
   const close = useCallback(() => setOpen(false), []);
+  // The provider lives in the root layout, so a same-tab Link (e.g. Privacidad)
+  // would otherwise leave the modal open on the new page.
+  useEffect(() => {
+    if (pathRef.current === pathname) return;
+    pathRef.current = pathname;
+    setOpen(false);
+  }, [pathname]);
   return (
     <ContactModalContext.Provider value={{ open: openModal, close }}>
       {children}
       {open ? <ContactModal step={step} setStep={setStep} onClose={close} /> : null}
     </ContactModalContext.Provider>
+  );
+}
+
+
+/**
+ * Two ways to get in touch: a short message form, or a video call on Cal.com.
+ * On the page the two options stay in view and the form only appears after
+ * choosing "Mandar un mensaje". In the modal, the form replaces the choices.
+ */
+export function ContactWays({
+  callHref,
+  variant,
+  step: stepProp,
+  setStep: setStepProp,
+  onCall,
+}: {
+  callHref: string;
+  variant: "modal" | "page";
+  step?: Step;
+  setStep?: (s: Step) => void;
+  onCall?: () => void;
+}) {
+  const { t, locale } = useLocale();
+  const c = t.contact;
+  const [inner, setInner] = useState<Step>("choice");
+  const step = stepProp ?? inner;
+  const setStep = setStepProp ?? setInner;
+
+  useEffect(() => {
+    if (variant !== "page") return;
+    if (new URLSearchParams(window.location.search).has("contacto")) setStep("message");
+  }, [variant, setStep]);
+
+  const messageBtn = (
+    <button
+      type="button"
+      className={variant === "page" ? "cm-pick-btn" : "hire-btn hire-cta"}
+      data-testid={variant === "page" ? "contact-message" : "contact-modal-message"}
+      data-active={variant === "page" && step === "message" ? "true" : undefined}
+      aria-pressed={variant === "page" ? step === "message" : undefined}
+      onClick={() => setStep("message")}
+    >
+      {variant === "page" ? c.messageCta : <span className="hire-btn-label">{c.messageCta}</span>}
+    </button>
+  );
+  const callLink = (
+    <a
+      href={callHref}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={variant === "page" ? "cm-pick-btn" : "hire-btn hire-cta"}
+      data-testid={variant === "page" ? "contact-call" : "contact-modal-call"}
+      onClick={onCall}
+    >
+      {variant === "page" ? c.callCta : <span className="hire-btn-label">{c.callCta}</span>}
+    </a>
+  );
+  const form = (
+    <HireForm
+      c={HIRE_COPY[locale === "en" ? "en" : "es"]}
+      idPrefix={variant === "page" ? "hire" : "cm-hire"}
+      compact
+      onInternalNav={onCall}
+    />
+  );
+
+  if (variant === "modal") {
+    if (step === "message") {
+      return (
+        <>
+          <button type="button" className="cm-back" onClick={() => setStep("choice")}>
+            {c.back}
+          </button>
+          {form}
+        </>
+      );
+    }
+    return <div className="cm-choices">{messageBtn}{callLink}</div>;
+  }
+
+  return (
+    <div className="contact-ways">
+      <div className="cm-pick" role="group" aria-label={c.contactCta}>
+        {messageBtn}
+        {callLink}
+      </div>
+      {step === "message" ? form : null}
+    </div>
   );
 }
 
@@ -99,12 +197,11 @@ function focusables(root: HTMLElement): HTMLElement[] {
 }
 
 function ContactModal({ step, setStep, onClose }: { step: Step; setStep: (s: Step) => void; onClose: () => void }) {
-  const { t, locale } = useLocale();
+  const { t } = useLocale();
   const settings = useSiteSettings();
   const callHref = bookingUrl(settings.callBookingUrl);
   const dialogRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
-  const leadId = useId();
   const c = t.contact;
 
   useEffect(() => {
@@ -156,43 +253,14 @@ function ContactModal({ step, setStep, onClose }: { step: Step; setStep: (s: Ste
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        aria-describedby={leadId}
         tabIndex={-1}
         data-testid="contact-modal"
       >
         <button type="button" className="cm-close" onClick={onClose} aria-label={c.close} data-testid="contact-modal-close">
           <span aria-hidden="true">×</span>
         </button>
-        {step === "choice" ? (
-          <>
-            <h2 id={titleId} className="cm-title">{c.chooseTitle}</h2>
-            <p id={leadId} className="cm-lead">{c.chooseLead}</p>
-            <div className="cm-choices">
-              <button type="button" className="hire-btn hire-cta" data-testid="contact-modal-message" onClick={() => setStep("message")}>
-                <span className="hire-btn-label">{c.messageCta}</span>
-              </button>
-              <a
-                href={callHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hire-btn hire-cta"
-                data-testid="contact-modal-call"
-                onClick={onClose}
-              >
-                <span className="hire-btn-label">{c.callCta}</span>
-              </a>
-            </div>
-          </>
-        ) : (
-          <>
-            <h2 id={titleId} className="cm-title">{c.messageTitle}</h2>
-            <p id={leadId} className="cm-lead sr-only">{c.messageCta}</p>
-            <button type="button" className="cm-back" onClick={() => setStep("choice")}>
-              {c.back}
-            </button>
-            <HireForm c={HIRE_COPY[locale === "en" ? "en" : "es"]} idPrefix="cm-hire" compact />
-          </>
-        )}
+        <h2 id={titleId} className="cm-title">{step === "message" ? c.messageTitle : c.chooseTitle}</h2>
+        <ContactWays callHref={callHref} variant="modal" step={step} setStep={setStep} onCall={onClose} />
       </div>
     </div>
   );
