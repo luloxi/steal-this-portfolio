@@ -165,6 +165,14 @@ export function slugify(input: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+/** Retired hire URLs: 301 these to the contact page (caller keeps the query string). */
+export function retiredHireRedirect(pathname: string): string | null {
+  const p = pathname.replace(/\/+$/, "") || "/";
+  if (p === "/contratar") return "/contacto";
+  if (p === "/en/hire") return "/en/contact";
+  return null;
+}
+
 export function isValidSlug(s: string): boolean {
   return s.length > 0 && s.length <= SLUG_MAX && SLUG_RE.test(s);
 }

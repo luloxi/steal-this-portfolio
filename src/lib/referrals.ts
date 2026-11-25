@@ -66,7 +66,7 @@ export function refCookie(code: string, secure: boolean): string {
 export function shareLinks(code: string, base = DEFAULT_SITE.url): { es: string; en: string } {
   const root = base.replace(/\/$/, "");
   const c = encodeURIComponent(code);
-  return { es: `${root}/contratar?${REF_PARAM}=${c}`, en: `${root}/en/hire?${REF_PARAM}=${c}` };
+  return { es: `${root}/contacto?${REF_PARAM}=${c}`, en: `${root}/en/contact?${REF_PARAM}=${c}` };
 }
 
 /* ---------- people ---------- */

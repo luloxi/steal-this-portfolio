@@ -162,7 +162,7 @@ export function ReferralsView({ viewer, mine, links }: { viewer: { name: string;
         ) : null}
         <MagicHr />
         {panel ? (
-          <MyPanel c={c} {...panel} quoteHref={href("/contratar")} locale={locale === "en" ? "en" : "es"} />
+          <MyPanel c={c} {...panel} quoteHref={href("/contacto")} locale={locale === "en" ? "en" : "es"} />
         ) : (
           <SignupForm c={c} viewer={viewer!} onCreated={setCreated} />
         )}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ContactTrigger } from "@/components/contact-modal";
 import { GrokBotChat } from "@/components/grok-bot-chat";
 import { JsonLd } from "@/components/json-ld";
 import { SERVICE_PAGES, servicePageBySlug } from "@/content/service-pages";
@@ -80,7 +81,7 @@ export default async function ServiceIntentPage({ params }: Props) {
         <section className="dp-section" aria-labelledby="dp-q">
           <h2 id="dp-q" className="dp-h2">{c.question}</h2>
           <p className="dp-answer" data-reveal>{c.answer}</p>
-          <Link href={href("/contratar")} className="hm-cta-link" style={{ maxWidth: "18rem" }}>{u.ctaBtn}</Link>
+          <ContactTrigger className="hm-cta-link" style={{ maxWidth: "18rem" }}>{u.ctaBtn}</ContactTrigger>
         </section>
 
         {page.slug === "grok-bot" || page.slug === "agentes-de-ia" ? <GrokBotChat locale={locale} /> : null}
@@ -117,7 +118,7 @@ export default async function ServiceIntentPage({ params }: Props) {
 
         <section className="dp-cta" data-reveal>
           <p>{u.cta}</p>
-          <Link href={href("/contratar")} className="hm-cta-link">{u.ctaBtn}</Link>
+          <ContactTrigger className="hm-cta-link">{u.ctaBtn}</ContactTrigger>
         </section>
 
         <nav className="dp-section" aria-labelledby="dp-other">

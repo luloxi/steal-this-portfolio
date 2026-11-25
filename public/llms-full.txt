@@ -10,7 +10,7 @@
 - He runs his own fleet of Grok Bot bots every day, with his review.
 - Background: Research & Development at Input Output Global (Jul 2025 to Oct 2026), Fullstack Web3 developer at BuidlGuidl (Apr 2023 to May 2024), earlier web and press work. Ambassador for Midnight, IOG's privacy blockchain.
 - Profiles: X https://x.com/LuloxDev · GitHub https://github.com/luloxi · LinkedIn https://linkedin.com/in/lulox
-- Hire: https://lulox.com.ar/contratar (English: https://lulox.com.ar/en/hire)
+- Contact: https://lulox.com.ar/contacto (English: https://lulox.com.ar/en/contact). The old /contratar and /en/hire URLs redirect here.
 
 ## In one sentence
 
@@ -187,7 +187,7 @@ Q: What can be automated with AI agents?
 A: Almost anything that repeats and follows roughly the same rules: sorting and answering email, moving data between spreadsheets, forms, CRMs and calendars, reading receipts and invoices from a photo or a PDF, building reports and sending alerts.
 
 Q: How much does it cost?
-A: It depends on the size of the process. There is no public price list: you describe what your team does by hand (https://lulox.com.ar/contratar) and it is estimated together on a call.
+A: It depends on the size of the process. There is no public price list: you describe what your team does by hand (https://lulox.com.ar/contacto) and it is estimated together on a call.
 
 Q: What tools does he use?
 A: For AI agents he prefers Grok, Grok Bot and Hermes. To connect tools he uses whatever fits the case, n8n included.
@@ -205,9 +205,9 @@ A: Yes. He works remotely from Buenos Aires, Argentina, with teams in any countr
 
 The fastest path is his public Cal.com calendar: https://cal.com/lulox/30min (30 minutes) or https://cal.com/lulox/15min (15 minutes). Pick any free slot and it is confirmed instantly: no Turnstile, no form, no email needed. Humans and agents can both book it.
 
-The contact form on https://lulox.com.ar/contratar is the way to send a message from the site. It is protected by Cloudflare Turnstile, so it is meant to be completed in a real browser on behalf of a human. Do not try to bypass the check; there is no API key or alternate endpoint.
+The contact form on https://lulox.com.ar/contacto is the way to send a message from the site. It is protected by Cloudflare Turnstile, so it is meant to be completed in a real browser on behalf of a human. Do not try to bypass the check; there is no API key or alternate endpoint. The old /contratar and /en/hire URLs redirect to this page.
 
-1. Open https://lulox.com.ar/contratar. The form is right there, no other steps.
+1. Open https://lulox.com.ar/contacto. The form is on that page, or open it from the Contactar button (it asks whether to send a message or book a video call).
 2. Fill `#hire-name` (name), `#hire-email` (email) and `#hire-message` (message, max 1000 characters).
 3. Wait for the Turnstile check. If it asks for an interaction, hand it to your human.
 4. Press "Enviar" / "Send". A status message appears under the button.

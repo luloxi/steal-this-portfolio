@@ -14,13 +14,13 @@ export function generateMetadata() {
 const TEXT = {
   es: {
     title: "Privacidad",
-    intro: (host: string, name: string) => `${host} es el sitio personal de ${name}. Esta página explica qué datos usa el sitio. Última actualización: 20 de noviembre de 2026.`,
+    intro: (host: string, name: string) => `${host} es el sitio personal de ${name}. Esta página explica qué datos usa el sitio. Última actualización: 25 de noviembre de 2026.`,
     blocks: [
       ["Visitantes.", "Podés leer todo el sitio sin cuenta. No hay publicidad ni cookies de terceros, y no vendemos ni compartimos datos personales con nadie."],
       ["Visitas.", "Para saber de dónde llegan las visitas usamos Cloudflare Web Analytics (sin cookies) y un contador propio, también sin cookies: guarda el día, la página, el origen (parámetros utm o el sitio que te mandó) y el país. No guardamos tu IP ni un identificador tuyo."],
       ["Ingreso con Google.", "Cualquiera puede \u201cIngresar con Google\u201d para sumarse al programa de referidos. El sitio recibe el nombre, el email y la foto de perfil de tu cuenta de Google y los guarda para tu sesión. Ingresar no da acceso a nada más: editar el sitio queda reservado al dueño."],
       ["Referidos.", "Si creás un código de referido, guardamos tu nombre, tu email, tu WhatsApp (si lo dejás), el código y la cuenta de Google a la que queda atado, junto con los clientes que llegan con tu código y lo que te corresponde. Solo vos ves tu panel, y el dueño del sitio los usa para contactarte por tus referidos."],
-      ["Formulario de Contratar.", "Cuando mandás un mensaje desde Contratar, guardamos tu nombre, tu email, el mensaje, los parámetros utm de la visita y el código de referido, si hay, para poder responderte y llevar la cuenta de los referidos."],
+      ["Formulario de contacto.", "Cuando mandás un mensaje desde Contacto o el formulario del sitio, guardamos tu nombre, tu email, el mensaje, los parámetros utm de la visita y el código de referido, si hay, para poder responderte y llevar la cuenta de los referidos."],
       ["Cookies.", "El sitio usa unas pocas cookies propias, sin seguimiento: lulox-locale y lulox-theme recuerdan el idioma y el tema que elegiste. Si entrás con un link que tiene ?ref=, la cookie lulox-ref recuerda ese código de referido durante 90 días, así tu mensaje le suma a quien te recomendó. Si ingresás, se suma la cookie de sesión de Better Auth, necesaria para que sigas logueado, y el admin tiene además lulox-edit-mode, que recuerda si el modo edición está activado. Esas cookies no se usan para medir visitas."],
       ["Hosting.", "El sitio corre en Cloudflare, que procesa datos estándar de cada pedido (como la dirección IP) para servir y proteger el sitio, bajo su propia política de privacidad."],
       ["Contacto.", "Preguntas o pedidos de borrado:"],
@@ -28,13 +28,13 @@ const TEXT = {
   },
   en: {
     title: "Privacy",
-    intro: (host: string, name: string) => `${host} is the personal site of ${name}. This page explains what data the site uses. Last updated: November 20, 2026.`,
+    intro: (host: string, name: string) => `${host} is the personal site of ${name}. This page explains what data the site uses. Last updated: November 25, 2026.`,
     blocks: [
       ["Visitors.", "You can read everything on this site without an account. We don't run ads or third-party cookies, and we don't sell or share personal data with anyone."],
       ["Visits.", "To see where visits come from we use Cloudflare Web Analytics (cookieless) and a first-party counter, also cookieless: it stores the day, the page, the source (utm parameters or the site that referred you) and the country. We do not store your IP or an identifier for you."],
       ["Google sign-in.", "Anyone can \u201cSign in with Google\u201d to join the referral program. The site receives your Google account's name, email address and profile picture and stores them for your session. Signing in gives access to nothing else: editing the site is reserved to its owner."],
       ["Referrals.", "If you create a referral code, we store your name, email, WhatsApp (if you add it), the code and the Google account it is tied to, along with the clients who come with your code and what you've earned. Only you see your panel, and the site owner uses this data to reach you about your referrals."],
-      ["Hire form.", "When you send a message from Hire me, we store your name, email, message, the visit's utm parameters and the referral code, if any, so we can reply and keep track of referrals."],
+      ["Contact form.", "When you send a message from Contact or the site form, we store your name, email, message, the visit's utm parameters and the referral code, if any, so we can reply and keep track of referrals."],
       ["Cookies.", "The site uses a few first-party cookies, no tracking: lulox-locale and lulox-theme remember the language and theme you picked. If you arrive through a link with ?ref=, the lulox-ref cookie remembers that referral code for 90 days, so your message credits whoever recommended you. When you sign in, the Better Auth session cookie (needed to stay logged in) is added, and the admin also gets lulox-edit-mode (whether edit mode is on). Those cookies are not used to measure visits."],
       ["Hosting.", "The site runs on Cloudflare, which processes standard request data (such as IP address) to deliver and protect the site, under its own privacy policy."],
       ["Contact.", "Questions or deletion requests:"],

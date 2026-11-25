@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ContactTrigger } from "@/components/contact-modal";
 
 export type HomeNavItem = { label: string; to: string; hire?: boolean };
 
@@ -82,12 +83,12 @@ export function HomeHeader({ items, label, menuLabel, homeHref }: { items: HomeN
         <Link href={homeHref} className="hh-brand" onClick={() => setOpen(false)}>LULOX</Link>
         <nav className="hh-nav" aria-label={label}>
           {links.map(renderLink)}
-          {hire ? <Link href={hire.to} className="hh-hire">{hire.label}</Link> : null}
+          {hire ? <ContactTrigger className="hh-hire" data-testid="header-contact">{hire.label}</ContactTrigger> : null}
         </nav>
       </div>
       <nav id="hh-panel" className="hh-panel" aria-label={label} hidden={!open}>
         {links.map(renderLink)}
-        {hire ? <Link href={hire.to} className="hh-hire" onClick={() => setOpen(false)}>{hire.label}</Link> : null}
+        {hire ? <ContactTrigger className="hh-hire" data-testid="header-contact-menu" onOpen={() => setOpen(false)}>{hire.label}</ContactTrigger> : null}
       </nav>
     </header>
   );

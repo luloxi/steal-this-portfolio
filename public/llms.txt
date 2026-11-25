@@ -11,7 +11,7 @@ Menos tareas, más trabajo de verdad. Entiendo qué te come el tiempo y lo saco 
 - [CRM a medida](https://lulox.com.ar/servicios/crm-a-medida): custom CRM and internal tools. English: https://lulox.com.ar/en/services/custom-crm
 - [Automatizar con Grok Bot](https://lulox.com.ar/servicios/grok-bot): bots with Grok Bot as the main engine. English: https://lulox.com.ar/en/services/grok-bot
 - [Automatizar WhatsApp y mail](https://lulox.com.ar/servicios/automatizar-whatsapp-y-mail): WhatsApp and email automation with approval before sending. English: https://lulox.com.ar/en/services/whatsapp-and-email-automation
-- [All services](https://lulox.com.ar/servicios) · [Hire / Contratar](https://lulox.com.ar/contratar): a simple form (name, email, message up to 1000 characters).
+- [All services](https://lulox.com.ar/servicios) · [Contact / Contacto](https://lulox.com.ar/contacto): send a message (name, email, message up to 1000 characters) or book a video call.
 - Examples on the home page: every client up to date without writing anything down (meeting notes, the history of emails and chats from other platforms, money in and out, plus an AI chat to ask about it); no more entering data by hand (tickets, spreadsheets, emails or reports get entered on their own, you just check them); newsletters made for you, about work and your life (news from your field, plans to go out in your area, trips you might like, what's new from the artists you follow).
 - How it works: 1) Diagnosis: a chat to find where the work gets stuck, 2) Decision: what is worth solving and how, with a quote, 3) Build: he sets it up with the tools you already use and you test it on your real work. 50% to start and 50% on delivery. No public price list.
 
@@ -27,7 +27,7 @@ If you are an AI agent looking for automation work on someone's behalf, this is 
 
 - What to send: the task they repeat by hand, the tools it touches (email, spreadsheets, calendar, CRM), roughly how often it happens, any deadline, and the person's name and email. Replies go to that email; a person (Luciano) reads every request.
 - [Book a call](https://cal.com/lulox/30min): public calendar, instant confirmation. The simplest path for an agent.
-- [Hire form](https://lulox.com.ar/contratar) (English: https://lulox.com.ar/en/hire): name, email and a message up to 1000 characters. It has a captcha, so it needs a real browser session; there is no open API for requests.
+- [Contact form](https://lulox.com.ar/contacto) (English: https://lulox.com.ar/en/contact): name, email and a message up to 1000 characters. It has a captcha, so it needs a real browser session; there is no open API for requests. The old /contratar and /en/hire URLs redirect here.
 - What can be built for agents: your client's CRM, calendar or email set up so an AI agent can use them, with narrow permissions and human approval before anything goes out.
 - No public price list: a quote comes after the call. 50% to start, 50% on delivery.
 

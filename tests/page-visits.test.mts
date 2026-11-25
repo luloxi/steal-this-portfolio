@@ -95,13 +95,13 @@ test("day bucket is Argentina time, even just after midnight ART", () => {
   assert.equal(dayInArgentina(new Date("2026-11-15T03:00:00.000Z")), "2026-11-15");
 });
 
-test("ready-to-use UTM links cover home and /contratar for instagram, linkedin, x and email", () => {
+test("ready-to-use UTM links cover home and /contacto for instagram, linkedin, x and email", () => {
   const links = utmLinks();
   assert.equal(links.length, 8);
   const urls = links.map((l) => l.url);
   for (const source of ["instagram", "linkedin", "x", "email"]) {
     assert.ok(urls.some((u) => u.includes(`utm_source=${source}`) && u.startsWith("https://lulox.com.ar/?") && u.includes("utm_campaign=portfolio")), source);
-    assert.ok(urls.some((u) => u.includes(`utm_source=${source}`) && u.includes("/contratar?") && u.includes("utm_campaign=implementacion-ia")), source);
+    assert.ok(urls.some((u) => u.includes(`utm_source=${source}`) && u.includes("/contacto?") && u.includes("utm_campaign=implementacion-ia")), source);
   }
   assert.ok(links.find((l) => l.source === "email")?.medium === "email");
   assert.ok(links.find((l) => l.source === "instagram")?.medium === "social");

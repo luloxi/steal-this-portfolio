@@ -6,7 +6,7 @@
 import type { D1Database } from "@/lib/db";
 
 export const VISIT_SITE_ORIGIN = "https://lulox.com.ar";
-export const HIRE_PATHS = ["/contratar", "/en/hire"] as const;
+export const HIRE_PATHS = ["/contratar", "/en/hire", "/contacto", "/en/contact"] as const;
 export const TEST_UTM_SOURCE = "test";
 export const TEST_UTM_CAMPAIGN = "analytics-smoke";
 
@@ -52,7 +52,7 @@ export const UTM_CHANNELS = [
 
 export const UTM_LANDINGS = [
   { path: "/", campaign: "portfolio", labelEs: "Inicio", labelEn: "Home" },
-  { path: "/contratar", campaign: "implementacion-ia", labelEs: "Implementación de IA", labelEn: "AI implementation" },
+  { path: "/contacto", campaign: "implementacion-ia", labelEs: "Implementación de IA", labelEn: "AI implementation" },
 ] as const;
 
 export type UtmLink = {

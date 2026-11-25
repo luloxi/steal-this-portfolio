@@ -2,7 +2,6 @@
 
 import type { ComponentType } from "react";
 import { useState } from "react";
-import Link from "next/link";
 import { CAL_DURATIONS, CalEmbed, calUrl, type CalDuration } from "@/components/cal-embed";
 import { CpRow } from "@/components/cp-row";
 import {
@@ -11,10 +10,10 @@ import {
   TelegramIcon,
   XIcon,
 } from "@/components/icons/social";
+import { HIRE_COPY } from "@/components/hire-copy";
+import { HireForm } from "@/components/hire-form";
 import { PageShell } from "@/components/page-shell";
-import { HireButton } from "@/components/hire-button";
 import { useSiteSettings } from "@/components/site-settings-context";
-import { useSectionShown } from "@/components/site-order-context";
 import { useLocale } from "@/i18n/locale-provider";
 
 const socialIcons: Record<string, { Icon: ComponentType<{ className?: string }>; className?: string; accent: string }> = {
@@ -40,9 +39,8 @@ const socialIcons: Record<string, { Icon: ComponentType<{ className?: string }>;
 };
 
 export default function ContactPage() {
-  const { t, href } = useLocale();
+  const { t, locale } = useLocale();
   const settings = useSiteSettings();
-  const hireShown = useSectionShown("hire");
   const rows = settings.socials.filter((s) => s.id !== "github");
   const [duration, setDuration] = useState<CalDuration>("30min");
   const [copied, setCopied] = useState(false);
@@ -119,14 +117,23 @@ export default function ContactPage() {
         </p>
       </section>
 
-      {hireShown ? <HireButton className="contact-hire" /> : null}
-      <Link
-        href={`${href("/contratar")}#hire-form-panel`}
-        className="hire-btn hire-cta contact-cta"
-        data-testid="contact-cta"
-      >
-        <span className="hire-btn-label">{t.contact.contactCta}</span>
-      </Link>
+      <section className="cm-page-choices" aria-labelledby="contact-choose">
+        <h2 id="contact-choose" className="cal-title">{t.contact.chooseTitle}</h2>
+        <p className="cal-sub">{t.contact.chooseLead}</p>
+        <div className="cm-choices">
+          <a href="#hire-form-panel" className="hire-btn hire-cta" data-testid="contact-message">
+            <span className="hire-btn-label">{t.contact.messageCta}</span>
+          </a>
+          <a href="#cal-title" className="hire-btn hire-cta" data-testid="contact-call">
+            <span className="hire-btn-label">{t.contact.callCta}</span>
+          </a>
+        </div>
+      </section>
+
+      <section className="contact-form-section" aria-labelledby="contact-form-title">
+        <h2 id="contact-form-title" className="cal-title">{t.contact.messageTitle}</h2>
+        <HireForm c={HIRE_COPY[locale === "en" ? "en" : "es"]} />
+      </section>
     </PageShell>
   );
 }

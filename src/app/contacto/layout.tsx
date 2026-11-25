@@ -1,9 +1,10 @@
 import { pageMetadata } from "@/lib/page-metadata";
+import "../home.css";
 
 export function generateMetadata() {
   return pageMetadata("/contacto", {
-    es: { title: "Contacto", description: "Escribime para automatizar el trabajo repetitivo de tu equipo con agentes de IA, o encontrame en redes." },
-    en: { title: "Contact", description: "Write to me to automate your team's repetitive work with AI agents, or find me on social media." },
+    es: { title: "Contacto", description: "Mandame un mensaje o agendá una videollamada. También me encontrás en redes." },
+    en: { title: "Contact", description: "Send me a message or book a video call. You can also find me on social media." },
   });
 }
 
