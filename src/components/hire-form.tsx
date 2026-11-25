@@ -8,7 +8,7 @@ import type { HireCopy } from "./hire-copy";
 
 const noopSubscribe = () => () => {};
 
-/** utm_* tags of the current URL (the home's Contratar link carries them over). */
+/** utm_* tags of the current URL (the home's Contactar link carries them over). */
 function readUtm(search: string): Record<string, string> {
   const out: Record<string, string> = {};
   for (const [k, v] of new URLSearchParams(search)) if (/^utm_[a-z0-9_]{1,40}$/.test(k) && v && v.length <= 120) out[k] = v;
@@ -110,7 +110,6 @@ export function HireForm({ c, callUrl }: { c: HireCopy; callUrl?: string }) {
         <div ref={tsBox} className="hire-turnstile" />
         <div className="hire-form-actions">
           <button type="submit" className="hire-btn hire-cta hire-form-send" disabled={state === "sending" || !message.trim() || !token} data-testid="hire-send">
-            <span className="hire-cta-paint" aria-hidden />
             <span className="hire-btn-label">{state === "sending" ? f.sending : f.send}</span>
           </button>
           <p ref={status} className="hire-form-status" role="status">{state === "ok" ? f.ok : state === "error" ? err : ""}</p>

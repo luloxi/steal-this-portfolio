@@ -413,7 +413,7 @@ export const messages = {
       copy: "Copy",
       copied: "Copied",
       callTitle: "Hire me",
-      contactCta: "Contact me",
+      contactCta: "Contact",
       scheduleTitle: "Book a call",
       scheduleSubtitle: "Pick a slot that works for you and it is booked right away, no email ping-pong.",
       schedule30: "30 minutes",

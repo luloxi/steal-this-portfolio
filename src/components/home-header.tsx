@@ -7,7 +7,7 @@ export type HomeNavItem = { label: string; to: string; hire?: boolean };
 
 /**
  * Landing header: sticky, lightly blurred, plain text links (no pills) and one clean
- * Contratar button. In-page anchors light up while their section is on screen.
+ * Contactar button (style B, same as the form Enviar). In-page anchors light up while their section is on screen.
  * Phones and narrow screens get a menu button with large tap targets.
  * The language/theme/login controls stay in their fixed corner (SiteControls).
  */

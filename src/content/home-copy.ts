@@ -121,7 +121,7 @@ export const homeMore: Record<Locale, {
   services: { title: string; lead: string; steps: { title: string; body: string }[]; casesTitle: string; cta: string; more: string };
 }> = {
   es: {
-    nav: { about: "Sobre mí", services: "Servicios", projects: "Proyectos", blog: "Blog", contact: "Contacto", hire: "Contratar" },
+    nav: { about: "Sobre mí", services: "Servicios", projects: "Proyectos", blog: "Blog", contact: "Contacto", hire: "Contactar" },
     about: {
       title: "Sobre mí",
       body: "Soy Luciano Oliva Bianco, me dicen Lulox. Antes programaba; hoy me dedico a entender problemas, encontrar dónde se traba el trabajo, decidir qué conviene y automatizarlo.",
@@ -141,7 +141,7 @@ export const homeMore: Record<Locale, {
     },
   },
   en: {
-    nav: { about: "About", services: "Services", projects: "Projects", blog: "Blog", contact: "Contact", hire: "Hire me" },
+    nav: { about: "About", services: "Services", projects: "Projects", blog: "Blog", contact: "Contact", hire: "Contact" },
     about: {
       title: "About me",
       body: "I'm Luciano Oliva Bianco, people call me Lulox. I used to code; now I work on understanding problems, finding where work gets stuck, deciding what's worth doing and automating it.",
