@@ -21,6 +21,7 @@ import { getSiteSettings } from "@/lib/site-settings-db";
 import { localizedOgImage } from "@/lib/seo";
 import "./globals.css";
 import "./hire-candy.css";
+import "./buttons.css";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],

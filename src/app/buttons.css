@@ -1,0 +1,63 @@
+/* Buttons: option C "Píldora mínima" (picked 2026-11-25).
+   Light: pastel peach pill. Dark: dark fill with a glowing magenta ring. Secondary: soft gray pill.
+   Loaded after globals.css. Not here on purpose: the header Contratar (.hh-hire) and the form
+   submit Enviar (.hire-form-send) keep their current look until they get their own style. */
+:root {
+  --pill-bg: #fbe0d8; --pill-bg-h: #f8cfc3; --pill-fg: #2b2a33;
+  --pill-shadow: inset 0 1px 0 #fff, 0 2px 10px -6px #e8907d;
+  --pill-shadow-h: inset 0 1px 0 #fff, 0 8px 18px -10px #e8907d;
+  --pill2-bg: #f1edf6; --pill2-bg-h: #e7e0f3; --pill2-fg: #2b2a33; --pill2-fg-h: #2b2a33;
+  --pill-focus: #5a47ad;
+}
+:root.dark {
+  --pill-bg: #1a1424; --pill-bg-h: #24182f; --pill-fg: #f2f1f7;
+  --pill-shadow: inset 0 0 0 1px #ff4fd8, 0 0 12px -3px rgb(255 79 216 / 67%);
+  --pill-shadow-h: inset 0 0 0 1.5px #ff6fe0, 0 0 20px -2px rgb(255 79 216 / 80%);
+  --pill2-bg: #1b1b28; --pill2-bg-h: #232336; --pill2-fg: #c9c6dc; --pill2-fg-h: #f2f1f7;
+  --pill-focus: #ff4fd8;
+}
+
+/* Primary. :root + :is() outranks the older .hire-btn / .hire-cta layers in globals.css. */
+:root :is(.hire-btn:not(.hire-form-send, .hire-act), .hm-cta-link) {
+  cursor: pointer; border: 0; border-radius: 999px; text-decoration: none;
+  background: var(--pill-bg); color: var(--pill-fg); box-shadow: var(--pill-shadow);
+  font-family: inherit; font-size: 1.05rem; font-weight: 600; letter-spacing: normal; text-transform: none; text-shadow: none;
+  filter: none; animation: none; transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+:root:not(.dark) :is(.hire-btn:not(.hire-form-send, .hire-act), .hm-cta-link),
+:root.dark :is(.hire-btn:not(.hire-form-send, .hire-act), .hm-cta-link) {
+  background: var(--pill-bg); color: var(--pill-fg); box-shadow: var(--pill-shadow); border: 0; text-shadow: none; font-family: inherit; letter-spacing: normal;
+}
+:root :is(.hire-btn:not(.hire-form-send, .hire-act), .hm-cta-link)::before,
+:root:not(.dark) :is(.hire-btn:not(.hire-form-send, .hire-act), .hm-cta-link)::after,
+:root.dark :is(.hire-btn:not(.hire-form-send, .hire-act), .hm-cta-link)::before,
+:root.dark :is(.hire-btn:not(.hire-form-send, .hire-act), .hm-cta-link)::after { content: none; }
+:root .hire-btn:not(.hire-form-send, .hire-act) :is(.hire-cta-paint, .hire-btn-rainbow) { display: none; }
+:root:not(.dark) :is(.hire-btn:not(.hire-form-send, .hire-act), .hm-cta-link):is(:hover, :focus-visible),
+:root.dark :is(.hire-btn:not(.hire-form-send, .hire-act), .hm-cta-link):is(:hover, :focus-visible) {
+  background: var(--pill-bg-h); box-shadow: var(--pill-shadow-h); transform: translateY(-1px); filter: none; border: 0;
+}
+:root :is(.hire-btn:not(.hire-form-send, .hire-act), .hm-cta-link):focus-visible { outline: 2px solid var(--pill-focus); outline-offset: 3px; }
+
+/* Secondary: soft gray pill (Ver los servicios, Leer mi historia, GitHub, referral quote link). */
+:root :is(.hm-more, .hire-act) {
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
+  min-height: 2.6rem; padding: .5rem 1.15rem; border: 0; border-radius: 999px; text-decoration: none;
+  background: var(--pill2-bg); color: var(--pill2-fg); box-shadow: none;
+  font-family: inherit; font-weight: 600; letter-spacing: normal; text-transform: none; text-shadow: none;
+  filter: none; transition: background-color .2s ease, color .2s ease;
+}
+:root:not(.dark) :is(.hm-more, .hire-act), :root.dark :is(.hm-more, .hire-act) { background: var(--pill2-bg); color: var(--pill2-fg); border: 0; }
+:root:not(.dark) :is(.hm-more, .hire-act):is(:hover, :focus-visible),
+:root.dark :is(.hm-more, .hire-act):is(:hover, :focus-visible) { background: var(--pill2-bg-h); color: var(--pill2-fg-h); transform: none; filter: none; }
+:root :is(.hm-more, .hire-act):focus-visible { outline: 2px solid var(--pill-focus); outline-offset: 3px; }
+
+/* Disabled: no lift, not-allowed. */
+:root :is(.hire-btn:not(.hire-form-send), .hm-cta-link, .hm-more, .hire-act):is(:disabled, [aria-disabled="true"]),
+:root :is(.hire-btn:not(.hire-form-send), .hm-cta-link, .hm-more, .hire-act):is(:disabled, [aria-disabled="true"]):hover {
+  cursor: not-allowed; opacity: .55; transform: none; box-shadow: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root :is(.hire-btn:not(.hire-form-send), .hm-cta-link, .hm-more, .hire-act) { transition: none; }
+  :root :is(.hire-btn:not(.hire-form-send), .hm-cta-link):is(:hover, :focus-visible) { transform: none; }
+}
