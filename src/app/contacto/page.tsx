@@ -125,7 +125,6 @@ export default function ContactPage() {
         className="hire-btn hire-cta contact-cta"
         data-testid="contact-cta"
       >
-        <span className="hire-cta-paint" aria-hidden />
         <span className="hire-btn-label">{t.contact.contactCta}</span>
       </Link>
     </PageShell>
