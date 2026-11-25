@@ -18,6 +18,7 @@ import { useLocale } from "@/i18n/locale-provider";
 import { insertSection, splitSections } from "@/lib/md-sections";
 import { insertJob, insertStory, parseLayout, recordsAfterStory, serializeLayout, type LayoutItem } from "@/lib/page-layout";
 import { Publications } from "@/components/publications";
+import { Talks } from "@/components/talks";
 import { DEFAULT_PUBLICATIONS, stripPublicationLinksInBody, type Publication } from "@/lib/publications";
 import { saveCopy, useEditMode } from "@/components/admin-context";
 import { useRouter } from "next/navigation";
@@ -120,6 +121,7 @@ export function AboutView({ publications }: { publications: readonly Publication
             />
             {/* A body without "## " sections has no slots: the block goes right after it. */}
             {storyCount === 0 ? <Publications items={publications} /> : null}
+            <Talks />
           </div>
         </div>
 
