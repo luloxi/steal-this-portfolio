@@ -88,6 +88,10 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
         name: "Herramientas internas a medida",
         description: "Sistemas internos hechos para cómo trabaja tu equipo.",
       },
+      {
+        name: "Sistemas listos para agentes de IA",
+        description: "Tu CRM, tu agenda o tu mail preparados para que un agente de IA los use, con permisos acotados y tu aprobación antes de enviar.",
+      },
     ],
   },
   en: {
@@ -163,6 +167,10 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
       {
         name: "Custom internal tools",
         description: "Internal systems made for the way your team works.",
+      },
+      {
+        name: "Systems your AI agents can use",
+        description: "Your CRM, calendar or email set up so an AI agent can use them, with narrow permissions and your approval before anything goes out.",
       },
     ],
   },

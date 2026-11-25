@@ -1,0 +1,72 @@
+/* Landing scroll motion (/ and /en). Scroll-linked, ScrollCraft-style:
+   - section titles slide in and their rule draws across,
+   - cards and list items rise, fade and scale in, staggered across a row,
+   - the hero title drifts up and the AI orb lags behind as you scroll (parallax),
+   - Automatizando's mini demos zoom into place,
+   - a thin reading-progress line under the header.
+   Pure CSS (animation-timeline) where supported; elsewhere scroll-reveal-fallback.tsx
+   adds simple reveals. Only opacity/transform animate (no layout shift), content is
+   in the HTML and visible without JS, and prefers-reduced-motion gets none of it. */
+
+.hm-landing .hm-main { overflow-x: clip; }
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .hm-landing { --stagger: 0%; }
+    @media (min-width: 640px) { .hm-landing [data-reveal] { --stagger: calc(var(--i, 0) * 6%); } }
+
+    .hm-landing [data-reveal] {
+      animation: hm-rise linear both;
+      animation-timeline: view();
+      animation-range: entry var(--stagger) entry calc(70% + var(--stagger));
+    }
+    .hm-landing .hm-step[data-reveal] { animation-name: hm-slide; }
+    .hm-landing .hm-faq-item[data-reveal] { animation-name: hm-fade-up; }
+
+    .hm-landing .hm-h2, .hm-landing .hm-sublead {
+      animation: hm-title-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 80%;
+    }
+    .hm-landing .hm-h2::after {
+      transform-origin: 0 50%;
+      animation: hm-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 40%;
+    }
+
+    /* Hero: title drifts up a little faster than the page, the orb lags (parallax). */
+    .hm-landing .hm-hero-text { animation: hm-hero-text linear both; animation-timeline: scroll(root); animation-range: 0 90vh; }
+    .hm-landing .hm-hero-art { animation: hm-hero-art linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
+
+    /* Automatizando: each mini demo zooms into its stage. */
+    .hm-landing .sc-stage > .sc-art {
+      animation: hm-stage linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 45%;
+    }
+
+    /* Reading progress under the fixed header. */
+    .hm-landing .hh::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; pointer-events: none;
+      transform-origin: 0 50%; transform: scaleX(0);
+      background: linear-gradient(90deg, var(--accent), color-mix(in oklab, var(--accent) 35%, #2dd4bf));
+      animation: hm-progress linear both; animation-timeline: scroll(root);
+    }
+    :root:not(.dark) .hm-landing .hh::after { background: linear-gradient(90deg, var(--joy-3), var(--joy-4), var(--joy-1), var(--joy-5)); }
+  }
+
+  /* Fallback (no scroll timelines): IntersectionObserver toggles .is-in. */
+  .hm-landing.io-reveal [data-reveal] { transition: opacity .6s ease, transform .6s cubic-bezier(.2,.7,.2,1); transition-delay: calc(var(--i, 0) * 80ms); }
+  .hm-landing.io-reveal [data-reveal]:not(.is-in) { opacity: 0; transform: translateY(28px) scale(.96); }
+}
+
+@keyframes hm-rise { from { opacity: 0; transform: translateY(44px) scale(.94); } to { opacity: 1; transform: none; } }
+@keyframes hm-slide { from { opacity: 0; transform: translateX(-36px); } to { opacity: 1; transform: none; } }
+@keyframes hm-fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+@keyframes hm-title-in { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+@keyframes hm-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes hm-hero-text { to { transform: translateY(-12vh); } }
+@keyframes hm-hero-art { to { transform: translateY(14vh) scale(.86) rotate(-4deg); } }
+@keyframes hm-stage { from { opacity: .2; transform: scale(.7) rotate(-6deg); } to { opacity: 1; transform: none; } }
+@keyframes hm-progress { to { transform: scaleX(1); } }

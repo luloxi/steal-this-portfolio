@@ -53,8 +53,8 @@ export const GROK_BOT_SHOWCASE: { art: ShowcaseArt; copy: Record<Locale, { title
   {
     art: "whatsapp",
     copy: {
-      es: { title: "Trámites y clientes por WhatsApp", body: "Responde consultas, hace seguimiento de clientes y te ayuda con trámites por WhatsApp, para que no se te pase ninguna conversación." },
-      en: { title: "Clients and errands on WhatsApp", body: "Answers questions, follows up with clients and helps with errands on WhatsApp, so no conversation slips through." },
+      es: { title: "Trámites y clientes por WhatsApp", body: "Responde consultas, sigue a tus clientes y te ayuda con trámites por WhatsApp, para que ninguna conversación quede colgada." },
+      en: { title: "Clients and errands on WhatsApp", body: "Answers questions, follows up with your clients and helps with errands on WhatsApp, so no conversation is left hanging." },
     },
   },
   {

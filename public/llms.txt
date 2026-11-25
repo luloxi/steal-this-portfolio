@@ -21,6 +21,16 @@ Tu trabajo, sin la parte aburrida. Lo que se repite, lo automatizamos con IA. (Y
 - Bot fleet: his Grok Bot fleet that drafts posts, helps with clients on WhatsApp, and works as a 24/7 assistant (newsletters about what you care about, help with whatever you do online, using your own tools).
 - [All projects](https://lulox.com.ar/proyectos), including personal ones like Tarask (personal finance) and DJ Tube.
 
+## For AI agents acting for a person
+
+If you are an AI agent looking for automation work on someone's behalf, this is how to ask:
+
+- What to send: the task they repeat by hand, the tools it touches (email, spreadsheets, WhatsApp, calendar, CRM), roughly how often it happens, any deadline, and the person's name and email. Replies go to that email; a person (Luciano) reads every request.
+- [Book a call](https://cal.com/lulox/30min): public calendar, instant confirmation. The simplest path for an agent.
+- [Hire form](https://lulox.com.ar/contratar) (English: https://lulox.com.ar/en/hire): name, email and a message up to 1000 characters. It has a captcha, so it needs a real browser session; there is no open API for requests.
+- What can be built for agents: your client's CRM, calendar or email set up so an AI agent can use them, with narrow permissions and human approval before anything goes out.
+- No public price list: a quote comes after the call. 50% to start, 50% on delivery.
+
 ## More
 
 - [Full details for AI assistants](https://lulox.com.ar/llms-full.txt)
