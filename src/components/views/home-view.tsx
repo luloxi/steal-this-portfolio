@@ -8,6 +8,8 @@ import { ScrollRevealFallback } from "@/components/scroll-reveal-fallback";
 import { AgentFlow } from "@/components/home-visuals";
 import { HomeHeader } from "@/components/home-header";
 import { CopyText } from "@/components/copy-text";
+import { FaqList } from "@/components/faq-list";
+import type { FaqItem } from "@/lib/faq";
 import { GitHubIcon, InstagramBrandIcon, LinkedInIcon, TelegramIcon, XIcon } from "@/components/icons/social";
 import { useSiteSettings } from "@/components/site-settings-context";
 import { ShowcaseVisual } from "@/components/showcase-visuals";
@@ -28,7 +30,7 @@ const accents = ["var(--joy-1)", "var(--joy-2)", "var(--joy-3)", "var(--joy-4)",
 const offerIcons = [Search, Signpost, Hammer];
 
 /** Scrolling landing page. Theme and language controls stay fixed in the layout. */
-export function HomeView() {
+export function HomeView({ faq }: { faq: FaqItem[] }) {
   const { t, href, locale, landing } = useLocale();
   const site = useSiteSettings();
   // Code defaults + edits saved from edit mode (D1 site_copy "landing.*").
@@ -118,14 +120,7 @@ export function HomeView() {
 
         <section className="hm-section" aria-labelledby="hm-faq">
           <h2 id="hm-faq" className="hm-h2"><CopyText copyKey="landing.home.faq.title" value={c.faq.title} /></h2>
-          <div className="hm-faq">
-            {c.faq.items.map((item, i) => (
-              <details key={i} className="hm-faq-item" data-reveal>
-                <summary className="hm-faq-q"><CopyText copyKey={`landing.home.faq.items.${i}.q`} value={item.q} /></summary>
-                <CopyText as="p" className="hm-faq-a" copyKey={`landing.home.faq.items.${i}.a`} value={item.a} />
-              </details>
-            ))}
-          </div>
+          <FaqList items={faq} />
         </section>
 
         <section id="sobre-mi" className="hm-section hm-anchor" aria-labelledby="hm-about">
