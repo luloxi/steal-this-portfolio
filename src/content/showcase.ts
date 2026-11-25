@@ -2,7 +2,7 @@ import type { Locale } from "@/i18n/types";
 
 /**
  * Home content: featured projects with a short demo clip (inside the Proyectos section)
- * and the "Automatizando procesos" cards. Real projects only, no invented clients or metrics.
+ * and the home Servicios examples. Real projects only, no invented clients or metrics.
  * Clips live in public/demos and were captured from local or test data (never real accounts).
  * Plain words, no stack names, no em dashes.
  */
@@ -46,15 +46,15 @@ export const GROK_BOT_SHOWCASE: { art: ShowcaseArt; copy: Record<Locale, { title
   {
     art: "social",
     copy: {
-      es: { title: "Borradores para redes", body: "Prepara posts para tus redes, con tu tono." },
-      en: { title: "Social media drafts", body: "Prepares posts for your social media, in your voice." },
+      es: { title: "Borradores para redes", body: "Posts para tus redes, con tu tono." },
+      en: { title: "Social media drafts", body: "Posts for your social media, in your voice." },
     },
   },
   {
     art: "whatsapp",
     copy: {
-      es: { title: "Trámites y clientes por WhatsApp", body: "Responde consultas, sigue a tus clientes y te ayuda con trámites por WhatsApp, para que ninguna conversación quede colgada." },
-      en: { title: "Clients and errands on WhatsApp", body: "Answers questions, follows up with your clients and helps with errands on WhatsApp, so no conversation is left hanging." },
+      es: { title: "Clientes por WhatsApp", body: "Responde consultas y sigue a tus clientes para que ninguna conversación quede colgada." },
+      en: { title: "Clients on WhatsApp", body: "Answers questions and follows up with your clients so no conversation is left hanging." },
     },
   },
   {

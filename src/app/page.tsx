@@ -28,8 +28,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const JOB_TITLE = {
-  es: "Desarrollador de automatizaciones con agentes de IA",
-  en: "Automation developer with AI agents",
+  es: "Consultor en automatización para independientes y freelancers",
+  en: "Automation consultant for freelancers and independent professionals",
 } as const;
 const KNOWS_ABOUT = {
   es: ["Automatización de procesos", "Agentes de IA", "Grok", "Grok Bot", "Hermes", "n8n", "CRM a medida", "Herramientas internas", "Next.js", "Cloudflare"],
@@ -37,7 +37,7 @@ const KNOWS_ABOUT = {
 } as const;
 
 /**
- * Landing: hero, about, Automatizando cards, services, featured projects
+ * Landing: hero, about, services (3 steps + examples), featured projects
  * with demo loops (Malito, Garpen), latest posts, process, FAQ, closing CTA.
  */
 export default async function HomePage() {

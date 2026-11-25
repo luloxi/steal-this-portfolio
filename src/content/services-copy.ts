@@ -18,11 +18,11 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
     meta: {
       title: "Servicios de automatización con agentes de IA",
       description:
-        "Qué puedo automatizar con agentes de IA (Grok, Grok Bot y Hermes): correo, carga de datos, CRM, facturas, reportes y agenda. También CRMs y herramientas internas a medida.",
+        "Para independientes y freelancers: diagnóstico, decisión y armado. Automatizo correo, carga de datos, facturas, reportes y agenda con IA. También CRMs a medida.",
     },
-    title: "Automatización con agentes de IA",
+    title: "Servicios",
     intro:
-      "Tomo el trabajo que tu equipo hace a mano, una y otra vez, y lo paso a agentes de IA y flujos que corren solos. Los agentes se encargan de la parte que antes necesitaba a una persona: leer, clasificar, resumir y redactar.",
+      "Para independientes y freelancers. Encuentro dónde se traba tu trabajo, decido qué conviene y lo automatizo con tus herramientas. La IA se encarga de lo que antes hacías a mano: leer, ordenar, resumir y redactar.",
     useCases: {
       title: "Qué se puede automatizar",
       note: "Son ejemplos de lo que se puede hacer, no trabajos para clientes.",
@@ -60,21 +60,25 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
     },
     stack: {
       title: "Con qué trabajo",
-      body: "Para los agentes de IA prefiero Grok, Grok Bot y Hermes. Para conectar tus herramientas (Gmail, Google Workspace, planillas, CRMs) uso lo que mejor encaje, n8n incluido, y armo aplicaciones web propias en Next.js sobre Cloudflare cuando hace falta algo a medida.",
+      body: "Con las que ya usás: mail, planillas, WhatsApp, tu agenda o tu sistema de clientes. Si hace falta algo a medida, lo armo.",
     },
     process: {
       title: "Cómo es trabajar conmigo",
       steps: [
-        "Me contás qué hace tu equipo a mano.",
-        "Lo vemos en una llamada y sale una estimación orientativa.",
-        "50% de anticipo y 50% al entregar.",
+        "Diagnóstico: una charla para encontrar dónde se traba tu trabajo.",
+        "Decisión: qué conviene resolver y cómo, con un presupuesto.",
+        "Armado: lo dejo andando con tus herramientas. 50% al empezar y 50% al entregar.",
       ],
     },
-    closing: "Si tenés un proceso que hoy depende de que alguien lo haga a mano, escribime y lo vemos.",
+    closing: "¿Qué tarea te sacarías de encima mañana? Contámela y vemos cómo automatizarla.",
     offers: [
       {
-        name: "Automatización con agentes de IA",
-        description: "Agentes de IA con Grok, Grok Bot y Hermes que leen, clasifican, resumen y redactan dentro de los procesos de tu equipo.",
+        name: "Diagnóstico y decisión",
+        description: "Una charla para encontrar dónde se traba tu trabajo, decidir qué conviene resolver y cómo, y pasarte un presupuesto.",
+      },
+      {
+        name: "Automatización con IA",
+        description: "Automatizaciones que leen, ordenan, resumen y redactan dentro de tu trabajo, con las herramientas que ya usás.",
       },
       {
         name: "Automatizaciones entre herramientas",
@@ -86,7 +90,7 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
       },
       {
         name: "Herramientas internas a medida",
-        description: "Sistemas internos hechos para cómo trabaja tu equipo.",
+        description: "Sistemas hechos para cómo trabajás.",
       },
       {
         name: "Sistemas listos para agentes de IA",
@@ -98,11 +102,11 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
     meta: {
       title: "Automation services with AI agents",
       description:
-        "What I can automate with AI agents (Grok, Grok Bot and Hermes): email, data entry, CRM, invoices, reports and scheduling. Plus custom CRMs and internal tools.",
+        "For freelancers and independent professionals: diagnosis, decision and build. I automate email, data entry, invoices, reports and scheduling with AI. Plus custom CRMs.",
     },
-    title: "Automation with AI agents",
+    title: "Services",
     intro:
-      "I take the work your team does by hand, over and over, and move it to AI agents and flows that run on their own. The agents handle the part that used to need a person: reading, sorting, summarizing and writing.",
+      "For freelancers and independent professionals. I find where your work gets stuck, decide what's worth doing and automate it with your tools. AI handles what you used to do by hand: reading, sorting, summarizing and writing.",
     useCases: {
       title: "What can be automated",
       note: "These are examples of what can be done, not client work.",
@@ -140,21 +144,25 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
     },
     stack: {
       title: "What I work with",
-      body: "For AI agents I prefer Grok, Grok Bot and Hermes. To connect your tools (Gmail, Google Workspace, sheets, CRMs) I use whatever fits best, n8n included, and I build my own web apps in Next.js on Cloudflare when something custom is needed.",
+      body: "The ones you already use: email, spreadsheets, WhatsApp, your calendar or your client system. If something custom is needed, I build it.",
     },
     process: {
       title: "How working with me goes",
       steps: [
-        "You tell me what your team does by hand.",
-        "We go over it on a call and you get a rough estimate.",
-        "50% upfront and 50% on delivery.",
+        "Diagnosis: a chat to find where your work gets stuck.",
+        "Decision: what's worth solving and how, with a quote.",
+        "Build: I set it up with your tools. 50% to start and 50% on delivery.",
       ],
     },
-    closing: "If you have a process that depends on someone doing it by hand, write to me and we'll look at it.",
+    closing: "Which task would you drop tomorrow? Tell me about it and we'll see how to automate it.",
     offers: [
       {
-        name: "Automation with AI agents",
-        description: "AI agents with Grok, Grok Bot and Hermes that read, sort, summarize and write inside your team's processes.",
+        name: "Diagnosis and decision",
+        description: "A chat to find where your work gets stuck, decide what's worth solving and how, and send you a quote.",
+      },
+      {
+        name: "Automation with AI",
+        description: "Automations that read, sort, summarize and write inside your work, with the tools you already use.",
       },
       {
         name: "Automations between tools",
@@ -166,7 +174,7 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
       },
       {
         name: "Custom internal tools",
-        description: "Internal systems made for the way your team works.",
+        description: "Systems made for the way you work.",
       },
       {
         name: "Systems your AI agents can use",

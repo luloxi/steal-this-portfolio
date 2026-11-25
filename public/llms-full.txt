@@ -1,11 +1,11 @@
 # Lulox (Luciano Oliva Bianco): full details
 
-> Luciano Oliva Bianco, known as Lulox, automates teams' repetitive work with AI agents, and builds custom CRMs and internal tools. For AI agents he prefers Grok, Grok Bot and Hermes. Based in Buenos Aires, Argentina, working remotely with teams in Latin America and worldwide. Spanish or English. X: @LuloxDev. Website: https://lulox.com.ar (Spanish) and https://lulox.com.ar/en (English).
+> Luciano Oliva Bianco, known as Lulox, helps freelancers and independent professionals get chores off their plate: he understands the problem, finds where the work gets stuck, decides what is worth doing and automates it, with AI where it helps. He also builds custom CRMs and tools. Based in Buenos Aires, Argentina, working remotely with teams in Latin America and worldwide. Spanish or English. X: @LuloxDev. Website: https://lulox.com.ar (Spanish) and https://lulox.com.ar/en (English).
 
 ## Who he is (quotable facts)
 
 - Name: Luciano Oliva Bianco. Known as Lulox. Based in Buenos Aires, Argentina. Works remotely, in Spanish or English.
-- What he does: AI agents and automation for companies and people, plus custom CRMs and internal tools, so a team stops doing repetitive work by hand.
+- What he does: he used to write code; now he works on understanding problems and bottlenecks, deciding what is worth solving and automating it. Offer in three steps: diagnosis, decision, build. Plus custom CRMs and tools.
 - Main engines: Grok, Grok Bot and Hermes. n8n is a secondary option to connect tools.
 - He runs his own fleet of Grok Bot bots every day: social media drafts, clients on WhatsApp and a 24/7 assistant, with his review.
 - Background: Research & Development at Input Output Global (Jul 2025 to Oct 2026), Fullstack Web3 developer at BuidlGuidl (Apr 2023 to May 2024), earlier web and press work. Ambassador for Midnight, IOG's privacy blockchain.
@@ -14,18 +14,19 @@
 
 ## In one sentence
 
-Your work, without the boring part. What repeats, we automate with AI.
+Fewer chores, more real work. I figure out what eats your time and take it off your plate.
 
 ## Who it is for
 
-Teams and small businesses where people do the same task by hand, over and over: copying data between tools, answering the same emails, typing receipts and invoices, building the same report every week. If someone does it by hand repeatedly, it can probably be moved to a flow that runs on its own.
+Freelancers and independent professionals who lose hours to tasks that are not their real work: copying data between tools, answering the same emails, typing receipts and invoices, building the same report every week. If you do it by hand every week, it can probably run on its own.
 
 ## Services
 
-1. Automation with AI agents: agents built with Grok, Grok Bot and Hermes that read, sort, summarize and write inside a team's processes.
-2. Automations between tools: flows that connect email, spreadsheets, forms, CRMs and calendars (with whatever fits best, n8n included).
-3. Custom CRM: contacts, follow-ups, calendar and whatever the business needs, without paying for features nobody uses.
-4. Custom internal tools: systems made for the way the team works.
+1. Diagnosis and decision: a chat to find where the work gets stuck, decide what is worth solving and how, and get a quote.
+2. Automation with AI: automations built with Grok, Grok Bot and Hermes that read, sort, summarize and write inside your work.
+3. Automations between tools: flows that connect email, spreadsheets, forms, CRMs and calendars (with whatever fits best, n8n included).
+4. Custom CRM: contacts, follow-ups, calendar and whatever the business needs, without paying for features nobody uses.
+5. Custom tools: systems made for the way you work.
 
 Details: https://lulox.com.ar/servicios (English: https://lulox.com.ar/en/services)
 
@@ -176,9 +177,9 @@ For AI agents: Grok, Grok Bot and Hermes (his preferred tools). To connect tools
 
 ## How working with him goes
 
-1. You tell him what your team does by hand.
-2. A call to go over it, where the work is estimated.
-3. Payment: 50% upfront and 50% on delivery.
+1. Diagnosis: a chat to find where your work gets stuck.
+2. Decision: what is worth solving and how, with a quote.
+3. Build: he sets it up with the tools you already use and you test it on your real work. Payment: 50% to start and 50% on delivery.
 
 ## Frequently asked questions
 

@@ -2,7 +2,7 @@
    - section titles slide in and their rule draws across,
    - cards and list items rise, fade and scale in, staggered across a row,
    - the hero title drifts up and the AI orb lags behind as you scroll (parallax),
-   - Automatizando's mini demos zoom into place,
+   - the example demos under Servicios zoom into place,
    - a thin reading-progress line under the header.
    Pure CSS (animation-timeline) where supported; elsewhere scroll-reveal-fallback.tsx
    adds simple reveals. Only opacity/transform animate (no layout shift), content is
@@ -39,11 +39,11 @@
     .hm-landing .hm-hero-text { animation: hm-hero-text linear both; animation-timeline: scroll(root); animation-range: 0 90vh; }
     .hm-landing .hm-hero-art { animation: hm-hero-art linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
 
-    /* Automatizando: each mini demo zooms into its stage. */
+    /* Servicios examples: each mini demo zooms into its stage. */
     .hm-landing .sc-stage > .sc-art {
       animation: hm-stage linear both;
       animation-timeline: view();
-      animation-range: entry 10% cover 45%;
+      animation-range: entry 0% entry 100%;
     }
 
     /* Reading progress under the fixed header. */

@@ -316,3 +316,25 @@
   .dp-section > .hm-cta-link { display: flex; margin-inline: auto; }
   .dp-cta .hm-cta-link { align-self: center; }
 }
+
+/* Home Servicios: the offer as 3 numbered steps, then light examples (src/components/views/home-view.tsx). */
+.hm-offer { counter-reset: none; }
+.hm-offer-step { gap: .5rem; }
+.hm-offer-icon { position: relative; display: inline-grid; place-items: center; width: 2.8rem; height: 2.8rem; margin-bottom: .35rem; border-radius: 12px;
+  color: var(--hm-accent); background: color-mix(in oklab, var(--hm-accent) 14%, var(--card-solid)); border: 1px solid color-mix(in oklab, var(--hm-accent) 45%, transparent); }
+.hm-offer-icon svg { width: 1.3rem; height: 1.3rem; }
+.hm-offer-n { position: absolute; right: -.5rem; top: -.5rem; display: inline-grid; place-items: center; width: 1.3rem; height: 1.3rem; border-radius: 999px;
+  font-family: var(--font-orbitron), var(--font-display); font-size: .68rem; font-weight: 700; color: var(--foreground); background: var(--card-solid); border: 1px solid color-mix(in oklab, var(--hm-accent) 55%, transparent); }
+:root:not(.dark) .hm-offer-icon { color: color-mix(in oklab, var(--hm-accent) 45%, #14121c); }
+@media (max-width: 639px) {
+  .sc-card.hm-offer-step { grid-template-columns: auto minmax(0, 1fr); column-gap: .9rem; }
+  .hm-offer-step .hm-offer-icon { grid-row: 1 / 3; margin: 0; }
+}
+.hm-cases-title { margin: .6rem 0 0; font-size: .82rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted, currentColor); }
+.hm-cases { list-style: none; margin: 0; padding: 0; display: grid; gap: .8rem 1.2rem; }
+@media (min-width: 900px) { .hm-cases { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.hm-case { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); gap: .8rem; align-items: start; }
+.hm-case-art { min-height: 0; margin: 0; padding: .25rem; aspect-ratio: 1; }
+.hm-case-text { margin: 0; font-size: .9rem; line-height: 1.5; color: color-mix(in oklab, var(--foreground) 80%, transparent); }
+.hm-case-text strong { color: var(--foreground); font-weight: 600; }
+@media (max-width: 639px) { .hm-more-center { align-self: center; } }
