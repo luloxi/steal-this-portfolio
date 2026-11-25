@@ -19,7 +19,7 @@ Menos tareas, más trabajo de verdad. Entiendo qué te come el tiempo y lo saco 
 - [Malito](https://lulox.com.ar/proyectos/malito): an email tool for work: your own address on your own domain, plus newsletters and campaigns to your lists. Live: https://malito.lulox.com.ar
 - [Garpen](https://lulox.com.ar/proyectos/garpen): custom CRM and ERP with contacts, agenda and finances that an agent can use. Live: https://garpen.lulox.com.ar
 - Bot fleet: his Grok Bot fleet that drafts posts, helps with clients on WhatsApp, and works as a 24/7 assistant (newsletters about what you care about, help with whatever you do online, using your own tools).
-- [All projects](https://lulox.com.ar/proyectos), including personal ones like Tarask (personal finance) and DJ Tube.
+- [All projects](https://lulox.com.ar/proyectos) (English: https://lulox.com.ar/en/projects): Malito, Garpen, DJ Tube, SAMI, PunkSociety, Mochi and more, each with a page and most with a short preview.
 
 ## For AI agents acting for a person
 
