@@ -9,6 +9,7 @@ import { joinSections, moveItem, splitSections } from "@/lib/article-sections";
 import type { BlogPost } from "@/content/blog/types";
 import { focusTopics } from "@/content/projects";
 import { useLocale } from "@/i18n/locale-provider";
+import { blogListPath } from "@/lib/blog-list";
 import { blogPostPath, slugify } from "@/lib/routes";
 
 export async function putPost(post: BlogPost & { previousSlug?: string }): Promise<{ slug?: string; slugEn?: string | null; error?: string }> {
@@ -86,6 +87,9 @@ export function useBlogPostEditor(post: BlogPost) {
   const [bodies, setBodies] = useState(post.body);
   const [reorderNote, setReorderNote] = useState("");
   const [liveBody, setLiveBody] = useState(post.body[L]);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
   const O = (L === "es" ? "en" : "es") as "es" | "en";
   const moveSection = (from: number, to: number) => {
     const cur = splitSections(bodyRef.current);
@@ -139,13 +143,22 @@ export function useBlogPostEditor(post: BlogPost) {
     if (err) window.alert(es ? `No se pudo guardar (${err})` : `Couldn't save (${err})`);
   };
   const del = async () => {
-    if (!window.confirm(es ? `¿Borrar "${post.title[L]}"? No se puede deshacer.` : `Delete "${post.title[L]}"? This can't be undone.`)) return;
-    const res = await fetch(`/api/blog?slug=${encodeURIComponent(post.slug)}`, { method: "DELETE" });
-    if (!res.ok) window.alert(es ? `No se pudo borrar (${res.status})` : `Couldn't delete (${res.status})`);
-    else {
-      router.push(L === "en" ? "/en/blog" : "/blog");
-      router.refresh();
+    setDeleting(true);
+    setDeleteError("");
+    const res = await fetch(`/api/blog?slug=${encodeURIComponent(post.slug)}`, {
+      method: "DELETE",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug: post.slug }),
+    });
+    if (!res.ok) {
+      setDeleting(false);
+      setDeleteError(es ? `No se pudo borrar (${res.status})` : `Couldn't delete (${res.status})`);
+      return;
     }
+    // Don't refresh this route after the delete: that 404s the draft page
+    // and can swallow the navigation back to the list.
+    router.replace(blogListPath(L, "drafts"));
   };
   const cancelExtra = () => {
     setTitle(post.title[L]);
@@ -245,12 +258,44 @@ export function useBlogPostEditor(post: BlogPost) {
             title={post.published ? (es ? "Pasar a borrador" : "Back to draft") : es ? "Publicar el artículo" : "Publish the article"}
             onClick={() => void togglePublish()}
           />
-          <ToolbarButton label="🗑" title={es ? "Borrar artículo" : "Delete article"} onClick={() => void del()} />
+          <span data-testid="blog-delete">
+            <ToolbarButton label="🗑" title={es ? "Borrar artículo" : "Delete article"} onClick={() => { setDeleteError(""); setConfirmDelete(true); }} />
+          </span>
         </>
       }
     />
     </>
   );
 
-  return { titleNode, summaryNode, bodyNode, metaPanel, coverNode, dateNode, textFocus };
+  const confirmNode = confirmDelete ? (
+    <div className="blog-del-confirm" role="alertdialog" aria-labelledby="blog-del-title" aria-describedby="blog-del-undo" data-testid="blog-delete-confirm">
+      <p id="blog-del-title" className="blog-del-title">
+        {es ? `¿Borrar "${post.title[L] || t.blog.statusDraft}"?` : `Delete "${post.title[L] || t.blog.statusDraft}"?`}
+      </p>
+      <p id="blog-del-undo" className="blog-del-undo">{t.blog.confirmDeleteUndo}</p>
+      {deleteError ? <p className="blog-del-error" role="alert">{deleteError}</p> : null}
+      <div className="blog-del-actions">
+        <button
+          type="button"
+          className="blog-del-yes"
+          data-testid="blog-delete-yes"
+          disabled={deleting}
+          onClick={() => void del()}
+        >
+          {deleting ? (es ? "Borrando…" : "Deleting…") : t.blog.confirmDeleteYes}
+        </button>
+        <button
+          type="button"
+          className="blog-del-no"
+          data-testid="blog-delete-no"
+          disabled={deleting}
+          onClick={() => { setConfirmDelete(false); setDeleteError(""); }}
+        >
+          {es ? "No" : "No"}
+        </button>
+      </div>
+    </div>
+  ) : null;
+
+  return { titleNode, summaryNode, bodyNode, metaPanel, coverNode, dateNode, textFocus, confirmNode };
 }

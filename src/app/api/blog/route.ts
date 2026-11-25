@@ -112,11 +112,22 @@ export async function DELETE(request: Request) {
   }
 
   const { searchParams } = new URL(request.url);
-  const slug = searchParams.get("slug");
+  let slug = searchParams.get("slug")?.trim() || "";
+  // Body slug as a fallback: some runtimes have dropped the query string on DELETE.
+  if (!slug) {
+    const ct = request.headers.get("content-type") ?? "";
+    if (ct.includes("application/json")) {
+      const body = (await request.json().catch(() => null)) as { slug?: unknown } | null;
+      if (typeof body?.slug === "string") slug = body.slug.trim();
+    }
+  }
   if (!slug) {
     return NextResponse.json({ error: "missing_slug" }, { status: 400 });
   }
 
-  await deletePost(slug);
+  const deleted = await deletePost(slug);
+  if (!deleted) {
+    return NextResponse.json({ error: "not_found" }, { status: 404 });
+  }
   return NextResponse.json({ ok: true });
 }

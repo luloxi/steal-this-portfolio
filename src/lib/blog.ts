@@ -282,10 +282,20 @@ export async function slugExists(slug: string): Promise<boolean> {
   return Boolean(row);
 }
 
-export async function deletePost(slug: string) {
+/**
+ * Delete a post by its Spanish slug or its English slug.
+ * Returns false when no row matches (nothing is written).
+ */
+export async function deletePost(slug: string): Promise<boolean> {
   await ensureBlogSchemaAndSeed();
   const db = await requireDb();
-  await db.prepare("DELETE FROM blog_posts WHERE slug = ?").bind(slug).run();
+  const row = await db
+    .prepare("SELECT slug FROM blog_posts WHERE slug = ? OR slug_en = ? LIMIT 1")
+    .bind(slug, slug)
+    .first<{ slug: string }>();
+  if (!row?.slug) return false;
+  await db.prepare("DELETE FROM blog_posts WHERE slug = ?").bind(row.slug).run();
+  return true;
 }
 
 /**

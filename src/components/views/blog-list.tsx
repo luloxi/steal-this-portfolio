@@ -2,17 +2,23 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { useEditMode, useIsAdmin } from "@/components/admin-context";
 import type { BlogPost } from "@/content/blog/types";
 import { localizePost } from "@/content/blog/types";
 import { useLocale } from "@/i18n/locale-provider";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  BLOG_LIST_VIEW_KEY,
+  blogListPath,
+  filterBlogPosts,
+  parseBlogListView,
+  type BlogListView,
+} from "@/lib/blog-list";
 import { blogPostPath } from "@/lib/routes";
 
 const PAGE_SIZE = 10;
-
-const fold = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
 function formatDate(iso: string, locale: string) {
   try {
@@ -26,26 +32,66 @@ function formatDate(iso: string, locale: string) {
   }
 }
 
-/** Blog index: newest first, search, 10 per page. Admin also sees drafts (muted). */
-export function BlogList({ posts, error }: { posts: BlogPost[]; error?: boolean }) {
+/** Blog index: newest first, search, 10 per page. Edit mode: Publicados / Borradores selector. */
+export function BlogList({
+  posts,
+  error,
+  initialView,
+}: {
+  posts: BlogPost[];
+  error?: boolean;
+  /** Set only when the URL has ?view=; otherwise the last localStorage choice is restored after mount. */
+  initialView?: BlogListView;
+}) {
   const { t, locale, href } = useLocale();
+  const router = useRouter();
   const isAdmin = useIsAdmin();
   const editOn = useEditMode();
   const es = locale === "es";
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(0);
-  const filtered = useMemo(() => {
-    const words = fold(query).split(/\s+/).filter(Boolean);
-    return [...posts]
-      .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
-      .filter((p) => {
-        if (p.published === false && !editOn) return false; // edit OFF: drafts hidden, as for a visitor
-        if (!words.length) return true;
-        // Title, summary, body (both languages) and tags.
-        const hay = fold([p.title.es, p.title.en, p.summary.es, p.summary.en, p.body.es, p.body.en, ...(p.tags ?? [])].join(" "));
-        return words.every((w) => hay.includes(w));
-      });
-  }, [posts, query, editOn]);
+  const [view, setView] = useState<BlogListView>(initialView ?? "published");
+  const showFilter = isAdmin && editOn;
+
+  // When the URL carries ?view= (after a toggle or deleting a draft), follow it.
+  if (initialView && initialView !== view) {
+    setView(initialView);
+  }
+
+  // Persist the URL view; if the URL is silent, restore the last choice by writing ?view=drafts.
+  useEffect(() => {
+    if (initialView) {
+      try {
+        localStorage.setItem(BLOG_LIST_VIEW_KEY, initialView);
+      } catch {
+        /* private mode */
+      }
+      return;
+    }
+    let stored: BlogListView = "published";
+    try {
+      stored = parseBlogListView(localStorage.getItem(BLOG_LIST_VIEW_KEY));
+    } catch {
+      /* private mode */
+    }
+    if (stored === "drafts") router.replace(blogListPath(locale, "drafts"), { scroll: false });
+  }, [initialView, locale, router]);
+
+  const choose = (next: BlogListView) => {
+    setView(next);
+    setPage(0);
+    try {
+      localStorage.setItem(BLOG_LIST_VIEW_KEY, next);
+    } catch {
+      /* private mode */
+    }
+    router.replace(blogListPath(locale, next), { scroll: false });
+  };
+
+  const filtered = useMemo(
+    () => filterBlogPosts(posts, { editOn: showFilter, view, query }),
+    [posts, showFilter, view, query],
+  );
   const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const cur = Math.min(page, pages - 1);
   const shown = filtered.slice(cur * PAGE_SIZE, cur * PAGE_SIZE + PAGE_SIZE);
@@ -70,6 +116,31 @@ export function BlogList({ posts, error }: { posts: BlogPost[]; error?: boolean 
           <p className="cp-prose text-[color:var(--section-tastes)]">
             {t.blog.loadError}
           </p>
+        ) : null}
+
+        {showFilter ? (
+          <div className="blog-list-filter" role="tablist" aria-label={t.blog.listFilterLabel} data-testid="blog-list-filter">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === "published"}
+              className={view === "published" ? "is-on" : undefined}
+              data-testid="blog-list-published"
+              onClick={() => choose("published")}
+            >
+              {t.blog.listPublished}
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === "drafts"}
+              className={view === "drafts" ? "is-on" : undefined}
+              data-testid="blog-list-drafts"
+              onClick={() => choose("drafts")}
+            >
+              {t.blog.listDrafts}
+            </button>
+          </div>
         ) : null}
 
         <input
@@ -145,7 +216,13 @@ export function BlogList({ posts, error }: { posts: BlogPost[]; error?: boolean 
         </ul>
 
         {!error && filtered.length === 0 ? (
-          <p className="cp-prose">{query ? (es ? "Sin resultados." : "No results.") : t.blog.empty}</p>
+          <p className="cp-prose">
+            {query
+              ? (es ? "Sin resultados." : "No results.")
+              : showFilter && view === "drafts"
+                ? t.blog.emptyDrafts
+                : t.blog.empty}
+          </p>
         ) : null}
 
         {pages > 1 ? (
