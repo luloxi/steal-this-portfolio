@@ -11,7 +11,7 @@ import { getSiteSettings } from "@/lib/site-settings-db";
 import { getFaq } from "@/lib/faq-db";
 import "./home.css";
 import "./showcase.css";
-import "./scroll-motion.css";
+import "./landing.css";
 
 /** Home share card: fixed service pitch (not the D1 site description). */
 export async function generateMetadata(): Promise<Metadata> {
@@ -27,8 +27,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const JOB_TITLE = {
-  es: "Consultor en automatización para independientes y freelancers",
-  en: "Automation consultant for freelancers and independent professionals",
+  es: "Consultor en automatización con IA",
+  en: "AI automation consultant",
 } as const;
 const KNOWS_ABOUT = {
   es: ["Automatización de procesos", "Agentes de IA", "Grok", "Grok Bot", "Hermes", "n8n", "CRM a medida", "Herramientas internas", "Next.js", "Cloudflare"],
@@ -36,7 +36,8 @@ const KNOWS_ABOUT = {
 } as const;
 
 /**
- * Landing: hero, services (3 steps + examples), FAQ, about, closing CTA.
+ * Landing: hero, problem, what it does on its own, trust strip, things built,
+ * how we work, about, FAQ, closing CTA.
  * Projects, blog and the full story live on their own pages.
  */
 export default async function HomePage() {

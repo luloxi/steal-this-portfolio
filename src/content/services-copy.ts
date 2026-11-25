@@ -18,11 +18,11 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
     meta: {
       title: "Servicios de automatización con agentes de IA",
       description:
-        "Para independientes y freelancers: diagnóstico, decisión y armado. Automatizo correo, carga de datos, facturas, reportes y agenda con IA. También CRMs a medida.",
+        "Para negocios chicos: análisis, propuesta y armado. Automatizo correo, carga de datos, facturas, reportes y agenda con IA. También CRMs a medida.",
     },
     title: "Servicios",
     intro:
-      "Para independientes y freelancers. Encuentro dónde se traba tu trabajo, decido qué conviene y lo automatizo con tus herramientas. La IA se encarga de lo que antes hacías a mano: leer, ordenar, resumir y redactar.",
+      "Para negocios chicos con poco equipo. Encuentro dónde se traba tu trabajo, decido qué conviene y lo automatizo con tus herramientas. La IA se encarga de lo que antes hacías a mano: leer, ordenar, resumir y redactar.",
     useCases: {
       title: "Qué se puede automatizar",
       note: "Son ejemplos de lo que se puede hacer, no trabajos para clientes.",
@@ -102,11 +102,11 @@ export const servicesCopy: Record<Locale, ServicesCopy> = {
     meta: {
       title: "Automation services with AI agents",
       description:
-        "For freelancers and independent professionals: diagnosis, decision and build. I automate email, data entry, invoices, reports and scheduling with AI. Plus custom CRMs.",
+        "For small businesses: analysis, proposal and build. I automate email, data entry, invoices, reports and scheduling with AI. Plus custom CRMs.",
     },
     title: "Services",
     intro:
-      "For freelancers and independent professionals. I find where your work gets stuck, decide what's worth doing and automate it with your tools. AI handles what you used to do by hand: reading, sorting, summarizing and writing.",
+      "For small businesses with a small team. I find where your work gets stuck, decide what's worth doing and automate it with your tools. AI handles what you used to do by hand: reading, sorting, summarizing and writing.",
     useCases: {
       title: "What can be automated",
       note: "These are examples of what can be done, not client work.",

@@ -44,7 +44,7 @@ export function FaqList({ items }: { items: FaqItem[] }) {
     return (
       <div className="hm-faq">
         {items.map((item, i) => (
-          <details key={i} className="hm-faq-item" data-reveal>
+          <details key={i} className="hm-faq-item">
             <summary className="hm-faq-q">{item.q}</summary>
             <p className="hm-faq-a">{item.a}</p>
           </details>

@@ -43,7 +43,7 @@ test("moveBlock: records swap places, two stories ask for a body swap", () => {
 test("landing texts are editable keys with code fallback, both languages", () => {
   for (const loc of ["es", "en"] as const) {
     const keys = flattenCopy({ landing: landingCopy(loc) });
-    for (const k of ["landing.home.title", "landing.home.lead", "landing.more.services.steps.0.title", "landing.cases.2.body", "landing.home.faq.items.0.q", "landing.more.about.body", "landing.home.closing"]) {
+    for (const k of ["landing.home.title", "landing.home.lead", "landing.home.process.steps.0.title", "landing.home.cases.items.2.solves", "landing.home.faq.items.0.q", "landing.more.about.body", "landing.home.closing.title"]) {
       assert.ok(k in keys, `${loc} ${k}`);
     }
     // SEO meta stays in code.
