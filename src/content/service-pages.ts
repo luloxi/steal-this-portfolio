@@ -1,4 +1,5 @@
 import type { Locale } from "@/i18n/types";
+import { GROK_BOT_SHOWCASE } from "@/content/showcase";
 
 /**
  * One landing per search intent under /servicios/[slug] (/en/services/[slug], slugs in src/lib/routes.ts).
@@ -195,15 +196,11 @@ export const SERVICE_PAGES: ServicePage[] = [
         label: "Automatizar con Grok Bot",
         h1: "Automatizaciones con Grok Bot",
         metaTitle: "Automatizar con Grok Bot | Lulox",
-        metaDescription: "Armo y configuro bots con Grok Bot como motor principal: borradores para redes, clientes por WhatsApp y un asistente 24/7. Remoto desde Buenos Aires.",
+        metaDescription: "Armo y configuro bots con Grok Bot como motor principal: tus clientes al día, lo que cargás a mano cargado solo y tu newsletter y tus redes listos para aprobar. Remoto desde Buenos Aires.",
         question: "¿Qué se puede automatizar con Grok Bot?",
-        answer: "Con Grok Bot se pueden armar bots que trabajan solos: preparan borradores para redes, atienden clientes por WhatsApp y te arman boletines sobre lo que te interesa, como un asistente 24/7 que usa tus propias herramientas. Yo uso una flota así todos los días, y te ayudo a armar la tuya con permisos claros y aprobación humana.",
-        casesTitle: "Bots que ya uso",
-        cases: [
-          { title: "Borradores para redes", body: "Prepara posts para tus redes, con tu tono, para que los revises antes de publicar." },
-          { title: "Clientes por WhatsApp", body: "Responde consultas y hace seguimiento de clientes para que no se te pase ninguna conversación." },
-          { title: "Tu asistente 24/7", body: "Boletines sobre lo que te interesa y una mano con lo que hagas en internet, usando tus propias herramientas." },
-        ],
+        answer: "Con Grok Bot se pueden armar bots que trabajan solos: tienen al día a cada cliente, cargan lo que hoy hacés a mano y te dejan tu newsletter y tus redes listos para aprobar, usando tus propias herramientas. Yo uso una flota así todos los días, y te ayudo a armar la tuya con permisos claros y aprobación humana.",
+        casesTitle: "Por ejemplo",
+        cases: GROK_BOT_SHOWCASE.map((c) => c.copy.es),
         howTitle: "Cómo trabajamos",
         how: HOW_ES,
         faq: [
@@ -216,15 +213,11 @@ export const SERVICE_PAGES: ServicePage[] = [
         label: "Automate with Grok Bot",
         h1: "Automations with Grok Bot",
         metaTitle: "Automate with Grok Bot | Lulox",
-        metaDescription: "I build and set up bots with Grok Bot as the main engine: social media drafts, clients on WhatsApp and a 24/7 assistant. Remote from Buenos Aires.",
+        metaDescription: "I build and set up bots with Grok Bot as the main engine: your clients up to date, what you enter by hand entered on its own, and your newsletter and social media ready to approve. Remote from Buenos Aires.",
         question: "What can you automate with Grok Bot?",
-        answer: "With Grok Bot you can build bots that work on their own: they prepare social media drafts, look after clients on WhatsApp and put together newsletters about what you care about, like a 24/7 assistant using your own tools. I use a fleet like that every day, and I help you build yours with clear permissions and human approval.",
-        casesTitle: "Bots I already use",
-        cases: [
-          { title: "Social media drafts", body: "Prepares posts for your social media, in your voice, for you to review before they go out." },
-          { title: "Clients on WhatsApp", body: "Answers questions and follows up with clients so no conversation slips through." },
-          { title: "Your 24/7 assistant", body: "Newsletters about what you care about, and help with whatever you do online, using your own tools." },
-        ],
+        answer: "With Grok Bot you can build bots that work on their own: they keep every client up to date, enter what you type in by hand today and leave your newsletter and social media ready to approve, using your own tools. I use a fleet like that every day, and I help you build yours with clear permissions and human approval.",
+        casesTitle: "For example",
+        cases: GROK_BOT_SHOWCASE.map((c) => c.copy.en),
         howTitle: "How we work",
         how: HOW_EN,
         faq: [

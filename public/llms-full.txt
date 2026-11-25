@@ -7,7 +7,7 @@
 - Name: Luciano Oliva Bianco. Known as Lulox. Based in Buenos Aires, Argentina. Works remotely, in Spanish or English.
 - What he does: he used to write code; now he works on understanding problems and bottlenecks, deciding what is worth solving and automating it. Offer in three steps: diagnosis, decision, build. Plus custom CRMs and tools.
 - Main engines: Grok, Grok Bot and Hermes. n8n is a secondary option to connect tools.
-- He runs his own fleet of Grok Bot bots every day: social media drafts, clients on WhatsApp and a 24/7 assistant, with his review.
+- He runs his own fleet of Grok Bot bots every day, with his review.
 - Background: Research & Development at Input Output Global (Jul 2025 to Oct 2026), Fullstack Web3 developer at BuidlGuidl (Apr 2023 to May 2024), earlier web and press work. Ambassador for Midnight, IOG's privacy blockchain.
 - Profiles: X https://x.com/LuloxDev · GitHub https://github.com/luloxi · LinkedIn https://linkedin.com/in/lulox
 - Hire: https://lulox.com.ar/contratar (English: https://lulox.com.ar/en/hire)
@@ -91,9 +91,9 @@ A: You do. The system can live in your own Cloudflare account or the infrastruct
 Spanish: https://lulox.com.ar/servicios/grok-bot · English: https://lulox.com.ar/en/services/grok-bot
 
 Q: What can you automate with Grok Bot?
-A: With Grok Bot you can build bots that work on their own: they prepare social media drafts, look after clients on WhatsApp and put together newsletters about what you care about, like a 24/7 assistant using your own tools. I use a fleet like that every day, and I help you build yours with clear permissions and human approval.
+A: With Grok Bot you can build bots that work on their own: they keep every client up to date, enter what you type in by hand today and leave your newsletter and social media ready to approve, using your own tools. I use a fleet like that every day, and I help you build yours with clear permissions and human approval.
 
-Use cases (examples, not client work): Social media drafts: Prepares posts for your social media, in your voice, for you to review before they go out. Clients on WhatsApp: Answers questions and follows up with clients so no conversation slips through. Your 24/7 assistant: Newsletters about what you care about, and help with whatever you do online, using your own tools.
+Use cases (examples, not client work): Every client, up to date, without writing anything down: Notes from your meetings that take themselves, the email history, what you spent and what you got paid. And if you need to know something, you ask an AI chat. What you enter by hand today, entered on its own: Tickets, spreadsheets, emails or reports: they put themselves together and you just review and approve. Your newsletter and your social media, ready to approve: Drafts arrive ready, in your voice, and nothing goes out without your OK.
 
 Q: What is Grok Bot?
 A: Grok Bot is an agent that works with Grok and can use tools: browse, read and write files, connect to apps over MCP, run routines and prepare messages. I use it as the main engine of my automations, with written rules so it asks for approval before sending anything or touching sensitive data.
@@ -122,11 +122,11 @@ A: Yes. It connects with Gmail and Google Workspace, or with email on your own d
 Q: What about my clients' privacy?
 A: The agent only reads what it needs for its task and does not share data with third parties. Drafts and information stay in your accounts. To start, we can test with sample messages, so you see how it works before giving it access to real conversations.
 
-## What his Grok Bot fleet does every day (his own work, not client results)
+## Examples on the home page (examples, not client results)
 
-- Social media drafts: Prepares posts for your social media, in your voice.
-- Clients and errands on WhatsApp: Answers questions, follows up with clients and helps with errands on WhatsApp, so no conversation slips through.
-- Your 24/7 assistant: Newsletters about what you care about, and an assistant that helps with whatever you do online, using your own tools.
+- Every client, up to date, without writing anything down: Notes from your meetings that take themselves, the email history, what you spent and what you got paid. And if you need to know something, you ask an AI chat.
+- What you enter by hand today, entered on its own: Tickets, spreadsheets, emails or reports: they put themselves together and you just review and approve.
+- Your newsletter and your social media, ready to approve: Drafts arrive ready, in your voice, and nothing goes out without your OK.
 
 ## Featured projects (demo videos recorded with test data)
 
@@ -148,7 +148,7 @@ Demo video: https://lulox.com.ar/demos/garpen.mp4
 
 ### Bot fleet
 
-A group of bots built with Grok Bot as the main engine and Hermes for tasks on his own machines. They prepare social media drafts, help with clients and errands on WhatsApp, and work as a 24/7 assistant (newsletters, help with whatever you do online). Status: in daily use.
+A group of bots built with Grok Bot as the main engine and Hermes for tasks on his own machines. They prepare social media drafts, help with clients and errands, and work as a 24/7 assistant (newsletters, help with whatever you do online). Status: in daily use.
 
 ## Example use cases (examples of what can be done, not client work)
 
@@ -212,7 +212,7 @@ The contact form on https://lulox.com.ar/contratar is the way to send a message 
 3. Wait for the Turnstile check. If it asks for an interaction, hand it to your human.
 4. Press "Enviar" / "Send". A status message appears under the button.
 
-What to include in the request: the task the person repeats by hand, the tools it touches (email, spreadsheets, WhatsApp, calendar, CRM), roughly how often it happens, any deadline, and the person's name and email. Replies go to that email; Luciano reads every request himself.
+What to include in the request: the task the person repeats by hand, the tools it touches (email, spreadsheets, calendar, CRM), roughly how often it happens, any deadline, and the person's name and email. Replies go to that email; Luciano reads every request himself.
 
 What he can build for agents: a client's CRM, calendar or email set up so an AI agent can use them, with narrow permissions and human approval before anything goes out.
 

@@ -5,28 +5,28 @@ import type { Locale } from "@/i18n/types";
  * Project previews live in src/content/project-media.ts. Plain words, no stack names, no em dashes.
  */
 
-export type ShowcaseArt = "social" | "whatsapp" | "routines";
+export type ShowcaseArt = "clients" | "autofill" | "drafts";
 
 export const GROK_BOT_SHOWCASE: { art: ShowcaseArt; copy: Record<Locale, { title: string; body: string }> }[] = [
   {
-    art: "social",
+    art: "clients",
     copy: {
-      es: { title: "Borradores para redes", body: "Posts para tus redes, con tu tono." },
-      en: { title: "Social media drafts", body: "Posts for your social media, in your voice." },
+      es: { title: "Cada cliente, al día y sin anotar nada", body: "Notas de tus reuniones que se toman solas, el historial de mails, lo que gastaste y lo que te pagaron. Y si necesitás saber algo, se lo preguntás a un chat con IA." },
+      en: { title: "Every client, up to date, without writing anything down", body: "Notes from your meetings that take themselves, the email history, what you spent and what you got paid. And if you need to know something, you ask an AI chat." },
     },
   },
   {
-    art: "whatsapp",
+    art: "autofill",
     copy: {
-      es: { title: "Clientes por WhatsApp", body: "Responde consultas y sigue a tus clientes para que ninguna conversación quede colgada." },
-      en: { title: "Clients on WhatsApp", body: "Answers questions and follows up with your clients so no conversation is left hanging." },
+      es: { title: "Lo que hoy cargás a mano, cargado solo", body: "Tickets, planillas, mails o reportes: se arman solos y vos solo revisás y aprobás." },
+      en: { title: "What you enter by hand today, entered on its own", body: "Tickets, spreadsheets, emails or reports: they put themselves together and you just review and approve." },
     },
   },
   {
-    art: "routines",
+    art: "drafts",
     copy: {
-      es: { title: "Tu asistente 24/7", body: "Boletines sobre lo que te interesa y un asistente que te da una mano con lo que hagas en internet, usando tus propias herramientas." },
-      en: { title: "Your 24/7 assistant", body: "Newsletters about what you care about, and an assistant that helps with whatever you do online, using your own tools." },
+      es: { title: "Tu newsletter y tus redes, listos para aprobar", body: "Los borradores llegan armados con tu tono y no sale nada sin tu OK." },
+      en: { title: "Your newsletter and your social media, ready to approve", body: "Drafts arrive ready, in your voice, and nothing goes out without your OK." },
     },
   },
 ];

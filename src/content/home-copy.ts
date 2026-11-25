@@ -46,7 +46,7 @@ export const homeCopy: Record<Locale, {
         },
         {
           q: "¿Con qué herramientas trabajás?",
-          a: "Con las que ya usás: mail, planillas, WhatsApp, tu agenda o tu sistema de clientes. No tenés que cambiar nada.",
+          a: "Con las que ya usás: mail, planillas, tu agenda o tu sistema de clientes. No tenés que cambiar nada.",
         },
         {
           q: "¿Hacés CRMs y sistemas a medida?",
@@ -92,7 +92,7 @@ export const homeCopy: Record<Locale, {
         },
         {
           q: "What tools do you work with?",
-          a: "The ones you already use: email, spreadsheets, WhatsApp, your calendar or your client system. You don't have to switch anything.",
+          a: "The ones you already use: email, spreadsheets, your calendar or your client system. You don't have to switch anything.",
         },
         {
           q: "Do you build custom CRMs and systems?",
