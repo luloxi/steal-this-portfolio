@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useMemo, type ReactNode } from "react";
 import { getMessages, type Messages } from "./messages";
 import { applyCopy, type CopyOverrides } from "./copy-overrides";
+import { landingCopy, type LandingCopy } from "./landing";
 import type { Locale } from "./types";
 import { LOCALE_COOKIE, LOCALE_STORAGE_KEY, writePrefCookie } from "@/lib/prefs-shared";
 import { localeFromPath, localizePath, switchLocalePath } from "@/lib/routes";
@@ -16,6 +17,10 @@ type LocaleContextValue = {
   /** Spanish site path ("/contratar") -> URL in the current language ("/en/hire"). */
   href: (esPath: string) => string;
   t: Messages;
+  /** Landing texts (code defaults + saved edits) for the current language. */
+  landing: LandingCopy;
+  /** Messages for any language with saved edits applied (e.g. to mirror a change in the other one). */
+  messagesFor: (locale: Locale) => Messages;
 };
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
@@ -91,6 +96,8 @@ export function LocaleProvider({
       toggleLocale,
       href,
       t: applyCopy(getMessages(locale), overrides?.[locale]),
+      landing: applyCopy({ landing: landingCopy(locale) }, overrides?.[locale]).landing,
+      messagesFor: (l: Locale) => applyCopy(getMessages(l), overrides?.[l]),
     }),
     [locale, setLocale, toggleLocale, href, overrides],
   );

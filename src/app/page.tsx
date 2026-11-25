@@ -8,6 +8,9 @@ import { getRequestLocale } from "@/lib/prefs";
 import { pathPair } from "@/lib/routes";
 import { faqLd, personLd, serviceLd, websiteLd } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/site-settings-db";
+import { getCopyOverrides } from "@/lib/site-copy";
+import { applyCopy } from "@/i18n/copy-overrides";
+import { landingCopy } from "@/i18n/landing";
 import "./home.css";
 import "./showcase.css";
 import "./scroll-motion.css";
@@ -39,14 +42,16 @@ const KNOWS_ABOUT = {
  * Projects, blog and the full story live on their own pages.
  */
 export default async function HomePage() {
-  const [locale, settings] = await Promise.all([getRequestLocale(), getSiteSettings()]);
+  const [locale, settings, overrides] = await Promise.all([getRequestLocale(), getSiteSettings(), getCopyOverrides()]);
   const c = homeCopy[locale];
+  // The FAQ schema follows the edited FAQ (what visitors read).
+  const faq = applyCopy({ landing: landingCopy(locale) }, overrides[locale]).landing.home.faq;
   const svc = servicesCopy[locale];
   const graph = [
     personLd(settings, locale, JOB_TITLE[locale], [...KNOWS_ABOUT[locale]]),
     websiteLd(settings, locale, c.meta.description),
     serviceLd(settings, locale, { name: svc.title, description: c.meta.description, offers: svc.offers }),
-    faqLd(c.faq.items),
+    faqLd(faq.items),
   ];
   return (
     <>

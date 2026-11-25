@@ -19,6 +19,8 @@ import { insertSection, splitSections } from "@/lib/md-sections";
 import { insertJob, insertStory, parseLayout, recordsAfterStory, serializeLayout, type LayoutItem } from "@/lib/page-layout";
 import { Publications } from "@/components/publications";
 import { Talks } from "@/components/talks";
+import { AboutReorder } from "@/components/about-reorder";
+import { TALKS } from "@/content/talks";
 import { DEFAULT_PUBLICATIONS, stripPublicationLinksInBody, type Publication } from "@/lib/publications";
 import { saveCopy, useEditMode } from "@/components/admin-context";
 import { useRouter } from "next/navigation";
@@ -88,7 +90,7 @@ export function AboutView({ publications }: { publications: readonly Publication
   const pubUrls = [...publications, ...DEFAULT_PUBLICATIONS].map((p) => p.url);
   const body = editOn ? about.body : stripPublicationLinksInBody(about.body, pubUrls);
   const storyCount = splitSections(about.body.replace(/\r\n?/g, "\n")).sections.length;
-  const layout = parseLayout(about.layout, storyCount, about.timeline.length, 1);
+  const layout = parseLayout(about.layout, storyCount, about.timeline.length, 1, TALKS.length > 0 ? 1 : 0);
   const recordsBySection = recordsAfterStory(layout);
 
   return (
@@ -103,6 +105,7 @@ export function AboutView({ publications }: { publications: readonly Publication
             <span className="cp-nav-corner cp-nav-corner-br" />
           </span>
           <div className="cp-panel-inner space-y-4">
+            {storyCount > 0 ? <AboutReorder body={about.body} layoutRaw={about.layout} timeline={about.timeline} /> : null}
             <CopyText as="p" className="cp-headline" copyKey="about.headline" value={about.headline} />
             <CopyMarkdown
               copyKey="about.body"
@@ -112,6 +115,7 @@ export function AboutView({ publications }: { publications: readonly Publication
                 <>
                   {(recordsBySection.get(si) ?? []).map((r) => {
                     if (r.kind === "pubs") return <Publications key={`pubs-${r.index}`} items={publications} />;
+                    if (r.kind === "talks") return <Talks key={`talks-${r.index}`} />;
                     const item = about.timeline[r.index];
                     return item ? <JobCard key={`job-${r.index}`} item={item} i={r.index} label={t.ui.experience} /> : null;
                   })}
@@ -120,8 +124,12 @@ export function AboutView({ publications }: { publications: readonly Publication
               )}
             />
             {/* A body without "## " sections has no slots: the block goes right after it. */}
-            {storyCount === 0 ? <Publications items={publications} /> : null}
-            <Talks />
+            {storyCount === 0 ? (
+              <>
+                <Publications items={publications} />
+                <Talks />
+              </>
+            ) : null}
           </div>
         </div>
 

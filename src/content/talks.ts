@@ -7,7 +7,8 @@ export type TalkPhoto = { src: string; width: number; height: number; alt: { es:
 
 type TalkCopy = { before: string; link: string; after: string };
 
-export type Talk = { url: string; date: string; es: TalkCopy; en: TalkCopy; photos: readonly TalkPhoto[] };
+/** image: the event's own artwork (e.g. its logo), shown small next to the text. */
+export type Talk = { url: string; date: string; es: TalkCopy; en: TalkCopy; image?: TalkPhoto; photos: readonly TalkPhoto[] };
 
 export const TALKS: readonly Talk[] = [
   {
@@ -22,6 +23,13 @@ export const TALKS: readonly Talk[] = [
       before: "In April 2025 I gave the talk ",
       link: "“SAMI, an AI hidden among humans”",
       after: " at Aleph Hub, Buenos Aires, with a live demo of a game where players have to figure out which of them is the AI.",
+    },
+    // SAMI logo, the cover art of the Luma event page.
+    image: {
+      src: "/talks/sami-logo.webp",
+      width: 800,
+      height: 800,
+      alt: { es: "Logo de SAMI: una cara sonriente de dos ojos cuadrados en celeste sobre fondo violeta", en: "SAMI logo: a smiling face with two square light blue eyes on a purple background" },
     },
     photos: [],
   },

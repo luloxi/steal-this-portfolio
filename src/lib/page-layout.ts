@@ -5,21 +5,25 @@
  * Story order always follows the Markdown body; the layout places records
  * between stories. Unknown/missing items are tolerated (white-label safe).
  */
-export type LayoutItem = { kind: "story" | "job" | "pubs"; index: number };
+export type LayoutItem = { kind: "story" | "job" | "pubs" | "talks"; index: number };
 
-/** pubs: how many publication blocks the page has (0 or 1); unplaced ones go after the last story. */
-export function parseLayout(raw: string | undefined, stories: number, jobs: number, pubs = 0): LayoutItem[] {
+/**
+ * pubs: how many publication blocks the page has (0 or 1); unplaced ones go after the last story.
+ * talks: same for the talks block (0 or 1); an unplaced one goes at the very end.
+ */
+export function parseLayout(raw: string | undefined, stories: number, jobs: number, pubs = 0, talks = 0): LayoutItem[] {
   const seenS = new Set<number>();
   const seenJ = new Set<number>();
   const seenP = new Set<number>();
+  const seenT = new Set<number>();
   const out: LayoutItem[] = [];
   for (const tok of (raw ?? "").split(",")) {
-    const m = /^\s*(story|job|pubs):(\d+)\s*$/.exec(tok);
+    const m = /^\s*(story|job|pubs|talks):(\d+)\s*$/.exec(tok);
     if (!m) continue;
     const kind = m[1] as LayoutItem["kind"];
     const index = Number(m[2]);
-    const max = kind === "story" ? stories : kind === "job" ? jobs : pubs;
-    const seen = kind === "story" ? seenS : kind === "job" ? seenJ : seenP;
+    const max = kind === "story" ? stories : kind === "job" ? jobs : kind === "pubs" ? pubs : talks;
+    const seen = kind === "story" ? seenS : kind === "job" ? seenJ : kind === "pubs" ? seenP : seenT;
     if (index >= max || seen.has(index)) continue;
     seen.add(index);
     out.push({ kind, index });
@@ -34,7 +38,28 @@ export function parseLayout(raw: string | undefined, stories: number, jobs: numb
     out.splice(at, 0, { kind: "pubs", index: i });
   }
   for (let i = 0; i < jobs; i++) if (!seenJ.has(i)) out.push({ kind: "job", index: i });
+  for (let i = 0; i < talks; i++) if (!seenT.has(i)) out.push({ kind: "talks", index: i });
   return out;
+}
+
+/**
+ * Move one block up (-1) or down (+1). Records just change place in the list.
+ * Two stories trade places in the Markdown body instead (story order is the
+ * body's order), so the list keeps its story indexes and `swapStories` says
+ * which two body sections to swap. Out of range = null.
+ */
+export function moveBlock(items: LayoutItem[], from: number, dir: -1 | 1): { items: LayoutItem[]; swapStories: [number, number] | null } | null {
+  const to = from + dir;
+  if (from < 0 || from >= items.length || to < 0 || to >= items.length) return null;
+  const a = items[from];
+  const b = items[to];
+  if (a.kind === "story" && b.kind === "story") {
+    return { items: items.slice(), swapStories: [a.index, b.index] };
+  }
+  const out = items.slice();
+  out[from] = b;
+  out[to] = a;
+  return { items: out, swapStories: null };
 }
 
 export function serializeLayout(items: LayoutItem[]): string {

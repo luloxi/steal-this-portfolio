@@ -2,19 +2,21 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { useAdminPanel, useIsAdmin } from "@/components/admin-context";
+import { useAdminPanel, useEditModeSwitch, useIsAdmin } from "@/components/admin-context";
 import { authClient } from "@/lib/auth/client";
 import { useLocale } from "@/i18n/locale-provider";
 
 /**
  * Header avatar for a signed-in user: the Google profile photo. Click opens a
- * small menu with "Personalizar" (admin only, opens the admin panel) and "Salir".
+ * small menu. Owner: "Modo edición" (switch: click any text to edit it),
+ * "Ajustes del sitio" (settings panel) and "Visitas". Everyone: "Salir".
  */
 export function ProfileMenu({ image, name }: { image?: string; name?: string }) {
   const { locale } = useLocale();
   const es = locale === "es";
   const isAdmin = useIsAdmin();
   const { setOpen: setPanelOpen } = useAdminPanel();
+  const edit = useEditModeSwitch();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [broken, setBroken] = useState(false);
@@ -63,6 +65,20 @@ export function ProfileMenu({ image, name }: { image?: string; name?: string }) 
             <>
               <button
                 type="button"
+                role="menuitemcheckbox"
+                aria-checked={edit.on}
+                className="pm-item pm-switch"
+                data-testid="edit-mode-switch"
+                onClick={() => {
+                  setOpen(false);
+                  edit.set(!edit.on);
+                }}
+              >
+                <span>{es ? "Modo edición" : "Edit mode"}</span>
+                <span className={`pm-pill${edit.on ? " is-on" : ""}`} aria-hidden>{edit.on ? (es ? "Sí" : "On") : "No"}</span>
+              </button>
+              <button
+                type="button"
                 role="menuitem"
                 className="pm-item"
                 onClick={() => {
@@ -70,7 +86,7 @@ export function ProfileMenu({ image, name }: { image?: string; name?: string }) 
                   setPanelOpen(true);
                 }}
               >
-                {es ? "Personalizar" : "Customize"}
+                {es ? "Ajustes del sitio" : "Site settings"}
               </button>
               <Link
                 href="/admin/visitas"

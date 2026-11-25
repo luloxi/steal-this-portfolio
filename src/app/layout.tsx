@@ -114,7 +114,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // Per-request: language from the URL (proxy.ts header), theme from its cookie (else dark).
-  const [{ locale, theme }, overrides, viewer, order, settings] = await Promise.all([
+  const [{ locale, theme }, cachedOverrides, viewer, order, settings] = await Promise.all([
     getServerPrefs(),
     getCopyOverrides(),
     getViewer(),
@@ -123,6 +123,8 @@ export default async function RootLayout({
   ]);
   // Admin = allowlisted Google account; any other session is a plain user (referrals only).
   const isAdmin = viewer?.isAdmin === true;
+  // The owner edits from what is in D1 right now; visitors read the cached copy (up to a minute old).
+  const overrides = isAdmin ? await getCopyOverrides(true) : cachedOverrides;
   // Project titles for the admin panel (admin only: visitors never pay for this read).
   let projectLabels: Record<string, { es: string; en: string }> = {};
   if (isAdmin) {
