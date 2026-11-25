@@ -52,25 +52,30 @@ function Autofill() {
   );
 }
 
-/** A newsletter and a post drafting themselves, waiting for your OK. */
-function Drafts() {
+/** A personal newsletter filling in, with topics popping in: work, plans nearby, trips, music. */
+function Newsletters() {
   return (
     <svg className="sc-art" {...box}>
-      <rect x="10" y="14" width="62" height="70" rx="8" className="sc-panel" />
-      <path d="M10 22 l31 20 l31 -20" className="sc-stroke" />
-      {[0, 1].map((i) => (
-        <rect key={i} x="18" y={54 + i * 10} width={[44, 32][i]} height="5" rx="2.5" className="sc-type" style={{ animationDelay: `${i * 0.5}s` }} />
-      ))}
-      <rect x="80" y="8" width="66" height="60" rx="8" className="sc-panel" />
-      <circle cx="92" cy="20" r="5" className="sc-avatar" />
-      <rect x="100" y="18" width="30" height="4" rx="2" className="sc-line" />
+      <rect x="10" y="12" width="74" height="74" rx="8" className="sc-panel" />
+      <path d="M10 20 l37 22 l37 -22" className="sc-stroke" />
       {[0, 1, 2].map((i) => (
-        <rect key={i} x="88" y={32 + i * 9} width={[50, 44, 30][i]} height="5" rx="2.5" className="sc-type" style={{ animationDelay: `${0.4 + i * 0.5}s` }} />
+        <rect key={i} x="20" y={52 + i * 9} width={[54, 44, 32][i]} height="5" rx="2.5" className="sc-type" style={{ animationDelay: `${i * 0.5}s` }} />
       ))}
-      <g className="sc-pop" style={{ animationDelay: "2s" }}>
-        <rect x="96" y="72" width="50" height="18" rx="9" className="sc-pill" />
-        <text x="121" y="84" textAnchor="middle" className="sc-label">OK</text>
-      </g>
+      {[
+        // work: briefcase
+        <path key="w" d="M-6 -2 h12 v8 h-12 z M-3 -2 v-3 h6 v3" />,
+        // plans nearby: map pin
+        <path key="p" d="M0 7 c-5 -6 -6 -8 -6 -11 a6 6 0 0 1 12 0 c0 3 -1 5 -6 11 z M0 -6 a2 2 0 1 0 0.01 0" />,
+        // trips: plane
+        <path key="t" d="M-7 1 l14 -6 l-4 12 l-3 -5 z M0 2 l-2 4" />,
+        // artists you follow: music note
+        <path key="m" d="M-1 5 v-11 l7 -2 v10 M-1 5 a2.5 2 0 1 1 -0.01 0 M6 2 a2.5 2 0 1 1 -0.01 0" />,
+      ].map((icon, i) => (
+        <g key={i} className="sc-pop" style={{ animationDelay: `${0.6 + i * 0.5}s` }}>
+          <circle cx={i % 2 ? 137 : 107} cy={i < 2 ? 31 : 63} r="13" className="sc-pill" />
+          <g transform={`translate(${i % 2 ? 137 : 107} ${i < 2 ? 31 : 63})`} className="sc-stroke">{icon}</g>
+        </g>
+      ))}
     </svg>
   );
 }
@@ -78,7 +83,7 @@ function Drafts() {
 const ARTS: Record<ShowcaseArt, () => React.ReactElement> = {
   clients: Clients,
   autofill: Autofill,
-  drafts: Drafts,
+  newsletters: Newsletters,
 };
 
 export function ShowcaseVisual({ art }: { art: ShowcaseArt }) {

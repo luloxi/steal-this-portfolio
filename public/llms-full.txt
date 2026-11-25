@@ -91,9 +91,9 @@ A: You do. The system can live in your own Cloudflare account or the infrastruct
 Spanish: https://lulox.com.ar/servicios/grok-bot · English: https://lulox.com.ar/en/services/grok-bot
 
 Q: What can you automate with Grok Bot?
-A: With Grok Bot you can build bots that work on their own: they keep every client up to date, enter what you type in by hand today and leave your newsletter and social media ready to approve, using your own tools. I use a fleet like that every day, and I help you build yours with clear permissions and human approval.
+A: With Grok Bot you can build bots that work on their own: they keep every client up to date, enter the data you type in by hand today and put together newsletters made for you, about work and your life, using your own tools. I use a fleet like that every day, and I help you build yours with clear permissions and human approval.
 
-Use cases (examples, not client work): Every client, up to date, without writing anything down: Notes from your meetings that take themselves, the email history, what you spent and what you got paid. And if you need to know something, you ask an AI chat. What you enter by hand today, entered on its own: Tickets, spreadsheets, emails or reports: they put themselves together and you just review and approve. Your newsletter and your social media, ready to approve: Drafts arrive ready, in your voice, and nothing goes out without your OK.
+Use cases (examples, not client work): Every client, up to date, without writing anything down: Notes from your meetings that take themselves, the history of emails and chats from other platforms, what you spent and what you got paid. And if you need to know something, you ask an AI chat. Stop entering data by hand: Tickets, spreadsheets, emails or reports get entered on their own. You just check that it's right. Newsletters made for you, about work and your life: You get news from your field, plus plans to go out in your area, trips you might like, or what's new from the artists you follow.
 
 Q: What is Grok Bot?
 A: Grok Bot is an agent that works with Grok and can use tools: browse, read and write files, connect to apps over MCP, run routines and prepare messages. I use it as the main engine of my automations, with written rules so it asks for approval before sending anything or touching sensitive data.
@@ -124,9 +124,9 @@ A: The agent only reads what it needs for its task and does not share data with 
 
 ## Examples on the home page (examples, not client results)
 
-- Every client, up to date, without writing anything down: Notes from your meetings that take themselves, the email history, what you spent and what you got paid. And if you need to know something, you ask an AI chat.
-- What you enter by hand today, entered on its own: Tickets, spreadsheets, emails or reports: they put themselves together and you just review and approve.
-- Your newsletter and your social media, ready to approve: Drafts arrive ready, in your voice, and nothing goes out without your OK.
+- Every client, up to date, without writing anything down: Notes from your meetings that take themselves, the history of emails and chats from other platforms, what you spent and what you got paid. And if you need to know something, you ask an AI chat.
+- Stop entering data by hand: Tickets, spreadsheets, emails or reports get entered on their own. You just check that it's right.
+- Newsletters made for you, about work and your life: You get news from your field, plus plans to go out in your area, trips you might like, or what's new from the artists you follow.
 
 ## Featured projects (demo videos recorded with test data)
 
