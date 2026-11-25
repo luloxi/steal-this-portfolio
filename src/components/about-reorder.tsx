@@ -6,11 +6,12 @@ import { saveCopy, useEditMode } from "@/components/admin-context";
 import { useLocale } from "@/i18n/locale-provider";
 import type { Locale } from "@/i18n/types";
 import { splitSections, swapSections } from "@/lib/md-sections";
+import { TALKS } from "@/content/talks";
 import { moveBlock, parseLayout, serializeLayout, type LayoutItem } from "@/lib/page-layout";
 
 const L = {
-  es: { open: "Ordenar bloques", close: "Listo", title: "Orden de Sobre mí", intro: "La introducción queda siempre arriba. Usá las flechas para mover cada bloque.", up: "Subir", down: "Bajar", job: "Experiencia", pubs: "Publicaciones", talks: "Charlas", saving: "Guardando…", error: "No se pudo guardar", session: "Sesión vencida: volvé a ingresar.", apart: "En inglés el orden es distinto: cambiá a English para ordenarlo ahí.", moved: "movido a la posición" },
-  en: { open: "Reorder blocks", close: "Done", title: "About page order", intro: "The intro always stays on top. Use the arrows to move each block.", up: "Move up", down: "Move down", job: "Experience", pubs: "Publications", talks: "Talks", saving: "Saving…", error: "Could not save", session: "Session expired: sign in again.", apart: "The Spanish order is different: switch to Español to reorder it there.", moved: "moved to position" },
+  es: { open: "Ordenar bloques", close: "Listo", title: "Orden de Sobre mí", intro: "La introducción queda siempre arriba. Usá las flechas para mover cada bloque.", up: "Subir", down: "Bajar", job: "Experiencia", pubs: "Publicaciones", talks: "Charlas", talk: "Charla", saving: "Guardando…", error: "No se pudo guardar", session: "Sesión vencida: volvé a ingresar.", apart: "En inglés el orden es distinto: cambiá a English para ordenarlo ahí.", moved: "movido a la posición" },
+  en: { open: "Reorder blocks", close: "Done", title: "About page order", intro: "The intro always stays on top. Use the arrows to move each block.", up: "Move up", down: "Move down", job: "Experience", pubs: "Publications", talks: "Talks", talk: "Talk", saving: "Saving…", error: "Could not save", session: "Session expired: sign in again.", apart: "The Spanish order is different: switch to Español to reorder it there.", moved: "moved to position" },
 } as const;
 
 type Job = { org: string; title: string };
@@ -21,9 +22,9 @@ export function sameText(a: string, b: string): boolean {
   return norm(a) === norm(b);
 }
 
-function layoutFor(body: string, layoutRaw: string, jobs: number): { stories: number; layout: LayoutItem[] } {
+function layoutFor(body: string, layoutRaw: string, jobs: number, talkCount = TALKS.length): { stories: number; layout: LayoutItem[] } {
   const stories = splitSections(body.replace(/\r\n?/g, "\n")).sections.length;
-  return { stories, layout: parseLayout(layoutRaw, stories, jobs, 1, 1) };
+  return { stories, layout: parseLayout(layoutRaw, stories, jobs, 1, talkCount > 0 ? 1 : 0, talkCount) };
 }
 
 /**
@@ -51,7 +52,11 @@ export function AboutReorder({ body, layoutRaw, timeline }: { body: string; layo
   const titles = splitSections(body.replace(/\r\n?/g, "\n")).sections.map((s) => s.title.replace(/[*_`]/g, ""));
 
   const label = (it: LayoutItem) =>
-    it.kind === "story" ? titles[it.index] ?? `#${it.index + 1}` : it.kind === "job" ? `${T.job}: ${timeline[it.index]?.org || timeline[it.index]?.title || it.index + 1}` : it.kind === "pubs" ? T.pubs : T.talks;
+    it.kind === "story" ? titles[it.index] ?? `#${it.index + 1}`
+    : it.kind === "job" ? `${T.job}: ${timeline[it.index]?.org || timeline[it.index]?.title || it.index + 1}`
+    : it.kind === "pubs" ? T.pubs
+    : it.kind === "talk" ? `${T.talk}: ${TALKS[it.index]?.[lang].link ?? it.index + 1}`
+    : T.talks;
 
   const applyTo = async (loc: Locale, srcBody: string, items: LayoutItem[], from: number, dir: -1 | 1): Promise<string | null> => {
     const r = moveBlock(items, from, dir);

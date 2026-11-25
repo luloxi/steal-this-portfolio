@@ -5,25 +5,30 @@
  * Story order always follows the Markdown body; the layout places records
  * between stories. Unknown/missing items are tolerated (white-label safe).
  */
-export type LayoutItem = { kind: "story" | "job" | "pubs" | "talks"; index: number };
+export type LayoutItem = { kind: "story" | "job" | "pubs" | "talks" | "talk"; index: number };
 
 /**
  * pubs: how many publication blocks the page has (0 or 1); unplaced ones go after the last story.
  * talks: same for the talks block (0 or 1); an unplaced one goes at the very end.
+ * talkItems: how many individual talks exist. When > 0, `talks:0` (and unplaced talks)
+ * expand into `talk:N` items so each talk can sit among jobs. Saved layouts may still
+ * use the old `talks:0` token.
  */
-export function parseLayout(raw: string | undefined, stories: number, jobs: number, pubs = 0, talks = 0): LayoutItem[] {
+export function parseLayout(raw: string | undefined, stories: number, jobs: number, pubs = 0, talks = 0, talkItems = 0): LayoutItem[] {
   const seenS = new Set<number>();
   const seenJ = new Set<number>();
   const seenP = new Set<number>();
-  const seenT = new Set<number>();
+  const seenBlock = new Set<number>();
+  const seenTalk = new Set<number>();
   const out: LayoutItem[] = [];
+  const talksBlockMax = Math.max(talks, talkItems > 0 ? 1 : 0);
   for (const tok of (raw ?? "").split(",")) {
-    const m = /^\s*(story|job|pubs|talks):(\d+)\s*$/.exec(tok);
+    const m = /^\s*(story|job|pubs|talks|talk):(\d+)\s*$/.exec(tok);
     if (!m) continue;
     const kind = m[1] as LayoutItem["kind"];
     const index = Number(m[2]);
-    const max = kind === "story" ? stories : kind === "job" ? jobs : kind === "pubs" ? pubs : talks;
-    const seen = kind === "story" ? seenS : kind === "job" ? seenJ : kind === "pubs" ? seenP : seenT;
+    const max = kind === "story" ? stories : kind === "job" ? jobs : kind === "pubs" ? pubs : kind === "talks" ? talksBlockMax : talkItems;
+    const seen = kind === "story" ? seenS : kind === "job" ? seenJ : kind === "pubs" ? seenP : kind === "talks" ? seenBlock : seenTalk;
     if (index >= max || seen.has(index)) continue;
     seen.add(index);
     out.push({ kind, index });
@@ -38,7 +43,35 @@ export function parseLayout(raw: string | undefined, stories: number, jobs: numb
     out.splice(at, 0, { kind: "pubs", index: i });
   }
   for (let i = 0; i < jobs; i++) if (!seenJ.has(i)) out.push({ kind: "job", index: i });
-  for (let i = 0; i < talks; i++) if (!seenT.has(i)) out.push({ kind: "talks", index: i });
+  if (talkItems > 0) {
+    const unplaced: LayoutItem[] = [];
+    for (let i = 0; i < talkItems; i++) if (!seenTalk.has(i)) unplaced.push({ kind: "talk", index: i });
+    if (unplaced.length) {
+      if (seenBlock.size) {
+        const expanded: LayoutItem[] = [];
+        for (const it of out) {
+          if (it.kind === "talks") expanded.push(...unplaced);
+          else expanded.push(it);
+        }
+        return expanded;
+      }
+      out.push(...unplaced);
+    } else {
+      return out.filter((it) => it.kind !== "talks");
+    }
+    return out.filter((it) => it.kind !== "talks");
+  }
+  for (let i = 0; i < talks; i++) if (!seenBlock.has(i)) out.push({ kind: "talks", index: i });
+  return out;
+}
+
+/** Talk indexes that share a records-after-story group with at least one job. */
+export function talksInTimeline(items: LayoutItem[]): Set<number> {
+  const out = new Set<number>();
+  for (const recs of recordsAfterStory(items).values()) {
+    if (!recs.some((r) => r.kind === "job")) continue;
+    for (const r of recs) if (r.kind === "talk") out.add(r.index);
+  }
   return out;
 }
 

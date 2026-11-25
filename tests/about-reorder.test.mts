@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { moveBlock, parseLayout, serializeLayout } from "../src/lib/page-layout.ts";
+import { moveBlock, parseLayout, serializeLayout, talksInTimeline } from "../src/lib/page-layout.ts";
 import { splitSections, swapSections } from "../src/lib/md-sections.ts";
 import { applyCopy, flattenCopy } from "../src/i18n/copy-overrides.ts";
 import { landingCopy } from "../src/i18n/landing.ts";
@@ -55,3 +55,29 @@ test("landing texts are editable keys with code fallback, both languages", () =>
   // The English landing says AI, never IA.
   assert.doesNotMatch(Object.values(flattenCopy(landingCopy("en"))).join(" "), /\bIA\b/);
 });
+
+test("individual talks: talks:0 expands, empty block is dropped, placement among jobs is a milestone", () => {
+  // Unplaced talks become talk:N at the end (or where talks:0 sat).
+  assert.equal(serializeLayout(parseLayout("story:0,story:1", 2, 1, 1, 1, 1)), "story:0,story:1,pubs:0,job:0,talk:0");
+  assert.equal(serializeLayout(parseLayout("talks:0,story:0", 1, 0, 0, 1, 2)), "talk:0,talk:1,story:0");
+  assert.equal(serializeLayout(parseLayout("story:0,job:0,talk:0", 1, 1, 0, 1, 1)), "story:0,job:0,talk:0");
+  // A leftover talks:0 with every talk already placed disappears.
+  assert.equal(serializeLayout(parseLayout("story:0,talk:0,talks:0", 1, 0, 0, 1, 1)), "story:0,talk:0");
+  const among = parseLayout("story:0,job:0,talk:0,job:1", 1, 2, 0, 1, 1);
+  assert.deepEqual([...talksInTimeline(among)], [0]);
+  const leftover = parseLayout("story:0,job:0,story:1,talk:0", 2, 1, 0, 1, 1);
+  assert.equal(talksInTimeline(leftover).size, 0);
+  // Two talks next to a job are both milestones; a later unplaced one stays out.
+  const mixed = parseLayout("story:0,job:0,talk:0,story:1", 2, 1, 0, 1, 2);
+  assert.deepEqual([...talksInTimeline(mixed)], [0]);
+  assert.match(serializeLayout(mixed), /story:1,talk:1$/);
+});
+
+test("moveBlock can walk a talk into the experience group", () => {
+  const l = parseLayout("story:0,job:0,story:1,talk:0", 2, 1, 0, 1, 1);
+  assert.equal(talksInTimeline(l).size, 0);
+  const up = moveBlock(l, 3, -1)!;
+  assert.equal(serializeLayout(up.items), "story:0,job:0,talk:0,story:1");
+  assert.deepEqual([...talksInTimeline(up.items)], [0]);
+});
+
