@@ -54,13 +54,9 @@
 }
 .hm-anchor { scroll-margin-top: 5rem; }
 .hm-sublead { margin: -.4rem 0 .2rem; max-width: 44rem; font-size: 1rem; line-height: 1.6; color: color-mix(in oklab, var(--foreground) 75%, transparent); }
-.hm-more { cursor: pointer; align-self: flex-start; font-size: .92rem; font-weight: 600; color: var(--accent-2); text-decoration: none; border-bottom: 1px solid color-mix(in oklab, var(--accent-2) 40%, transparent); transition: border-color .2s ease, color .2s ease; }
-.hm-more:hover, .hm-more:focus-visible { border-color: var(--accent-2); }
-.hm-more.is-dim { color: var(--muted); border-color: color-mix(in oklab, var(--muted) 35%, transparent); }
-/* Same look as the header Contratar button (.hh-hire) in both themes: solid accent in dark, the joyful coral-lilac in light. */
-.hm-cta-link { cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 3rem; padding: .7rem 1.4rem; border-radius: 10px; font-size: 1rem; font-weight: 600; text-decoration: none;
-  color: var(--background); background: var(--accent); transition: transform .2s ease, box-shadow .2s ease; }
-.hm-cta-link:hover, .hm-cta-link:focus-visible { transform: translateY(-1px); box-shadow: 0 8px 22px -10px var(--accent); }
+/* Secondary (.hm-more) and primary (.hm-cta-link) share the option C pills in buttons.css. */
+.hm-more { align-self: flex-start; font-size: .92rem; }
+.hm-cta-link { display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 3rem; padding: .7rem 1.4rem; font-size: 1rem; }
 
 .hm-about { display: grid; grid-template-columns: 1fr; gap: 1.1rem; padding: 1rem; border-radius: 18px;
   /* Solid card like the rest (no diagonal gradient), with a faint accent edge glow. */
@@ -205,7 +201,7 @@
 .dp-meta dd { margin: 0; line-height: 1.5; }
 .dp-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
 .dp-tags span { padding: .25rem .6rem; border-radius: 999px; font-size: .78rem; border: 1px solid color-mix(in oklab, var(--accent-2) 40%, transparent); color: color-mix(in oklab, var(--foreground) 80%, transparent); }
-.dp-cta { display: flex; flex-direction: column; gap: .8rem; align-items: flex-start; padding: 1.3rem; border-radius: 18px;
+.dp-cta { display: flex; flex-direction: column; gap: .8rem; align-items: center; text-align: center; padding: 1.3rem; border-radius: 18px;
   background: radial-gradient(90% 140% at 100% 0%, color-mix(in oklab, var(--accent-2) 16%, transparent), transparent 65%), color-mix(in oklab, var(--surface) 50%, transparent); border: 1px solid color-mix(in oklab, var(--accent) 30%, transparent); }
 .dp-cta p { margin: 0; font-size: 1.02rem; line-height: 1.6; }
 .dp-cta .hm-cta-link { width: auto; }
@@ -302,20 +298,16 @@
 :root:not(.dark) .hm-step:nth-child(3) .hm-step-icon { color: color-mix(in oklab, var(--joy-1) 40%, #14121c); background: color-mix(in oklab, var(--joy-1) 22%, var(--background)); border-color: var(--joy-1); }
 :root:not(.dark) .hh-link::after { background: linear-gradient(90deg, var(--joy-3), var(--joy-5)); height: 3px; }
 :root:not(.dark) .hh-hire { background: linear-gradient(90deg, var(--joy-3), var(--joy-5)); color: #14121c; border-color: transparent; }
-:root:not(.dark) .hm-more { color: color-mix(in oklab, var(--joy-5) 50%, #14121c); border-color: color-mix(in oklab, var(--joy-5) 55%, transparent); }
 :root:not(.dark) .hm-faq-q::after,
 :root:not(.dark) .dp-kicker { color: color-mix(in oklab, var(--joy-3) 55%, #14121c); }
 :root:not(.dark) .hm-card { border: 1.5px solid color-mix(in oklab, var(--hm-accent) 70%, transparent); }
 :root:not(.dark) .hm-card::before { opacity: 1; width: 3px; }
-:root:not(.dark) .hm-cta-link { background: linear-gradient(90deg, var(--joy-3), var(--joy-5)); color: #14121c; }
-:root:not(.dark) .hm-cta-link:hover, :root:not(.dark) .hm-cta-link:focus-visible { box-shadow: 0 8px 22px -10px var(--joy-5); }
 
-/* Phones: buttons sit centered (header nav and hamburger keep their own layout) */
-@media (max-width: 639px) {
-  .hm-cta { margin-inline: auto; }
-  .dp-section > .hm-cta-link { display: flex; margin-inline: auto; }
-  .dp-cta .hm-cta-link { align-self: center; }
-}
+/* Buttons under full-width content sit centered at every width. The hero button stays
+   left-aligned with its text on desktop and centers on phones. Header nav keeps its own layout. */
+.hm-section > .hm-cta, .hm-page > .hm-cta { margin-inline: auto; }
+.dp-section > .hm-cta-link { display: flex; margin-inline: auto; }
+@media (max-width: 639px) { .hm-cta { margin-inline: auto; } }
 
 /* Home Servicios: the offer as 3 numbered steps, then light examples (src/components/views/home-view.tsx). */
 .hm-offer { counter-reset: none; }
@@ -337,4 +329,4 @@
 .hm-case-art { min-height: 0; margin: 0; padding: .25rem; aspect-ratio: 1; }
 .hm-case-text { margin: 0; font-size: .9rem; line-height: 1.5; color: color-mix(in oklab, var(--foreground) 80%, transparent); }
 .hm-case-text strong { color: var(--foreground); font-weight: 600; }
-@media (max-width: 639px) { .hm-more-center { align-self: center; } }
+.hm-more-center { align-self: center; }
