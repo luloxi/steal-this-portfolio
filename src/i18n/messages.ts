@@ -287,8 +287,9 @@ export const messages = {
       /**
        * Page order: one list mixing story sections ("story:N" = Nth "## " section of body)
        * and records ("job:N" = timeline[N], "pubs:0" = the Publications block). Story order follows the body; this places the records.
+       * English mirrors the Spanish order saved in edit mode (2026-11-25); its extra chapters keep their place.
        */
-      layout: "story:0,story:1,job:2,story:2,job:1,story:3,job:0,story:4,pubs:0,story:5",
+      layout: "story:0,story:1,job:2,story:2,story:3,job:1,talk:0,story:4,job:0,pubs:0,story:5",
       linkedInCta: "LinkedIn",
       linkedInDetail: "My work history and professional network",
     },

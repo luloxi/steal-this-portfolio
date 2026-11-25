@@ -152,8 +152,18 @@ test("permissions: anon 401, non-admin 403, admin with edit mode off 403, nothin
   assert.equal(boom.status, 500);
 });
 
-test("rendering order: the Publications block sits right below 'Agentes e investigación' / 'Agents and research'", () => {
-  for (const loc of ["es", "en"] as const) {
+test("English Sobre mí follows the Spanish block order (talk and Input Output before Publications)", () => {
+  const sections = splitSections(LIVE.en).sections.map((s) => s.title);
+  const layout = parseLayout(messages.en.about.layout, sections.length, messages.en.about.timeline.length, 1, 1, 1);
+  const named = serializeLayout(layout).split(",").map((t) => (t.startsWith("story:") ? sections[Number(t.split(":")[1])] : t));
+  assert.deepEqual(named, [
+    "FIRST STEPS", "THE COLLEGE EXPERIENCE", "job:2", "UNEARNED SUCCESS", "BLOCKCHAIN FOR REAL",
+    "job:1", "talk:0", "AGENTS AND RESEARCH", "job:0", "pubs:0", "TODAY",
+  ]);
+});
+
+test("rendering order: the Publications block sits right below 'Agentes e investigación'", () => {
+  for (const loc of ["es"] as const) {
     const sections = splitSections(LIVE[loc]).sections.map((s) => s.title);
     const layout = parseLayout(messages[loc].about.layout, sections.length, messages[loc].about.timeline.length, 1);
     const flat = serializeLayout(layout).split(",");
