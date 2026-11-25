@@ -53,7 +53,7 @@
       background: linear-gradient(90deg, var(--accent), color-mix(in oklab, var(--accent) 35%, #2dd4bf));
       animation: hm-progress linear both; animation-timeline: scroll(root);
     }
-    :root:not(.dark) .hm-landing .hh::after { background: linear-gradient(90deg, var(--joy-3), var(--joy-4), var(--joy-1), var(--joy-5)); }
+    :root:not(.dark) .hm-landing .hh::after { height: 3px; background: linear-gradient(90deg, var(--joy-3), var(--joy-4), var(--joy-1), var(--joy-5)); }
   }
 
   /* Fallback (no scroll timelines): IntersectionObserver toggles .is-in. */

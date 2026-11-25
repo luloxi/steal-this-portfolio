@@ -73,9 +73,28 @@ export function HomeView({ faq }: { faq: FaqItem[] }) {
           </div>
         </header>
 
+        <section className="hm-section hm-examples" aria-labelledby="hm-cases">
+          <h2 id="hm-cases" className="hm-cases-title"><CopyText copyKey="landing.more.services.casesTitle" value={m.services.casesTitle} /></h2>
+          <ul className="hm-cases" aria-labelledby="hm-cases">
+            {GROK_BOT_SHOWCASE.map((item, i) => {
+              const copy = landing.cases[i] ?? item.copy[locale];
+              return (
+                <li key={item.art} className="hm-case" data-reveal style={{ ["--hm-accent" as string]: accents[(i + 2) % accents.length], ["--i" as string]: i }}>
+                  <div className="sc-stage hm-case-art">
+                    <ShowcaseVisual art={item.art} />
+                  </div>
+                  <p className="hm-case-text">
+                    <strong><CopyText copyKey={`landing.cases.${i}.title`} value={copy.title} />.</strong>{" "}
+                    <CopyText copyKey={`landing.cases.${i}.body`} value={copy.body} />
+                  </p>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+
         <section id="servicios" className="hm-section hm-anchor" aria-labelledby="hm-services">
           <h2 id="hm-services" className="hm-h2"><CopyText copyKey="landing.more.services.title" value={m.services.title} /></h2>
-          <CopyText as="p" className="hm-sublead" copyKey="landing.more.services.lead" value={m.services.lead} />
           <ol className="sc-grid hm-offer">
             {m.services.steps.map((step, i) => {
               const Icon = offerIcons[i % offerIcons.length];
@@ -96,23 +115,6 @@ export function HomeView({ faq }: { faq: FaqItem[] }) {
               );
             })}
           </ol>
-          <h3 id="hm-cases" className="hm-cases-title"><CopyText copyKey="landing.more.services.casesTitle" value={m.services.casesTitle} /></h3>
-          <ul className="hm-cases" aria-labelledby="hm-cases">
-            {GROK_BOT_SHOWCASE.map((item, i) => {
-              const copy = landing.cases[i] ?? item.copy[locale];
-              return (
-                <li key={item.art} className="hm-case" data-reveal style={{ ["--hm-accent" as string]: accents[(i + 2) % accents.length], ["--i" as string]: i }}>
-                  <div className="sc-stage hm-case-art">
-                    <ShowcaseVisual art={item.art} />
-                  </div>
-                  <p className="hm-case-text">
-                    <strong><CopyText copyKey={`landing.cases.${i}.title`} value={copy.title} />.</strong>{" "}
-                    <CopyText copyKey={`landing.cases.${i}.body`} value={copy.body} />
-                  </p>
-                </li>
-              );
-            })}
-          </ul>
           <div className="hm-cta">
             <ContactTrigger className="hm-cta-link"><CopyText copyKey="landing.more.services.cta" value={m.services.cta} /></ContactTrigger>
           </div>
