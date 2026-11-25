@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { turnstileSiteKey } from "@/content/site";
+import { useLocale } from "@/i18n/locale-provider";
 import { charCount, clampMessage, MAX_MESSAGE } from "@/lib/hire-limits";
 import { normalizeCode, REF_PARAM, refFromCookie } from "@/lib/referrals";
 import type { HireCopy } from "./hire-copy";
@@ -20,8 +22,15 @@ function readUtm(search: string): Record<string, string> {
  * (same rule as the server) with a live counter. Referral code and utm tags ride along
  * silently (cookie / URL); the server validates both.
  */
-export function HireForm({ c, callUrl }: { c: HireCopy; callUrl?: string }) {
+export function HireForm({ c, callUrl, idPrefix = "hire", compact = false }: { c: HireCopy; callUrl?: string; idPrefix?: string; compact?: boolean }) {
   const f = c.form;
+  const { href } = useLocale();
+  const nameId = `${idPrefix}-name`;
+  const emailId = `${idPrefix}-email`;
+  const messageId = `${idPrefix}-message`;
+  const countId = `${idPrefix}-message-count`;
+  const agentsId = `${idPrefix}-form-agents`;
+  const panelId = `${idPrefix}-form-panel`;
   const status = useRef<HTMLParagraphElement>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -41,10 +50,10 @@ export function HireForm({ c, callUrl }: { c: HireCopy; callUrl?: string }) {
     const id = requestAnimationFrame(() => {
       if (res === "ok") setState("ok");
       else { setState("error"); setErr(f.err[res] ?? f.err.default); }
-      document.getElementById("hire-form-panel")?.scrollIntoView({ block: "start" });
+      document.getElementById(panelId)?.scrollIntoView({ block: "start" });
     });
     return () => cancelAnimationFrame(id);
-  }, [f]);
+  }, [f, panelId]);
   const { box: tsBox, token, reset: resetTs } = useTurnstile();
   const left = Math.max(0, MAX_MESSAGE - charCount(message));
 
@@ -78,27 +87,27 @@ export function HireForm({ c, callUrl }: { c: HireCopy; callUrl?: string }) {
   };
 
   return (
-    <div id="hire-form-panel" className="hire-form-panel" data-open="true">
-      <form className="hire-form" onSubmit={submit} data-testid="hire-form" method="post" action="/api/hire-contact" aria-describedby="hire-form-agents">
-        <p id="hire-form-agents" className="sr-only">{f.agents}</p>
+    <div id={panelId} className="hire-form-panel" data-open="true">
+      <form className={`hire-form${compact ? " is-compact" : ""}`} onSubmit={submit} data-testid={idPrefix === "hire" ? "hire-form" : `${idPrefix}-form`} method="post" action="/api/hire-contact" aria-describedby={agentsId}>
+        <p id={agentsId} className="sr-only">{f.agents}</p>
         <div className="hire-form-row">
-          <label className="hire-form-field" htmlFor="hire-name">
+          <label className="hire-form-field" htmlFor={nameId}>
             <span>{f.name}</span>
-            <input id="hire-name" name="name" type="text" required maxLength={80} autoComplete="name" autoCapitalize="words" enterKeyHint="next" value={name} onChange={(e) => setName(e.target.value)} />
+            <input id={nameId} name="name" type="text" required maxLength={80} autoComplete="name" autoCapitalize="words" enterKeyHint="next" value={name} onChange={(e) => setName(e.target.value)} />
           </label>
-          <label className="hire-form-field" htmlFor="hire-email">
+          <label className="hire-form-field" htmlFor={emailId}>
             <span>{f.email}</span>
-            <input id="hire-email" name="email" required type="email" inputMode="email" autoCapitalize="none" spellCheck={false} enterKeyHint="next" maxLength={254} autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input id={emailId} name="email" required type="email" inputMode="email" autoCapitalize="none" spellCheck={false} enterKeyHint="next" maxLength={254} autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </label>
         </div>
-        <label className="hire-form-field" htmlFor="hire-message">
+        <label className="hire-form-field" htmlFor={messageId}>
           <span className="hire-form-msg-label">
             {f.message}
-            <output id="hire-message-count" htmlFor="hire-message" className={`hire-form-count${left === 0 ? " is-over" : left <= 50 ? " is-low" : ""}`} aria-live="polite">
+            <output id={countId} htmlFor={messageId} className={`hire-form-count${left === 0 ? " is-over" : left <= 50 ? " is-low" : ""}`} aria-live="polite">
               {left} <span className="sr-only">{f.left}</span>
             </output>
           </span>
-          <textarea id="hire-message" name="message" required rows={5} autoComplete="off" placeholder={f.ph} value={message} aria-describedby="hire-message-count" onChange={(e) => setMessage(clampMessage(e.target.value))} />
+          <textarea id={messageId} name="message" required rows={compact ? 4 : 5} autoComplete="off" placeholder={f.ph} value={message} aria-describedby={countId} onChange={(e) => setMessage(clampMessage(e.target.value))} />
         </label>
         {/* Honeypot: odd name so browsers never autofill it. */}
         <label className="hire-hp" aria-hidden="true">
@@ -107,15 +116,17 @@ export function HireForm({ c, callUrl }: { c: HireCopy; callUrl?: string }) {
         {/* Native (no-fetch) POST fallback carries the same silent extras. */}
         {Object.entries(utm).map(([k, v]) => <input key={k} type="hidden" name={k} value={v} />)}
         {refCode ? <input type="hidden" name="ref_code" value={refCode} /> : null}
+        <input type="hidden" name="next" value={href("/contacto")} />
         <div ref={tsBox} className="hire-turnstile" />
         <div className="hire-form-actions">
-          <button type="submit" className="hire-btn hire-cta hire-form-send" disabled={state === "sending" || !message.trim() || !token} data-testid="hire-send">
+          <button type="submit" className="hire-btn hire-cta hire-form-send" disabled={state === "sending" || !message.trim() || !token} data-testid={idPrefix === "hire" ? "hire-send" : `${idPrefix}-send`}>
             <span className="hire-btn-label">{state === "sending" ? f.sending : f.send}</span>
           </button>
           <p ref={status} className="hire-form-status" role="status">{state === "ok" ? f.ok : state === "error" ? err : ""}</p>
         </div>
         <p className="hire-form-foot">
-          {f.reply}
+          {f.reply}{" "}
+          <Link href={href("/privacidad")} className="hire-privacy">{f.privacy}</Link>
           {callUrl ? (
             <>
               {" "}

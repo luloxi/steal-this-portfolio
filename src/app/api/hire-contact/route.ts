@@ -4,6 +4,8 @@ import { bodyFromForm, handleHireContact, type HireDeps, type HireEnv } from "@/
 import { getDb } from "@/lib/db";
 import { getActiveReferrer, insertLead } from "@/lib/referrals-db";
 import { getSiteSettings } from "@/lib/site-settings-db";
+import { retiredHireRedirect } from "@/lib/routes";
+import { safeNext } from "@/lib/referrals";
 
 export async function POST(request: Request) {
   const type = request.headers.get("content-type") ?? "";
@@ -34,8 +36,11 @@ export async function POST(request: Request) {
   };
   const r = await handleHireContact(body, env as unknown as HireEnv, ip, deps);
   if (isForm) {
-    // Plain form post: send the browser back to the page with the result in the URL.
-    const to = new URL("/contratar", request.url);
+    // Plain form post: send the browser back to the contact page with the result in the URL.
+    const rawNext = typeof (body as { next?: unknown }).next === "string" ? (body as { next: string }).next : "/contacto";
+    let path = safeNext(rawNext, "/contacto").split(/[?#]/)[0] || "/contacto";
+    path = retiredHireRedirect(path) ?? path;
+    const to = new URL(path, request.url);
     to.searchParams.set("contacto", r.body.ok ? "ok" : String(r.body.error ?? "error"));
     to.hash = "hire-form-panel";
     return NextResponse.redirect(to, 303);

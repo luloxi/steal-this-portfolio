@@ -10,7 +10,7 @@ import type { Locale } from "@/i18n/types";
 import { SERVICE_PAGES } from "@/content/service-pages";
 
 /** Last real content change of the code-driven pages (bump when their copy changes). */
-const PAGES_UPDATED = new Date("2026-11-21T00:00:00-03:00");
+const PAGES_UPDATED = new Date("2026-11-25T00:00:00-03:00");
 
 /** projects.updated_at by id (read only). Empty when D1 is unavailable. */
 async function projectUpdates(): Promise<Map<string, string>> {
@@ -39,11 +39,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Hidden sections and projects (admin strip) are out of the sitemap, both languages.
   const [order, settings, stored, updated] = await Promise.all([getSiteOrder(), getSiteSettings(), getProjects(), projectUpdates()]);
   const shown = (esPath: string) => !isPathHidden(esPath, order.sections, order.projects);
-  const pages = ["/", "/servicios", "/sobre-mi", "/proyectos", "/blog", "/contacto", "/contratar", "/referidos", "/privacidad"].filter(shown).flatMap((path) =>
+  const pages = ["/", "/servicios", "/sobre-mi", "/proyectos", "/blog", "/contacto", "/referidos", "/privacidad"].filter(shown).flatMap((path) =>
     both(settings.url, pathPair(path), {
       lastModified: PAGES_UPDATED,
       changeFrequency: path === "/blog" ? "weekly" : "monthly",
-      priority: path === "/" ? 1 : path === "/servicios" || path === "/contratar" ? 0.9 : 0.7,
+      priority: path === "/" ? 1 : path === "/servicios" || path === "/contacto" ? 0.9 : 0.7,
     }),
   );
   const projects = orderRecords(stored, order.projects).filter((p) => p.visible && shown(`/proyectos/${p.id}`)).flatMap((p) =>

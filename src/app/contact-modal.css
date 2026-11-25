@@ -1,0 +1,137 @@
+/* Contact modal: message vs video call. Mobile-first sheet, card on wider screens. */
+.cm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+  background: rgba(8, 8, 12, 0.58);
+  cursor: pointer;
+}
+.cm-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 28rem;
+  max-height: min(92dvh, 44rem);
+  overflow: auto;
+  padding: 1.35rem 1.25rem 1.6rem;
+  border-radius: 1.25rem 1.25rem 0 0;
+  background: var(--surface);
+  color: var(--foreground);
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.35);
+  cursor: default;
+  -webkit-overflow-scrolling: touch;
+}
+.cm-close,
+.cm-back,
+.cm-dialog a,
+.cm-dialog button {
+  cursor: pointer;
+}
+.cm-close {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--foreground);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.cm-close:hover,
+.cm-close:focus-visible {
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  outline: none;
+}
+.cm-close:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cy, #00d4ff) 35%, transparent);
+}
+.cm-title {
+  margin: 0 2.5rem 0.55rem 0;
+  font-family: var(--font-space), system-ui, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+.cm-lead {
+  margin: 0 0 1.15rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+.cm-choices {
+  display: grid;
+  gap: 0.75rem;
+}
+.cm-choices .hire-btn {
+  width: 100%;
+}
+.cm-back {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 0.85rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.9rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.cm-back:hover,
+.cm-back:focus-visible {
+  color: var(--foreground);
+  outline: none;
+}
+.cm-dialog .hire-form {
+  padding-top: 0.2rem;
+}
+.cm-dialog .hire-form-panel {
+  opacity: 1;
+  grid-template-rows: 1fr;
+}
+.cm-dialog .hire-form-foot a {
+  cursor: pointer;
+  color: var(--accent-2, var(--cy, #00d4ff));
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (min-width: 640px) {
+  .cm-backdrop {
+    align-items: center;
+    padding: 1.5rem;
+  }
+  .cm-dialog {
+    border-radius: 1.25rem;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cm-dialog { scroll-behavior: auto; }
+}
+
+.cm-page-choices {
+  margin: 2.2rem 0 0;
+  max-width: 28rem;
+}
+.cm-page-choices .cm-choices { margin-top: 1rem; }
+.cm-page-choices .hire-btn,
+.contact-form-section a,
+.contact-form-section button { cursor: pointer; }
+.contact-form-section {
+  margin: 2.4rem 0 0;
+  max-width: 36rem;
+}
+#hire-form-panel,
+#cal-title { scroll-margin-top: 5.5rem; }

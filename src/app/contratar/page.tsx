@@ -1,7 +1,6 @@
-import { HireView } from "@/components/views/hire-view";
-import "../home.css";
+import { permanentRedirect } from "next/navigation";
 
-/** /contratar (/en/hire): a short pitch and a three-field form (name, email, message). */
-export default function HirePage() {
-  return <HireView />;
+/** Retired: proxy.ts already 301s /contratar and /en/hire. This is the in-app backup. */
+export default function RetiredHirePage() {
+  permanentRedirect("/contacto");
 }

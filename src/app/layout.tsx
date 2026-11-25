@@ -11,6 +11,7 @@ import { AdminProvider } from "@/components/admin-context";
 import { SiteOrderProvider } from "@/components/site-order-context";
 import { AdminPanel } from "@/components/admin-panel";
 import { SiteSettingsProvider } from "@/components/site-settings-context";
+import { ContactModalProvider } from "@/components/contact-modal";
 import { getSiteOrder } from "@/lib/site-order";
 import { PREFS_HEAD_SCRIPT } from "@/lib/prefs-shared";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -21,6 +22,7 @@ import { getSiteSettings } from "@/lib/site-settings-db";
 import { localizedOgImage } from "@/lib/seo";
 import "./globals.css";
 import "./buttons.css";
+import "./contact-modal.css";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -151,14 +153,16 @@ export default async function RootLayout({
         <SiteSettingsProvider value={settings}>
           <ThemeProvider initialTheme={theme}>
             <LocaleProvider initialLocale={locale} overrides={overrides}>
-              <CosmicBg />
-              <AdminProvider isAdmin={isAdmin} signedIn={Boolean(viewer)}>
-                <SiteControls signedIn={Boolean(viewer)} image={viewer?.image} name={viewer?.name} />
-                <SiteOrderProvider initial={order}>
-                  <div className="relative z-10">{children}</div>
-                  {isAdmin ? <AdminPanel projectLabels={projectLabels} /> : null}
-                </SiteOrderProvider>
-              </AdminProvider>
+              <ContactModalProvider>
+                <CosmicBg />
+                <AdminProvider isAdmin={isAdmin} signedIn={Boolean(viewer)}>
+                  <SiteControls signedIn={Boolean(viewer)} image={viewer?.image} name={viewer?.name} />
+                  <SiteOrderProvider initial={order}>
+                    <div className="relative z-10">{children}</div>
+                    {isAdmin ? <AdminPanel projectLabels={projectLabels} /> : null}
+                  </SiteOrderProvider>
+                </AdminProvider>
+              </ContactModalProvider>
             </LocaleProvider>
           </ThemeProvider>
         </SiteSettingsProvider>

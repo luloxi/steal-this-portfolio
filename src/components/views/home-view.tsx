@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, type ComponentType } from "react";
 import { Hammer, Search, Signpost } from "lucide-react";
+import { ContactTrigger } from "@/components/contact-modal";
 import { HireButton } from "@/components/hire-button";
 import { ScrollRevealFallback } from "@/components/scroll-reveal-fallback";
 import { AgentFlow } from "@/components/home-visuals";
@@ -42,7 +43,7 @@ export function HomeView({ faq }: { faq: FaqItem[] }) {
     { label: m.nav.blog, to: href("/blog") },
     { label: m.nav.about, to: href("/sobre-mi") },
     { label: m.nav.contact, to: href("/contacto") },
-    { label: m.nav.hire, to: href("/contratar"), hire: true },
+    { label: m.nav.hire, to: href("/contacto"), hire: true },
   ];
   // Old links to the removed landing sections land on their pages now.
   useEffect(() => {
@@ -113,7 +114,7 @@ export function HomeView({ faq }: { faq: FaqItem[] }) {
             })}
           </ul>
           <div className="hm-cta">
-            <Link href={href("/contratar")} className="hm-cta-link"><CopyText copyKey="landing.more.services.cta" value={m.services.cta} /></Link>
+            <ContactTrigger className="hm-cta-link"><CopyText copyKey="landing.more.services.cta" value={m.services.cta} /></ContactTrigger>
           </div>
           <Link href={href("/servicios")} className="hm-more hm-more-center"><CopyText copyKey="landing.more.services.more" value={m.services.more} /> ▸</Link>
         </section>

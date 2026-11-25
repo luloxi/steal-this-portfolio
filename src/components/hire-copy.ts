@@ -1,6 +1,6 @@
 import type { Locale } from "@/i18n/types";
 
-/** /contratar (/en/hire) copy: what I can build, then a three-field form. No em dashes. */
+/** Contact form copy: what I can build, then a three-field form. No em dashes. */
 export const HIRE_COPY = {
   es: {
     lead: "Armo agentes de IA y automatizaciones que se encargan del trabajo repetitivo de tu equipo.",
@@ -23,6 +23,7 @@ export const HIRE_COPY = {
       sending: "Enviando…",
       ok: "¡Listo! Te respondo a tu email.",
       reply: "Te respondo por email.",
+      privacy: "Privacidad",
       call: "¿Preferís hablar? Agendá una videollamada.",
       agents: "Formulario de contacto: nombre, email y mensaje (hasta 1000 caracteres). Para enviarlo hay que pasar la verificación de Cloudflare Turnstile.",
       err: {
@@ -56,6 +57,7 @@ export const HIRE_COPY = {
       sending: "Sending…",
       ok: "Done! I'll reply to your email.",
       reply: "I'll reply by email.",
+      privacy: "Privacy",
       call: "Rather talk? Book a video call.",
       agents: "Contact form: name, email and message (up to 1000 characters). Sending it requires passing the Cloudflare Turnstile check.",
       err: {

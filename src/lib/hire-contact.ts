@@ -4,7 +4,7 @@ import { checkCodeShape } from "./referrals";
 export { MAX_MESSAGE };
 
 /**
- * /contratar contact form: name, email and message (max MAX_MESSAGE characters).
+ * Contact form: name, email and message (max MAX_MESSAGE characters).
  * Sends one email via Resend (RESEND_API_KEY), falling back to the Email Routing
  * `send_email` binding, then forwards a copy to Garpen. Every send needs a valid
  * Cloudflare Turnstile token, checked server-side via siteverify (TURNSTILE_SECRET_KEY).
@@ -70,7 +70,7 @@ export type HireDeps = {
   saveLead?: (lead: { name: string; email: string; message: string; budgetJson: string; totalUsd: number; refCode: string | null; referrerId: string | null }) => Promise<unknown>;
   /** From-name on the email. Missing = a generic label. */
   fromName?: string;
-  /** Public site URL, used in the footer ("sent from host/contratar"). */
+  /** Public site URL, used in the footer ("sent from host/contacto"). */
   publicUrl?: string;
 };
 
@@ -127,13 +127,13 @@ export async function handleHireContact(raw: unknown, env: HireEnv, ip: string, 
     ...(extra.length ? ["", ...extra] : []),
     "",
     "--",
-    `Enviado desde ${publicHost}/contratar. Respondé este email para contestarle a ${email}.`,
+    `Enviado desde ${publicHost}/contacto. Respondé este email para contestarle a ${email}.`,
   ].join("\n");
   const html = `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(subject)}</title></head><body><div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#1a1a1a;max-width:560px">
 <p style="margin:0 0 4px;font-weight:700">${esc(name)} &lt;${esc(email)}&gt;</p>
 <p style="font-size:17px;line-height:1.5;white-space:pre-wrap;margin:12px 0 24px">${esc(message)}</p>
 ${extra.map((l) => `<p style="margin:0 0 6px;font-size:14px;color:#0F766E">${esc(l)}</p>`).join("")}
-<p style="font-size:12px;color:#666;margin-top:24px">Enviado desde ${esc(publicHost)}/contratar. Respondé este email para contestarle a ${esc(email)}.</p>
+<p style="font-size:12px;color:#666;margin-top:24px">Enviado desde ${esc(publicHost)}/contacto. Respondé este email para contestarle a ${esc(email)}.</p>
 </div></body></html>`;
 
   try {
@@ -181,7 +181,7 @@ export function bodyFromForm(entries: Iterable<[string, unknown]>): Record<strin
     if (UTM_KEY.test(k)) utm[k] = raw;
     else if (k === "cf-turnstile-response") out.turnstileToken = raw;
     else if (k === "ref_code") out.refCode = raw;
-    else if (["name", "email", "message", "hire_hp", "turnstileToken"].includes(k)) out[k] = raw;
+    else if (["name", "email", "message", "hire_hp", "turnstileToken", "next"].includes(k)) out[k] = raw;
   }
   out.utm = utm;
   return out;

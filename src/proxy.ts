@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
 import { listProjectIds } from "@/lib/projects-db";
 import { getPostBySlug, getPostBySlugEn } from "@/lib/blog";
-import { EN_PREFIX, LOCALE_HEADER, enToEsPath, isNewPostPath, localeFromPath } from "@/lib/routes";
+import { EN_PREFIX, LOCALE_HEADER, enToEsPath, isNewPostPath, localeFromPath, retiredHireRedirect } from "@/lib/routes";
 import type { Locale } from "@/i18n/types";
 import { editModeFromCookie, mayLookUpDrafts } from "@/lib/edit-mode";
 import { isPathHidden, sectionForPath } from "@/lib/site-sections";
@@ -18,8 +18,9 @@ import { getActiveReferrer } from "@/lib/referrals-db";
  * client sent, if any, is overwritten. No redirect by cookie or Accept-Language:
  * crawlers and visitors see what the URL says.
  *
- * /en/<segment>/... is rewritten to the Spanish route that renders it
- * (/en/hire -> /contratar), so both URLs share one page.
+ * /en/<segment>/... is rewritten to the Spanish route that renders it,
+ * so both URLs share one page. Retired /contratar and /en/hire 301 to
+ * /contacto and /en/contact before that rewrite.
  */
 function withLocale(request: NextRequest, locale: Locale) {
   const headers = new Headers(request.headers);
@@ -116,6 +117,12 @@ export default async function proxy(request: NextRequest) {
 
 async function route(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
+  const retired = retiredHireRedirect(pathname);
+  if (retired) {
+    const url = request.nextUrl.clone();
+    url.pathname = retired;
+    return NextResponse.redirect(url, 301);
+  }
   const locale = localeFromPath(pathname);
 
   // Hidden section/project (admin strip): 404 for visitors, before any rewrite.

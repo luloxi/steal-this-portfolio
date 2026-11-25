@@ -14,6 +14,7 @@ import {
   localeFromPath,
   localizePath,
   pathPair,
+  retiredHireRedirect,
   slugify,
   switchLocalePath,
   uniqueSlug,
@@ -164,4 +165,14 @@ test("share excerpt: plain text, cut at a word", () => {
   assert.equal(excerpt("## Title\n\nSome **bold** [link](https://x.y) text."), "Title Some bold link text.");
   const long = excerpt("word ".repeat(80), 40);
   assert.ok(long.length <= 41 && long.endsWith("…"));
+});
+
+test("retired /contratar and /en/hire redirect to contact", () => {
+  assert.equal(retiredHireRedirect("/contratar"), "/contacto");
+  assert.equal(retiredHireRedirect("/contratar/"), "/contacto");
+  assert.equal(retiredHireRedirect("/en/hire"), "/en/contact");
+  assert.equal(retiredHireRedirect("/en/hire/"), "/en/contact");
+  assert.equal(retiredHireRedirect("/contacto"), null);
+  assert.equal(retiredHireRedirect("/en/contact"), null);
+  assert.equal(retiredHireRedirect("/"), null);
 });

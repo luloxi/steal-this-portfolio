@@ -89,7 +89,7 @@ export function serviceLd(
     address: ADDRESS,
     availableLanguage: ["es", "en"],
     sameAs: sameAs(s),
-    potentialAction: { "@type": "CommunicateAction", target: abs(s, localizePath(locale, "/contratar")) },
+    potentialAction: { "@type": "CommunicateAction", target: abs(s, localizePath(locale, "/contacto")) },
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: opts.name,
@@ -118,7 +118,7 @@ export function serviceOfferLd(
     ...(opts.image ? { image: abs(s, opts.image) } : {}),
     provider: [{ "@id": personId(s) }, { "@id": serviceId(s) }],
     areaServed: areaServed(locale),
-    availableChannel: { "@type": "ServiceChannel", serviceUrl: abs(s, localizePath(locale, "/contratar")), availableLanguage: ["es", "en"] },
+    availableChannel: { "@type": "ServiceChannel", serviceUrl: abs(s, localizePath(locale, "/contacto")), availableLanguage: ["es", "en"] },
     inLanguage: locale === "es" ? "es-AR" : "en-US",
   };
 }

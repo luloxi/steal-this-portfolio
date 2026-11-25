@@ -64,15 +64,15 @@ export function VisitsAdmin({ stats, links, loadError }: { stats: VisitStats; li
       <div className="vist" data-testid="visits-admin">
         {loadError ? <p className="ref-error">No se pudo leer D1 (¿falta la migración 0016?).</p> : null}
         <p className="ref-sub">
-          Últimos 60 días · <strong data-testid="vist-total">{stats.total}</strong> visitas · Implementación de IA (<code>/contratar</code>): <strong data-testid="vist-hire">{stats.hireTotal}</strong>
+          Últimos 60 días · <strong data-testid="vist-total">{stats.total}</strong> visitas · Implementación de IA (<code>/contacto</code>): <strong data-testid="vist-hire">{stats.hireTotal}</strong>
         </p>
         <p className="ref-hint">
           Contador propio, sin cookies ni IP: día (hora de Argentina), página, origen (utm o sitio que te mandó) y país. Los totales de todo el sitio también están en el panel de Cloudflare Web Analytics.
         </p>
         <Table title="Visitas por día" testId="vist-by-day" rows={stats.byDay} empty="Todavía no hay visitas." />
         <Table title="Visitas por origen" testId="vist-by-source" rows={stats.bySource} empty="Todavía no hay orígenes." />
-        <Table title="Implementación de IA, por día" testId="vist-hire-by-day" rows={stats.hireByDay} empty="Todavía no hay visitas a /contratar." />
-        <Table title="Implementación de IA, por origen" testId="vist-hire-by-source" rows={stats.hireBySource} empty="Todavía no hay orígenes en /contratar." />
+        <Table title="Implementación de IA, por día" testId="vist-hire-by-day" rows={stats.hireByDay} empty="Todavía no hay visitas a /contacto." />
+        <Table title="Implementación de IA, por origen" testId="vist-hire-by-source" rows={stats.hireBySource} empty="Todavía no hay orígenes en /contacto." />
         <section className="vist-card" data-testid="vist-utm-links">
           <h2 className="vist-h">Links con UTM, listos para pegar</h2>
           <p className="ref-hint">Usalos en Instagram, LinkedIn, X y el mail. Así en esta página se distingue de dónde vino cada visita.</p>

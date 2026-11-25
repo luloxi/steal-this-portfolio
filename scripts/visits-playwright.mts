@@ -1,5 +1,5 @@
 /**
- * Visual smoke for / and /contratar (mobile + desktop), and an optional live
+ * Visual smoke for / and /contacto (mobile + desktop), and an optional live
  * UTM count check. Default: https://lulox.com.ar
  *
  *   pnpm exec tsx scripts/visits-playwright.mts
@@ -18,7 +18,7 @@ const VIEWPORTS = [
   { name: "mobile", width: 390, height: 844 },
   { name: "desktop", width: 1280, height: 800 },
 ] as const;
-const ROUTES = ["/", "/contratar"] as const;
+const ROUTES = ["/", "/contacto"] as const;
 
 async function checkPage(page: Page, path: string) {
   const res = await page.goto(BASE + path, { waitUntil: "domcontentloaded", timeout: 30000 });
@@ -32,11 +32,11 @@ async function checkPage(page: Page, path: string) {
   }
   if (path === "/") {
     const hire = page.locator('[data-testid="hire-btn"]');
-    if (!(await hire.count())) throw new Error("home is missing the Contratar button");
+    if (!(await hire.count())) throw new Error("home is missing the Contactar button");
   }
-  if (path === "/contratar") {
+  if (path === "/contacto") {
     const form = page.locator("form, [data-testid='hire-form'], textarea, input[type='email']");
-    if (!(await form.count())) throw new Error("contratar is missing the form");
+    if (!(await form.count())) throw new Error("contacto is missing the form");
   }
 }
 

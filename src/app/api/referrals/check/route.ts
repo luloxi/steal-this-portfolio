@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * GET ?code=xyz -> { status: "available" | "taken" | "invalid" | "reserved", active? }.
- * Used by the signup form (availability) and /contratar (is the code active?).
+ * Used by the signup form (availability) and the contact form (is the code active?).
  * Rate limited per IP with REF_CHECK_RL (60/min).
  */
 export async function GET(request: Request) {
