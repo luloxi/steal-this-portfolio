@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { HomeView } from "@/components/views/home-view";
-import { homeCopy } from "@/content/home-copy";
+import { homeCopy, withExtraFaq } from "@/content/home-copy";
 import { servicesCopy } from "@/content/services-copy";
 import { buildPageMetadata } from "@/lib/page-metadata";
 import { getRequestLocale } from "@/lib/prefs";
@@ -36,14 +36,16 @@ const KNOWS_ABOUT = {
 } as const;
 
 /**
- * Landing: hero, problem, what it does on its own, trust strip, things built,
- * how we work, about, FAQ, closing CTA.
+ * Landing: hero, two paths (copy a recipe / done for you), featured recipes,
+ * more ideas, how it works if you hire, about, things built, FAQ, closing CTA.
  * Projects, blog and the full story live on their own pages.
  */
 export default async function HomePage() {
   const locale = await getRequestLocale();
-  const [settings, faq] = await Promise.all([getSiteSettings(), getFaq(locale)]);
+  const [settings, saved] = await Promise.all([getSiteSettings(), getFaq(locale)]);
   const c = homeCopy[locale];
+  // The saved FAQ keeps its order; the recipe questions from code go first until it has them.
+  const faq = withExtraFaq(saved, c.faq.extra);
   // The saved FAQ list (D1 landing_faq, else the code seed): the page and the schema show the same thing.
   const svc = servicesCopy[locale];
   const graph = [

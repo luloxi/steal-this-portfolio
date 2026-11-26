@@ -33,9 +33,6 @@ const MAP: [string, string][] = [
   ["/ingresar", "/en/sign-in"],
   ["/referidos", "/en/referrals"],
   ["/servicios", "/en/services"],
-  ["/servicios/agentes-de-ia", "/en/services/ai-agents"],
-  ["/servicios/crm-a-medida", "/en/services/custom-crm"],
-  ["/servicios/grok-bot", "/en/services/grok-bot"],
 ];
 
 test("route map es <-> en is symmetric", () => {
@@ -50,16 +47,16 @@ test("route map es <-> en is symmetric", () => {
   assert.equal(enToEsPath("/english"), null);
 });
 
-test("every service page has a translated slug both ways", async () => {
-  const { SERVICE_PAGES } = await import("../src/content/service-pages.ts");
-  for (const es of SERVICE_PAGES.map((p) => `/servicios/${p.slug}`)) {
-    const en = esToEnPath(es);
-    assert.ok(en && en.startsWith("/en/"), es);
-    assert.equal(enToEsPath(en), es, en);
-  }
+test("old service pages 301 to their section on /servicios, both languages", async () => {
+  const { SERVICE_REDIRECTS } = await import("../src/lib/service-redirects.ts");
+  const { SERVICE_SECTION_IDS } = await import("../src/content/services-copy.ts");
+  assert.equal(SERVICE_REDIRECTS.length, SERVICE_SECTION_IDS.length * 2);
+  const map = Object.fromEntries(SERVICE_REDIRECTS);
+  assert.equal(map["/servicios/agentes-de-ia"], "/servicios#agentes-de-ia");
+  assert.equal(map["/en/services/ai-agents"], "/en/services#agentes-de-ia");
+  for (const [, to] of SERVICE_REDIRECTS) assert.ok(SERVICE_SECTION_IDS.some((id) => to.endsWith(`#${id}`)), to);
   // Project ids and blog slugs under a segment without a sub-map stay as they are.
   assert.equal(esToEnPath("/proyectos/garpen"), "/en/projects/garpen");
-  // Case-study pages were removed (next.config.ts redirects them to /#proyectos).
   assert.equal(esToEnPath("/casos"), null);
 });
 

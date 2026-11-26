@@ -101,28 +101,6 @@ export function serviceLd(
   };
 }
 
-/** One offering page (/servicios/<slug>): a Service provided by the ProfessionalService and the Person. */
-export function serviceOfferLd(
-  s: SiteSettings,
-  locale: Locale,
-  opts: { name: string; description: string; esPath: string; serviceType: string; image?: string },
-): Json {
-  const url = abs(s, localizePath(locale, opts.esPath));
-  return {
-    "@type": "Service",
-    "@id": `${url}#service`,
-    name: opts.name,
-    serviceType: opts.serviceType,
-    description: opts.description,
-    url,
-    ...(opts.image ? { image: abs(s, opts.image) } : {}),
-    provider: [{ "@id": personId(s) }, { "@id": serviceId(s) }],
-    areaServed: areaServed(locale),
-    availableChannel: { "@type": "ServiceChannel", serviceUrl: abs(s, localizePath(locale, "/contacto")), availableLanguage: ["es", "en"] },
-    inLanguage: locale === "es" ? "es-AR" : "en-US",
-  };
-}
-
 export function faqLd(items: { q: string; a: string }[]): Json {
   return {
     "@type": "FAQPage",

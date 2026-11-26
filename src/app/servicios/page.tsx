@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { HireButton } from "@/components/hire-button";
+import { ContactTrigger } from "@/components/contact-modal";
 import { JsonLd } from "@/components/json-ld";
 import { PageShell } from "@/components/page-shell";
 import { HOME_PROJECT_IDS } from "@/content/home-copy";
-import { SERVICE_PAGES } from "@/content/service-pages";
-import { servicesCopy } from "@/content/services-copy";
+import { SERVICE_SECTION_IDS, servicesCopy } from "@/content/services-copy";
 import { getRequestLocale } from "@/lib/prefs";
 import { getProjects } from "@/lib/projects-db";
 import { localizePath } from "@/lib/routes";
@@ -13,10 +12,12 @@ import { getSiteSettings } from "@/lib/site-settings-db";
 import { thumb } from "@/lib/thumbs";
 import "../home.css";
 import "../showcase.css";
+import "../landing.css";
+import "./servicios.css";
 
 const accents = ["var(--joy-1)", "var(--joy-2)", "var(--joy-3)", "var(--joy-4)", "var(--joy-5)"];
 
-/** /servicios (/en/services): concrete use cases (marked as examples), custom work, process. */
+/** /servicios (/en/services): «Hecho para vos». One page; the old /servicios/<slug> pages 301 to its sections. */
 export default async function ServicesPage() {
   const [locale, all, settings] = await Promise.all([getRequestLocale(), getProjects(), getSiteSettings()]);
   const c = servicesCopy[locale];
@@ -35,40 +36,37 @@ export default async function ServicesPage() {
     <>
       <JsonLd graph={graph} />
       <PageShell title={c.title}>
-        <div className="hm-page">
-          <p className="hm-lead">{c.intro}</p>
-          <div className="hm-cta"><HireButton /></div>
+        <div className="ln sv">
+          <p className="sv-intro">{c.intro}</p>
+          <ContactTrigger className="hm-cta-link ln-btn" data-testid="services-cta">{c.cta}</ContactTrigger>
 
-          <section className="hm-section" aria-labelledby="sv-intents">
-            <h2 id="sv-intents" className="hm-h2">{locale === "es" ? "Elegí un servicio" : "Pick a service"}</h2>
-            <ul className="sv-chips sv-chips-stack">
-              {SERVICE_PAGES.map((sp) => (
-                <li key={sp.slug}>
-                  <Link href={localizePath(locale, `/servicios/${sp.slug}`)} className="sv-chip">
-                    <span>{sp.copy[locale].label}</span>
-                    <span aria-hidden>▸</span>
-                  </Link>
+          <section className="sv-block" aria-labelledby="sv-offer">
+            <h2 id="sv-offer" className="sv-h2">{c.offer.title}</h2>
+            <ul className="sv-offer">
+              {c.offer.items.map((it, i) => (
+                <li key={it.title} id={SERVICE_SECTION_IDS[i]} className="sv-card">
+                  <h3 className="sv-card-title">{it.title}</h3>
+                  <p className="sv-card-body">{it.body}</p>
                 </li>
               ))}
             </ul>
           </section>
 
-          <section className="hm-section" aria-labelledby="sv-cases">
-            <h2 id="sv-cases" className="hm-h2">{c.useCases.title}</h2>
-            <p className="hm-note">{c.useCases.note}</p>
-            <ul className="hm-cards hm-cards-2">
-              {c.useCases.items.map((item, i) => (
-                <li key={item.title} className="hm-card" style={{ ["--hm-accent" as string]: accents[i % accents.length] }}>
-                  <h3 className="hm-card-title">{item.title}</h3>
-                  <p className="hm-card-body">{item.body}</p>
+          <section className="sv-block" aria-labelledby="sv-cases">
+            <h2 id="sv-cases" className="sv-h2">{c.useCases.title}</h2>
+            <p className="ln-note">{c.useCases.note}</p>
+            <ul className="sv-cases">
+              {c.useCases.items.map((it) => (
+                <li key={it.title}>
+                  <strong>{it.title}.</strong> {it.body}
                 </li>
               ))}
             </ul>
           </section>
 
-          <section className="hm-section" aria-labelledby="sv-custom">
-            <h2 id="sv-custom" className="hm-h2">{c.custom.title}</h2>
-            <p className="hm-field">{c.custom.body}</p>
+          <section className="sv-block" aria-labelledby="sv-custom">
+            <h2 id="sv-custom" className="sv-h2">{c.custom.title}</h2>
+            <p className="sv-text">{c.custom.body}</p>
             {projects.length ? (
               <ul className="hm-projects" aria-label={c.custom.projectsLabel}>
                 {projects.map((p, i) => (
@@ -98,26 +96,25 @@ export default async function ServicesPage() {
             ) : null}
           </section>
 
-          <section className="hm-section" aria-labelledby="sv-stack">
-            <h2 id="sv-stack" className="hm-h2">{c.stack.title}</h2>
-            <p className="hm-text">{c.stack.body}</p>
-          </section>
-
-          <section className="hm-section" aria-labelledby="sv-process">
-            <h2 id="sv-process" className="hm-h2">{c.process.title}</h2>
-            <ol className="hm-steps hm-steps-stack">
+          <section className="sv-block" aria-labelledby="sv-process">
+            <h2 id="sv-process" className="sv-h2">{c.process.title}</h2>
+            <ol className="ln-steps">
               {c.process.steps.map((step, i) => (
-                <li key={step} className="hm-step">
-                  <span className="hm-step-n" aria-hidden>{i + 1}</span>
-                  <span>{step}</span>
+                <li key={step} className="ln-step">
+                  <span className="ln-step-n" aria-hidden>{i + 1}</span>
+                  <p className="ln-step-body">{step}</p>
                 </li>
               ))}
             </ol>
           </section>
 
-          <section className="hm-closing">
-            <p>{c.closing}</p>
-            <div className="hm-cta"><HireButton /></div>
+          <p className="sv-recipes">
+            {c.recipes.body} <Link href={localizePath(locale, "/recetas")} className="ln-recipe-link">{c.recipes.link} ▸</Link>
+          </p>
+
+          <section className="rc-cta sv-closing" aria-labelledby="sv-closing">
+            <h2 id="sv-closing" className="sv-closing-title">{c.closing.title}</h2>
+            <ContactTrigger className="hm-cta-link ln-btn" data-testid="services-closing-cta">{c.closing.cta}</ContactTrigger>
           </section>
         </div>
       </PageShell>

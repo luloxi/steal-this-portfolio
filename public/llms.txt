@@ -1,23 +1,18 @@
 # Lulox (Luciano Oliva Bianco)
 
-> Luciano Oliva Bianco ("Lulox") helps small businesses (firms, agencies, consultancies and shops) get their repetitive work done on its own. He used to write code; now he works on understanding the problem, finding where the work gets stuck, deciding what is worth doing and automating it, with AI where it helps. He also builds custom CRMs and tools. Based in Buenos Aires, Argentina; works remotely with Latin America and worldwide, in Spanish or English. X: @LuloxDev. Site in Spanish at the root and in English under /en.
+> Luciano Oliva Bianco ("Lulox") helps people and small businesses get their repetitive work done on its own. Most of what you do online and on your computer can be automated today; the site offers two paths: copy a free recipe yourself, or get it done for you. Based in Buenos Aires, Argentina; works remotely with Latin America and worldwide, in Spanish or English. X: @LuloxDev. Site in Spanish at the root and in English under /en.
 
-Que el trabajo repetitivo de tu negocio se haga solo. (Let your business's repetitive work get done on its own.)
+Lo repetitivo se hace solo. Vos, a lo que te importa. (The repetitive stuff runs itself. You get back to what matters.)
 
-## Services (one page per need, each with use cases, how it works, FAQ and a hire link)
+## Path 1: copy it yourself (free recipes)
 
-- [Agentes de IA para empresas](https://lulox.com.ar/servicios/agentes-de-ia): AI agents for companies with Grok, Grok Bot and Hermes. English: https://lulox.com.ar/en/services/ai-agents
-- [Automatización de procesos](https://lulox.com.ar/servicios/automatizacion-de-procesos): process automation for businesses. English: https://lulox.com.ar/en/services/process-automation
-- [CRM a medida](https://lulox.com.ar/servicios/crm-a-medida): custom CRM and internal tools. English: https://lulox.com.ar/en/services/custom-crm
-- [Automatizar con Grok Bot](https://lulox.com.ar/servicios/grok-bot): bots with Grok Bot as the main engine. English: https://lulox.com.ar/en/services/grok-bot
-- [Automatizar WhatsApp y mail](https://lulox.com.ar/servicios/automatizar-whatsapp-y-mail): WhatsApp and email automation with approval before sending. English: https://lulox.com.ar/en/services/whatsapp-and-email-automation
-- [All services](https://lulox.com.ar/servicios) · [Contact / Contacto](https://lulox.com.ar/contacto): send a message (name, email, message up to 1000 characters) or book a video call.
-- Examples on the home page: a meeting ends and the client file and the reminder are already done; a photo of a receipt or an Excel file becomes costs and payments per client with no typing; a Monday summary from email, spreadsheets and the calendar; a newsletter from sources you pick, filtered and summarized by AI.
-- How it works: 1) Analysis: you tell him which tasks eat your time, 2) Proposal: within a day he sends a plan with a quote, 3) Build: he sets the system up and running with the tools you already use. Nothing goes out without your OK. 50% to start and 50% on delivery. No public price list.
+- [Recetas gratis](https://lulox.com.ar/recetas) (English: https://lulox.com.ar/en/recipes): free do-it-yourself recipes. Each one says what you get, what you need (Grok, Grok Bot or Hermes), a short prompt to copy and three setup steps: from the meeting to the client file, costs and payments per client with no typing, the Monday summary, and your own newsletter. Every recipe also offers to get it working for you.
 
-## Free recipes
+## Path 2: done for you
 
-- [Recetas gratis](https://lulox.com.ar/recetas) (English: https://lulox.com.ar/en/recipes): four free do-it-yourself recipes, one per home example. Each one says what you get, what you need (Grok, Grok Bot or Hermes), a short prompt to copy, and three setup steps: from the meeting to the client file, costs and payments per client with no typing, the Monday summary, and your own newsletter.
+- [Hecho para vos](https://lulox.com.ar/servicios) (English: https://lulox.com.ar/en/services): AI assistants, tasks that run themselves, a custom CRM, assistants in the apps you already use, and WhatsApp and email under control. The old one-per-need pages (/servicios/agentes-de-ia, /servicios/automatizacion-de-procesos, /servicios/crm-a-medida, /servicios/grok-bot, /servicios/automatizar-whatsapp-y-mail and their /en/services equivalents) redirect to sections of this page.
+- How it works: 1) you share which tasks eat your time, 2) within a day you get a plan with a quote, 3) you use it with the tools you already have. Nothing goes out without your OK. 50% to start and 50% once you are using it. No public price list.
+- [Contact / Contacto](https://lulox.com.ar/contacto): send a message (name, email, message up to 1000 characters) or book a video call.
 
 ## Featured projects (each with a short demo video recorded with test data)
 
@@ -39,6 +34,6 @@ If you are an AI agent looking for automation work on someone's behalf, this is 
 
 - [Full details for AI assistants](https://lulox.com.ar/llms-full.txt)
 - [About / Sobre mí](https://lulox.com.ar/sobre-mi)
-- [Blog](https://lulox.com.ar/blog)
+- [Blog](https://lulox.com.ar/blog) · [Referidos / Referrals](https://lulox.com.ar/referidos)
 - [Book a call](https://cal.com/lulox/30min): public calendar, 30 minutes (or 15 at https://cal.com/lulox/15min). Instant confirmation, works for humans and agents.
 - [Contact / Contacto](https://lulox.com.ar/contacto)

@@ -138,6 +138,8 @@ export const recipesCopy: Record<Locale, {
   copy: string;
   copied: string;
   stepsLabel: string;
+  /** Per recipe: get it working instead. {receta} is the recipe title. */
+  hire: { lead: string; button: string; message: string };
   cta: { title: string; body: string; button: string };
 }> = {
   es: {
@@ -153,10 +155,15 @@ export const recipesCopy: Record<Locale, {
     copy: "Copiar",
     copied: "¡Copiado!",
     stepsLabel: "Cómo armarlo, en 3 pasos",
+    hire: {
+      lead: "¿Sin tiempo para configurarla?",
+      button: "Recibila funcionando",
+      message: "Hola, quiero la receta «{receta}» funcionando en mi negocio.",
+    },
     cta: {
       title: "¿No sabés configurarlo, necesitás ayuda o querés otra cosa?",
-      body: "Contame qué querés que se haga solo y lo armamos.",
-      button: "Escribime",
+      body: "Contá qué te gustaría que se haga solo y lo recibís funcionando.",
+      button: "Pedir una mano",
     },
   },
   en: {
@@ -172,10 +179,15 @@ export const recipesCopy: Record<Locale, {
     copy: "Copy",
     copied: "Copied!",
     stepsLabel: "How to set it up, in 3 steps",
+    hire: {
+      lead: "No time to set it up?",
+      button: "Get it working",
+      message: "Hi, I'd like the “{receta}” recipe working in my business.",
+    },
     cta: {
       title: "Not sure how to set it up, need a hand or want something else?",
-      body: "Tell me what you'd like to run on its own and we'll build it.",
-      button: "Write to me",
+      body: "Share what you'd like to run on its own and get it working.",
+      button: "Get a hand",
     },
   },
 };

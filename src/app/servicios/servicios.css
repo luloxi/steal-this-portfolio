@@ -1,0 +1,18 @@
+/* /servicios «Hecho para vos»: calm cards, mobile first. Old service pages land on .sv-card:target. */
+.sv { display: flex; flex-direction: column; gap: 1.25rem; }
+.sv > .ln-btn { align-self: flex-start; }
+.ln.sv .ln-btn { width: auto; }
+.sv-intro { margin: 0; font-size: 1.12rem; line-height: 1.55; color: var(--ln-ink); }
+.sv-block { display: flex; flex-direction: column; gap: .8rem; margin-top: 1rem; }
+.sv-h2 { margin: 0; font-family: inherit; font-size: 1.45rem; line-height: 1.2; font-weight: 600; letter-spacing: -.01em; text-transform: none; color: var(--ln-ink); }
+.sv-offer { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .8rem; }
+.sv-card { scroll-margin-top: 5.5rem; padding: 1.1rem 1.15rem; border: 1px solid var(--ln-line); border-radius: 16px; background: var(--ln-card); }
+.sv-card:target { border-color: var(--ln-human); box-shadow: 0 0 0 3px var(--ln-human-bg); }
+.sv-card-title { margin: 0 0 .35rem; font-family: inherit; font-size: 1.08rem; line-height: 1.3; font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--ln-ink); }
+.sv-card-body { margin: 0; font-size: .98rem; line-height: 1.55; color: color-mix(in oklab, var(--ln-ink) 80%, transparent); }
+.sv-cases { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: .55rem; font-size: 1rem; line-height: 1.55; color: color-mix(in oklab, var(--ln-ink) 82%, transparent); }
+.sv-cases strong { color: var(--ln-ink); font-weight: 600; }
+.sv-text { margin: 0; font-size: 1rem; line-height: 1.6; color: color-mix(in oklab, var(--ln-ink) 82%, transparent); }
+.sv-recipes { margin: .5rem 0 0; font-size: 1rem; color: var(--ln-muted); }
+.sv-closing { margin-top: .75rem; display: flex; flex-direction: column; align-items: center; gap: .9rem; text-align: center; padding: 1.75rem 1.25rem; border-radius: 20px; background: var(--ln-human-bg); border: 1px solid color-mix(in oklab, var(--ln-human) 30%, transparent); }
+.sv-closing-title { margin: 0; font-family: inherit; font-size: 1.35rem; line-height: 1.25; font-weight: 600; text-transform: none; letter-spacing: -.01em; color: var(--ln-ink); text-wrap: balance; }

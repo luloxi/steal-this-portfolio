@@ -55,6 +55,12 @@ export default async function RecipesPage() {
                       {x.steps.map((s, k) => <li key={k}>{s}</li>)}
                     </ol>
                   </details>
+                  <p className="rc-hire">
+                    <span>{c.hire.lead}</span>{" "}
+                    <ContactTrigger className="rc-hire-link" prefill={c.hire.message.replace("{receta}", x.title)} data-testid={`recipe-hire-${r.slug}`}>
+                      {c.hire.button} ▸
+                    </ContactTrigger>
+                  </p>
                 </li>
               );
             })}

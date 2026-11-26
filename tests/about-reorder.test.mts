@@ -43,14 +43,17 @@ test("moveBlock: records swap places, two stories ask for a body swap", () => {
 test("landing texts are editable keys with code fallback, both languages", () => {
   for (const loc of ["es", "en"] as const) {
     const keys = flattenCopy({ landing: landingCopy(loc) });
-    for (const k of ["landing.home.title", "landing.home.lead", "landing.home.process.steps.0.title", "landing.home.cases.items.2.solves", "landing.home.faq.items.0.q", "landing.more.about.body", "landing.home.closing.title"]) {
+    for (const k of ["landing.home.hero.title", "landing.home.hero.lead", "landing.home.paths.diy.title", "landing.home.process.steps.0.title", "landing.home.featured.items.2.solves", "landing.home.faq.items.0.q", "landing.more.about.body", "landing.home.end.title"]) {
       assert.ok(k in keys, `${loc} ${k}`);
     }
     // SEO meta stays in code.
     assert.ok(!Object.keys(keys).some((k) => k.startsWith("landing.home.meta")));
-    const edited = applyCopy({ landing: landingCopy(loc) }, { "landing.home.title": "Nuevo", "about.body": "x" }).landing;
-    assert.equal(edited.home.title, "Nuevo");
-    assert.equal(landingCopy(loc).home.title !== "Nuevo", true);
+    const edited = applyCopy({ landing: landingCopy(loc) }, { "landing.home.hero.title": "Nuevo", "about.body": "x" }).landing;
+    assert.equal(edited.home.hero.title, "Nuevo");
+    assert.equal(landingCopy(loc).home.hero.title !== "Nuevo", true);
+    // Old keys saved in D1 before the two-paths home (lead, kicker, closing) no longer touch it.
+    const old = applyCopy({ landing: landingCopy(loc) }, { "landing.home.lead": "viejo", "landing.home.kicker": ".", "landing.home.closing": "viejo" }).landing;
+    assert.deepEqual(old, landingCopy(loc));
   }
   // The English landing says AI, never IA.
   assert.doesNotMatch(Object.values(flattenCopy(landingCopy("en"))).join(" "), /\bIA\b/);

@@ -1,185 +1,131 @@
 import type { Locale } from "@/i18n/types";
 
-/** /servicios (/en/services). Use cases are examples, not client work. No em dashes. */
+/**
+ * /servicios (/en/services): «Hecho para vos», the done-for-you path.
+ * The five old service pages live here as sections (ids = their old slugs; 301s in next.config.ts).
+ * Second person, benefits first, no stack names, never "cheap". No em dashes.
+ */
+export const SERVICE_SECTION_IDS = ["agentes-de-ia", "automatizacion-de-procesos", "crm-a-medida", "grok-bot", "automatizar-whatsapp-y-mail"] as const;
+
 export type ServicesCopy = {
   meta: { title: string; description: string };
   title: string;
   intro: string;
+  cta: string;
+  offer: { title: string; items: { title: string; body: string }[] };
   useCases: { title: string; note: string; items: { title: string; body: string }[] };
   custom: { title: string; body: string; projectsLabel: string };
-  stack: { title: string; body: string };
   process: { title: string; steps: string[] };
-  closing: string;
+  recipes: { body: string; link: string };
+  closing: { title: string; cta: string };
   offers: { name: string; description: string }[];
 };
 
 export const servicesCopy: Record<Locale, ServicesCopy> = {
   es: {
     meta: {
-      title: "Servicios de automatización con agentes de IA",
-      description:
-        "Para negocios chicos: análisis, propuesta y armado. Automatizo correo, carga de datos, facturas, reportes y agenda con IA. También CRMs a medida.",
+      title: "Automatización hecha para vos: recuperá horas cada semana",
+      description: "Contás qué te saca tiempo y lo recibís funcionando con tus herramientas: asistentes con IA, tareas que se hacen solas, CRM a medida, WhatsApp y mail en orden.",
     },
-    title: "Servicios",
-    intro:
-      "Para negocios chicos con poco equipo. Encuentro dónde se traba tu trabajo, decido qué conviene y lo automatizo con tus herramientas. La IA se encarga de lo que antes hacías a mano: leer, ordenar, resumir y redactar.",
-    useCases: {
-      title: "Qué se puede automatizar",
-      note: "Son ejemplos de lo que se puede hacer, no trabajos para clientes.",
+    title: "Hecho para vos",
+    intro: "No hace falta que aprendas nada. Contás qué te saca tiempo y lo recibís funcionando, con las herramientas que ya usás. Vos revisás y seguís con lo tuyo.",
+    cta: "Contar qué me saca tiempo",
+    offer: {
+      title: "Lo que podés tener",
       items: [
-        {
-          title: "Correo y atención",
-          body: "Clasificar los mails que llegan, preparar borradores de las respuestas que se repiten y avisar por chat cuando entra algo urgente.",
-        },
-        {
-          title: "Ventas y CRM",
-          body: "Llevar cada consulta de un formulario, un mail o una planilla al CRM, asignarla y programar el seguimiento para que nadie quede sin respuesta.",
-        },
-        {
-          title: "Facturas, tickets y comprobantes",
-          body: "Leer los datos de una foto o un PDF (fecha, monto, proveedor) y cargarlos en la planilla o el sistema que uses.",
-        },
-        {
-          title: "Reportes y resúmenes",
-          body: "Juntar los números de varias planillas o sistemas y mandar un resumen diario o semanal por mail o chat.",
-        },
-        {
-          title: "Agenda y recordatorios",
-          body: "Confirmar turnos, mandar recordatorios y mover a la agenda lo que llega por otros canales.",
-        },
-        {
-          title: "Documentos",
-          body: "Armar presupuestos, contratos o informes a partir de una plantilla y los datos que ya tenés.",
-        },
+        { title: "Un asistente con IA que trabaja por vos", body: "Lee mails y documentos, carga los datos donde van y te avisa cuando algo necesita tu decisión. Nada sale sin tu OK." },
+        { title: "Tareas repetidas que se hacen solas", body: "Lo que hoy pasás de un mail a una planilla, de un formulario a tu agenda o de un sistema a otro, corre solo y sin errores de tipeo." },
+        { title: "Tu CRM, a tu manera", body: "Contactos, seguimiento, agenda y presupuestos en un solo lugar, con solo lo que tu negocio usa." },
+        { title: "Asistentes en tus apps de siempre", body: "Tienen al día a cada cliente, cargan lo que hoy pasás a mano y te arman boletines a tu medida, del trabajo y de tu vida." },
+        { title: "WhatsApp y mail en orden", body: "Lo que se repite se responde solo, lo urgente te llega primero y en WhatsApp tenés borradores listos para que decidas si se mandan." },
+      ],
+    },
+    useCases: {
+      title: "Qué podés sacarte de encima",
+      note: "Son ejemplos de lo que se puede hacer.",
+      items: [
+        { title: "Correo y consultas", body: "Tus mails llegan ordenados, las respuestas de siempre ya están escritas y te enterás al toque de lo urgente." },
+        { title: "Ventas y seguimiento", body: "Cada consulta queda registrada con su seguimiento agendado. Nadie queda sin respuesta." },
+        { title: "Facturas y tickets", body: "Sacás una foto o mandás el PDF y fecha, monto y proveedor quedan cargados." },
+        { title: "Reportes y resúmenes", body: "Te llega un resumen diario o semanal con los números que te importan, sin abrir planillas." },
+        { title: "Agenda y recordatorios", body: "Los turnos se confirman solos y lo que llega por otros canales aparece en tu agenda." },
+        { title: "Documentos", body: "Presupuestos, contratos o informes listos a partir de tu plantilla y los datos que ya tenés." },
       ],
     },
     custom: {
-      title: "CRMs y herramientas a medida",
-      body: "Cuando una herramienta genérica no alcanza o cobra por funciones que no usás, armo un sistema a medida: contactos, seguimiento, agenda, finanzas o lo que tu negocio necesite. Estos son algunos que ya construí y uso:",
+      title: "Cuando lo genérico no alcanza",
+      body: "Si las herramientas de siempre te obligan a trabajar como ellas quieren, podés tener un sistema hecho para tu forma de trabajar. Algunos en uso real:",
       projectsLabel: "Proyectos",
     },
-    stack: {
-      title: "Con qué trabajo",
-      body: "Con las que ya usás: mail, planillas, tu agenda o tu sistema de clientes. Si hace falta algo a medida, lo armo.",
-    },
     process: {
-      title: "Cómo es trabajar conmigo",
+      title: "Cómo es",
       steps: [
-        "Diagnóstico: una charla para encontrar dónde se traba tu trabajo.",
-        "Decisión: qué conviene resolver y cómo, con un presupuesto.",
-        "Armado: lo dejo andando con tus herramientas. 50% al empezar y 50% al entregar.",
+        "Contás qué tareas te sacan tiempo.",
+        "En el día recibís un plan con qué conviene hacer primero y el presupuesto.",
+        "Lo usás con tus herramientas. Pagás 50% al empezar y 50% cuando ya lo estás usando.",
       ],
     },
-    closing: "¿Qué tarea te sacarías de encima mañana? Contámela y vemos cómo automatizarla.",
+    recipes: { body: "¿Te animás a probar por tu cuenta?", link: "Mirá las recetas gratis" },
+    closing: { title: "¿Qué harías con unas horas más por semana?", cta: "Contar mi caso" },
     offers: [
-      {
-        name: "Diagnóstico y decisión",
-        description: "Una charla para encontrar dónde se traba tu trabajo, decidir qué conviene resolver y cómo, y pasarte un presupuesto.",
-      },
-      {
-        name: "Automatización con IA",
-        description: "Automatizaciones que leen, ordenan, resumen y redactan dentro de tu trabajo, con las herramientas que ya usás.",
-      },
-      {
-        name: "Automatizaciones entre herramientas",
-        description: "Flujos que conectan correo, planillas, formularios, CRMs y agendas para que el trabajo repetitivo corra solo.",
-      },
-      {
-        name: "CRM a medida",
-        description: "Un CRM hecho para tu negocio: contactos, seguimiento, agenda y lo que necesites, sin pagar por funciones que no usás.",
-      },
-      {
-        name: "Herramientas internas a medida",
-        description: "Sistemas hechos para cómo trabajás.",
-      },
-      {
-        name: "Sistemas listos para agentes de IA",
-        description: "Tu CRM, tu agenda o tu mail preparados para que un agente de IA los use, con permisos acotados y tu aprobación antes de enviar.",
-      },
+      { name: "Diagnóstico y plan", description: "Una charla para encontrar dónde se te va el tiempo y un plan con presupuesto." },
+      { name: "Asistentes con IA", description: "Asistentes que leen, ordenan, resumen y redactan dentro de tu trabajo, con tu aprobación antes de enviar." },
+      { name: "Automatización de tareas", description: "Mail, planillas, formularios, CRMs y agendas conectados para que lo repetitivo corra solo." },
+      { name: "CRM a medida", description: "Contactos, seguimiento, agenda y presupuestos, con solo lo que tu negocio usa." },
+      { name: "WhatsApp y mail", description: "Respuestas a lo que se repite, avisos de lo urgente y borradores listos para aprobar." },
     ],
   },
   en: {
     meta: {
-      title: "Automation services with AI agents",
-      description:
-        "For small businesses: analysis, proposal and build. I automate email, data entry, invoices, reports and scheduling with AI. Plus custom CRMs.",
+      title: "Automation done for you: get hours back every week",
+      description: "Share what eats your time and get it working with your tools: AI assistants, tasks that run themselves, a custom CRM, WhatsApp and email under control.",
     },
-    title: "Services",
-    intro:
-      "For small businesses with a small team. I find where your work gets stuck, decide what's worth doing and automate it with your tools. AI handles what you used to do by hand: reading, sorting, summarizing and writing.",
-    useCases: {
-      title: "What can be automated",
-      note: "These are examples of what can be done, not client work.",
+    title: "Done for you",
+    intro: "No need to learn a thing. Share what eats your time and get it working, with the tools you already use. You check it and get on with your day.",
+    cta: "Tell me what eats my time",
+    offer: {
+      title: "What you can get",
       items: [
-        {
-          title: "Email and support",
-          body: "Sort incoming email, draft the replies you keep writing and send a chat alert when something urgent arrives.",
-        },
-        {
-          title: "Sales and CRM",
-          body: "Bring every inquiry from a form, an email or a sheet into the CRM, assign it and schedule the follow-up so nobody goes unanswered.",
-        },
-        {
-          title: "Invoices, receipts and tickets",
-          body: "Read the data from a photo or a PDF (date, amount, vendor) and load it into the sheet or system you use.",
-        },
-        {
-          title: "Reports and summaries",
-          body: "Gather numbers from several sheets or systems and send a daily or weekly summary by email or chat.",
-        },
-        {
-          title: "Scheduling and reminders",
-          body: "Confirm appointments, send reminders and move what arrives on other channels into the calendar.",
-        },
-        {
-          title: "Documents",
-          body: "Build quotes, contracts or reports from a template and the data you already have.",
-        },
+        { title: "An AI assistant that works for you", body: "It reads emails and documents, puts the data where it belongs and flags anything that needs your call. Nothing goes out without your OK." },
+        { title: "Repetitive tasks that run themselves", body: "What you move today from an email to a sheet, from a form to your calendar or from one system to another runs on its own, with no typos." },
+        { title: "Your CRM, your way", body: "Contacts, follow-ups, calendar and quotes in one place, with only what your business uses." },
+        { title: "Assistants in the apps you already use", body: "They keep every client up to date, log what you type by hand today and put together newsletters made for you, about work and your life." },
+        { title: "WhatsApp and email under control", body: "The repetitive questions get answered, the urgent ones reach you first, and on WhatsApp you get drafts ready for you to send or not." },
+      ],
+    },
+    useCases: {
+      title: "What you can take off your plate",
+      note: "These are examples of what can be done.",
+      items: [
+        { title: "Email and inquiries", body: "Your inbox arrives sorted, the usual replies are already written and you hear about urgent things right away." },
+        { title: "Sales and follow-up", body: "Every inquiry is logged with its follow-up scheduled. Nobody goes unanswered." },
+        { title: "Invoices and receipts", body: "Snap a photo or send the PDF and date, amount and vendor get logged." },
+        { title: "Reports and summaries", body: "A daily or weekly summary with the numbers you care about, no spreadsheets to open." },
+        { title: "Scheduling and reminders", body: "Appointments confirm themselves and what arrives on other channels shows up in your calendar." },
+        { title: "Documents", body: "Quotes, contracts or reports ready from your template and the data you already have." },
       ],
     },
     custom: {
-      title: "Custom CRMs and tools",
-      body: "When a generic tool falls short or charges for features you don't use, I build a custom system: contacts, follow-ups, calendar, finances or whatever your business needs. These are some I've already built and use:",
+      title: "When off-the-shelf falls short",
+      body: "If the usual tools force you to work their way, you can have a system made for the way you work. A few in real use:",
       projectsLabel: "Projects",
     },
-    stack: {
-      title: "What I work with",
-      body: "The ones you already use: email, spreadsheets, your calendar or your client system. If something custom is needed, I build it.",
-    },
     process: {
-      title: "How working with me goes",
+      title: "How it goes",
       steps: [
-        "Diagnosis: a chat to find where your work gets stuck.",
-        "Decision: what's worth solving and how, with a quote.",
-        "Build: I set it up with your tools. 50% to start and 50% on delivery.",
+        "You share which tasks eat your time.",
+        "Within a day you get a plan with what to do first and a quote.",
+        "You use it with your tools. You pay 50% to start and 50% once you're using it.",
       ],
     },
-    closing: "Which task would you drop tomorrow? Tell me about it and we'll see how to automate it.",
+    recipes: { body: "Feel like trying it yourself?", link: "See the free recipes" },
+    closing: { title: "What would you do with a few extra hours a week?", cta: "Share my case" },
     offers: [
-      {
-        name: "Diagnosis and decision",
-        description: "A chat to find where your work gets stuck, decide what's worth solving and how, and send you a quote.",
-      },
-      {
-        name: "Automation with AI",
-        description: "Automations that read, sort, summarize and write inside your work, with the tools you already use.",
-      },
-      {
-        name: "Automations between tools",
-        description: "Flows that connect email, sheets, forms, CRMs and calendars so repetitive work runs on its own.",
-      },
-      {
-        name: "Custom CRM",
-        description: "A CRM made for your business: contacts, follow-ups, calendar and whatever you need, without paying for features you don't use.",
-      },
-      {
-        name: "Custom internal tools",
-        description: "Systems made for the way you work.",
-      },
-      {
-        name: "Systems your AI agents can use",
-        description: "Your CRM, calendar or email set up so an AI agent can use them, with narrow permissions and your approval before anything goes out.",
-      },
+      { name: "Diagnosis and plan", description: "A chat to find where your time goes and a plan with a quote." },
+      { name: "AI assistants", description: "Assistants that read, sort, summarize and write inside your work, with your approval before anything goes out." },
+      { name: "Task automation", description: "Email, sheets, forms, CRMs and calendars connected so the repetitive work runs on its own." },
+      { name: "Custom CRM", description: "Contacts, follow-ups, calendar and quotes, with only what your business uses." },
+      { name: "WhatsApp and email", description: "Answers to the repetitive questions, alerts for what's urgent and drafts ready to approve." },
     ],
   },
 };

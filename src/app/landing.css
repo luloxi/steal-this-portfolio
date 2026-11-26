@@ -41,7 +41,6 @@
 /* Hero */
 .ln-hero { display: flex; flex-direction: column; gap: 2.5rem; }
 .ln-hero-text { display: flex; flex-direction: column; gap: 1.1rem; max-width: 54rem; }
-.ln-kicker { margin: 0; font-size: .8rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ln-muted); }
 .ln-title { margin: 0; font-size: clamp(40px, 6vw, 68px); line-height: 1.04; font-weight: 600; letter-spacing: -.02em; text-wrap: balance; color: var(--ln-ink); }
 .ln-lead { margin: 0; max-width: 60ch; font-size: clamp(17px, 2.2vw, 19px); line-height: 1.55; color: var(--ln-muted); }
 .ln-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: .4rem; }
@@ -96,13 +95,29 @@
 .ln-recipe-link { align-self: flex-start; margin-top: .15rem; font-size: .92rem; font-weight: 600; color: var(--ln-human); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: color-mix(in oklab, var(--ln-human) 40%, transparent); }
 .ln-recipe-link:hover { text-decoration-color: currentColor; }
 
-/* Nada sale sin tu OK */
-.ln-trust { display: flex; flex-direction: column; gap: 1rem; padding: 1.5rem 1.35rem; border-radius: 18px; background: var(--ln-human-bg); border: 1px solid color-mix(in oklab, var(--ln-human) 30%, transparent); }
-.ln-trust .ln-h3 { color: var(--ln-human); }
-.ln-trust-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .8rem; }
-@media (min-width: 760px) { .ln-trust { padding: 1.75rem 2rem; } .ln-trust-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; } }
-.ln-trust-list li { display: flex; gap: .55rem; font-size: 1rem; line-height: 1.5; color: var(--ln-ink); }
-.ln-trust-list li::before { content: "✓"; flex: none; font-weight: 700; color: var(--ln-human); }
+/* Two paths: copy it yourself / done for you. Whole card is the link. */
+.ln-paths { display: grid; gap: 1rem; margin-top: .4rem; }
+@media (min-width: 760px) { .ln-paths { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; } }
+.ln-path { display: flex; flex-direction: column; gap: .6rem; padding: 1.5rem 1.35rem 1.35rem; border-radius: 22px; border: 1px solid var(--ln-line); background: var(--ln-card); color: var(--ln-ink); text-decoration: none; cursor: pointer; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.ln-path:hover, .ln-path:focus-visible { transform: translateY(-2px); border-color: color-mix(in oklab, var(--ln-ink) 30%, transparent); box-shadow: 0 10px 30px -18px color-mix(in oklab, var(--ln-ink) 45%, transparent); }
+.ln-path-done { background: var(--ln-human-bg); border-color: color-mix(in oklab, var(--ln-human) 35%, transparent); }
+.ln-path-tag { align-self: flex-start; padding: .25rem .7rem; border-radius: 999px; font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ln-check); background: color-mix(in oklab, var(--ln-check) 12%, transparent); }
+.ln-path-done .ln-path-tag { color: var(--ln-human); background: color-mix(in oklab, var(--ln-human) 16%, transparent); }
+.ln-path-title { margin: 0; font-family: inherit; font-size: 1.35rem; line-height: 1.25; font-weight: 600; letter-spacing: -.01em; text-transform: none; color: var(--ln-ink); }
+.ln-path-body { margin: 0; font-size: 1rem; line-height: 1.55; color: color-mix(in oklab, var(--ln-ink) 82%, transparent); }
+.ln-path-cta { margin-top: auto; padding-top: .35rem; font-weight: 600; color: var(--ln-ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: color-mix(in oklab, var(--ln-ink) 35%, transparent); }
+
+/* Each featured recipe: copy it, or get it working. */
+.ln-case-links { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.1rem; margin-top: .15rem; }
+.ln-case-links .ln-recipe-link { margin-top: 0; }
+.ln-hire-link { font-size: .92rem; font-weight: 600; color: var(--ln-ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: color-mix(in oklab, var(--ln-ink) 30%, transparent); cursor: pointer; }
+.ln-hire-link:hover { text-decoration-color: currentColor; }
+
+/* More ideas: soft chips. */
+.ln-ideas-list { list-style: none; margin: .2rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.ln-ideas-list li { padding: .5rem .9rem; border-radius: 999px; border: 1px solid var(--ln-line); background: var(--ln-card); font-size: .95rem; color: var(--ln-ink); }
+@media (prefers-reduced-motion: reduce) { .ln-path { transition: none; } .ln-path:hover { transform: none; } }
+
 
 /* Cosas que ya armé */
 .ln-built { list-style: none; margin: .4rem 0 0; padding: 0; display: grid; gap: 1rem; }
