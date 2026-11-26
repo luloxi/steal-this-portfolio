@@ -57,9 +57,8 @@ export function HomeView({ faq }: { faq: FaqItem[] }) {
   const m = landing.more;
   const { heroRef, closingRef, show: stickyOn } = useStickyCta();
   const nav: { label: string; to: string; hire?: boolean }[] = [
-    { label: m.nav.services, to: "#servicios" },
-    { label: m.nav.projects, to: href("/proyectos") },
-    { label: m.nav.blog, to: href("/blog") },
+    { label: m.nav.recipes, to: href("/recetas") },
+    { label: m.nav.services, to: href("/servicios") },
     { label: m.nav.about, to: href("/sobre-mi") },
     { label: m.nav.contact, to: href("/contacto") },
     { label: m.nav.hire, to: href("/contacto"), hire: true },
@@ -80,16 +79,15 @@ export function HomeView({ faq }: { faq: FaqItem[] }) {
       <main className="hm-main ln-main">
         <header className="ln-hero" ref={heroRef}>
           <div className="ln-hero-text">
-            <CopyText as="p" className="ln-kicker" copyKey="landing.home.kicker" value={c.kicker} />
-            <CopyText as="h1" className="ln-title" copyKey="landing.home.title" value={c.title} />
-            <CopyText as="p" className="ln-lead" copyKey="landing.home.lead" value={c.lead} />
+            <CopyText as="h1" className="ln-title" copyKey="landing.home.hero.title" value={c.hero.title} />
+            <CopyText as="p" className="ln-lead" copyKey="landing.home.hero.lead" value={c.hero.lead} />
             <div className="ln-actions">
-              <ContactTrigger className="hm-cta-link ln-btn" data-testid="hero-cta"><CopyText copyKey="landing.home.cta" value={c.cta} /></ContactTrigger>
-              <a href="#que-hace-solo" className="hm-more ln-btn"><CopyText copyKey="landing.home.cta2" value={c.cta2} /></a>
+              <Link href={href("/recetas")} className="hm-cta-link ln-btn" data-testid="hero-recipes"><CopyText copyKey="landing.home.hero.ctaRecipes" value={c.hero.ctaRecipes} /></Link>
+              <ContactTrigger className="hm-more ln-btn" data-testid="hero-cta"><CopyText copyKey="landing.home.hero.ctaHire" value={c.hero.ctaHire} /></ContactTrigger>
             </div>
             <ul className="ln-checks">
-              {c.checks.map((x, i) => (
-                <li key={i}><CopyText copyKey={`landing.home.checks.${i}`} value={x} /></li>
+              {c.hero.checks.map((x, i) => (
+                <li key={i}><CopyText copyKey={`landing.home.hero.checks.${i}`} value={x} /></li>
               ))}
             </ul>
           </div>
@@ -102,37 +100,86 @@ export function HomeView({ faq }: { faq: FaqItem[] }) {
           />
         </header>
 
-        <section className="ln-section ln-problem">
-          <CopyText as="h2" className="ln-h2" copyKey="landing.home.problem.title" value={c.problem.title} />
-          <CopyText as="p" className="ln-body" copyKey="landing.home.problem.body" value={c.problem.body} />
+        <section id="caminos" className="ln-section hm-anchor" aria-labelledby="ln-paths">
+          <h2 id="ln-paths" className="ln-h2"><CopyText copyKey="landing.home.paths.title" value={c.paths.title} /></h2>
+          <div className="ln-paths">
+            <Link href={href("/recetas")} className="ln-path ln-path-diy" data-testid="path-diy">
+              <CopyText as="span" className="ln-path-tag" copyKey="landing.home.paths.diy.tag" value={c.paths.diy.tag} />
+              <CopyText as="h3" className="ln-path-title" copyKey="landing.home.paths.diy.title" value={c.paths.diy.title} />
+              <CopyText as="p" className="ln-path-body" copyKey="landing.home.paths.diy.body" value={c.paths.diy.body} />
+              <span className="ln-path-cta"><CopyText copyKey="landing.home.paths.diy.cta" value={c.paths.diy.cta} /> ▸</span>
+            </Link>
+            <ContactTrigger className="ln-path ln-path-done" data-testid="path-done">
+              <CopyText as="span" className="ln-path-tag" copyKey="landing.home.paths.done.tag" value={c.paths.done.tag} />
+              <CopyText as="h3" className="ln-path-title" copyKey="landing.home.paths.done.title" value={c.paths.done.title} />
+              <CopyText as="p" className="ln-path-body" copyKey="landing.home.paths.done.body" value={c.paths.done.body} />
+              <span className="ln-path-cta"><CopyText copyKey="landing.home.paths.done.cta" value={c.paths.done.cta} /> ▸</span>
+            </ContactTrigger>
+          </div>
         </section>
 
         <section id="que-hace-solo" className="ln-section hm-anchor" aria-labelledby="ln-cases">
-          <h2 id="ln-cases" className="ln-h2"><CopyText copyKey="landing.home.cases.title" value={c.cases.title} /></h2>
-          <CopyText as="p" className="ln-note" copyKey="landing.home.cases.note" value={c.cases.note} />
+          <h2 id="ln-cases" className="ln-h2"><CopyText copyKey="landing.home.featured.title" value={c.featured.title} /></h2>
+          <CopyText as="p" className="ln-note" copyKey="landing.home.featured.note" value={c.featured.note} />
           <ul className="ln-cases">
-            {c.cases.items.map((it, i) => (
-              <li key={i} className="ln-case">
-                <CopyText as="p" className="ln-case-problem" copyKey={`landing.home.cases.items.${i}.problem`} value={it.problem} />
-                <CopyText as="p" className="ln-case-body" copyKey={`landing.home.cases.items.${i}.solves`} value={it.solves} />
-                <FlowChips steps={it.flow} human={CASE_HUMAN_STEP[i] ?? -1} />
-                {RECIPES[i] ? (
-                  <Link href={`${href("/recetas")}#${RECIPES[i].slug}`} className="ln-recipe-link">
-                    <CopyText copyKey="landing.home.cases.recipe" value={c.cases.recipe} /> ▸
-                  </Link>
-                ) : null}
-              </li>
+            {c.featured.items.map((it, i) => {
+              const r = RECIPES[i];
+              return (
+                <li key={i} className="ln-case">
+                  <CopyText as="p" className="ln-case-problem" copyKey={`landing.home.featured.items.${i}.problem`} value={it.problem} />
+                  <CopyText as="p" className="ln-case-body" copyKey={`landing.home.featured.items.${i}.solves`} value={it.solves} />
+                  <FlowChips steps={it.flow} human={CASE_HUMAN_STEP[i] ?? -1} />
+                  {r ? (
+                    <div className="ln-case-links">
+                      <Link href={`${href("/recetas")}#${r.slug}`} className="ln-recipe-link">
+                        <CopyText copyKey="landing.home.featured.copy" value={c.featured.copy} /> ▸
+                      </Link>
+                      <ContactTrigger className="ln-hire-link" prefill={c.featured.hireMessage.replace("{receta}", r.copy[locale].title)}>
+                        <CopyText copyKey="landing.home.featured.hire" value={c.featured.hire} />
+                      </ContactTrigger>
+                    </div>
+                  ) : null}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+
+        <section className="ln-section ln-ideas" aria-labelledby="ln-ideas">
+          <h2 id="ln-ideas" className="ln-h2"><CopyText copyKey="landing.home.ideas.title" value={c.ideas.title} /></h2>
+          <CopyText as="p" className="ln-body" copyKey="landing.home.ideas.body" value={c.ideas.body} />
+          <ul className="ln-ideas-list">
+            {c.ideas.items.map((x, i) => (
+              <li key={i}><CopyText copyKey={`landing.home.ideas.items.${i}`} value={x} /></li>
             ))}
           </ul>
         </section>
 
-        <section className="ln-trust" aria-labelledby="ln-trust">
-          <h2 id="ln-trust" className="ln-h3"><CopyText copyKey="landing.home.trust.title" value={c.trust.title} /></h2>
-          <ul className="ln-trust-list">
-            {c.trust.items.map((x, i) => (
-              <li key={i}><CopyText copyKey={`landing.home.trust.items.${i}`} value={x} /></li>
+        <section id="servicios" className="ln-section hm-anchor" aria-labelledby="ln-process">
+          <h2 id="ln-process" className="ln-h2"><CopyText copyKey="landing.home.process.title" value={c.process.title} /></h2>
+          <ol className="ln-steps">
+            {c.process.steps.map((step, i) => (
+              <li key={i} className="ln-step">
+                <span className="ln-step-n" aria-hidden>{i + 1}</span>
+                <CopyText as="h3" className="ln-step-title" copyKey={`landing.home.process.steps.${i}.title`} value={step.title} />
+                <CopyText as="p" className="ln-step-body" copyKey={`landing.home.process.steps.${i}.body`} value={step.body} />
+              </li>
             ))}
-          </ul>
+          </ol>
+          <CopyText as="p" className="ln-note ln-pay" copyKey="landing.home.process.pay" value={c.process.pay} />
+          <Link href={href("/servicios")} className="ln-textlink"><CopyText copyKey="landing.home.process.more" value={c.process.more} /> ▸</Link>
+        </section>
+
+        <section id="sobre-mi" className="ln-section hm-anchor" aria-labelledby="ln-about">
+          <h2 id="ln-about" className="ln-h2"><CopyText copyKey="landing.more.about.title" value={m.about.title} /></h2>
+          <div className="ln-about">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/avatar-portrait.webp" alt={site.legalName} width={600} height={800} loading="lazy" decoding="async" className="ln-about-photo" />
+            <div className="ln-about-text">
+              <CopyText as="p" className="ln-body" copyKey="landing.more.about.body" value={m.about.body} />
+              <Link href={href("/sobre-mi")} className="hm-more ln-btn-sm"><CopyText copyKey="landing.more.about.more" value={m.about.more} /> ▸</Link>
+            </div>
+          </div>
         </section>
 
         <section className="ln-section" aria-labelledby="ln-built">
@@ -150,33 +197,7 @@ export function HomeView({ faq }: { faq: FaqItem[] }) {
               </li>
             ))}
           </ul>
-        </section>
-
-        <section id="servicios" className="ln-section hm-anchor" aria-labelledby="ln-process">
-          <h2 id="ln-process" className="ln-h2"><CopyText copyKey="landing.home.process.title" value={c.process.title} /></h2>
-          <ol className="ln-steps">
-            {c.process.steps.map((step, i) => (
-              <li key={i} className="ln-step">
-                <span className="ln-step-n" aria-hidden>{i + 1}</span>
-                <CopyText as="h3" className="ln-step-title" copyKey={`landing.home.process.steps.${i}.title`} value={step.title} />
-                <CopyText as="p" className="ln-step-body" copyKey={`landing.home.process.steps.${i}.body`} value={step.body} />
-              </li>
-            ))}
-          </ol>
-          <CopyText as="p" className="ln-note ln-pay" copyKey="landing.home.process.pay" value={c.process.pay} />
-          <Link href={href("/servicios")} className="ln-textlink">{c.footer.services} ▸</Link>
-        </section>
-
-        <section id="sobre-mi" className="ln-section hm-anchor" aria-labelledby="ln-about">
-          <h2 id="ln-about" className="ln-h2"><CopyText copyKey="landing.more.about.title" value={m.about.title} /></h2>
-          <div className="ln-about">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/avatar-portrait.webp" alt={site.legalName} width={600} height={800} loading="lazy" decoding="async" className="ln-about-photo" />
-            <div className="ln-about-text">
-              <CopyText as="p" className="ln-body" copyKey="landing.more.about.body" value={m.about.body} />
-              <Link href={href("/sobre-mi")} className="hm-more ln-btn-sm"><CopyText copyKey="landing.more.about.more" value={m.about.more} /> ▸</Link>
-            </div>
-          </div>
+          <Link href={href("/proyectos")} className="ln-textlink">{locale === "es" ? "Ver los proyectos" : "See the projects"} ▸</Link>
         </section>
 
         <section className="ln-section" aria-labelledby="ln-faq">
@@ -185,9 +206,9 @@ export function HomeView({ faq }: { faq: FaqItem[] }) {
         </section>
 
         <section className="ln-closing" ref={closingRef}>
-          <CopyText as="h2" className="ln-closing-title" copyKey="landing.home.closing.title" value={c.closing.title} />
-          <CopyText as="p" className="ln-body" copyKey="landing.home.closing.body" value={c.closing.body} />
-          <ContactTrigger className="hm-cta-link ln-btn" data-testid="closing-cta"><CopyText copyKey="landing.home.closing.cta" value={c.closing.cta} /></ContactTrigger>
+          <CopyText as="h2" className="ln-closing-title" copyKey="landing.home.end.title" value={c.end.title} />
+          <CopyText as="p" className="ln-body" copyKey="landing.home.end.body" value={c.end.body} />
+          <ContactTrigger className="hm-cta-link ln-btn" data-testid="closing-cta"><CopyText copyKey="landing.home.end.cta" value={c.end.cta} /></ContactTrigger>
         </section>
 
         <p className="hm-agents">
@@ -197,12 +218,15 @@ export function HomeView({ faq }: { faq: FaqItem[] }) {
       </main>
 
       <div className={stickyOn ? "ln-sticky is-on" : "ln-sticky"} aria-hidden={!stickyOn}>
-        <ContactTrigger className="hm-cta-link ln-btn" tabIndex={stickyOn ? 0 : -1} data-testid="sticky-cta">{c.cta}</ContactTrigger>
+        <ContactTrigger className="hm-cta-link ln-btn" tabIndex={stickyOn ? 0 : -1} data-testid="sticky-cta">{c.hero.ctaHire}</ContactTrigger>
       </div>
       <footer className="hm-footer">
         <nav className="hm-footer-links" aria-label="Social">
+          <Link href={href("/recetas")} className="hm-footer-blog"><CopyText copyKey="landing.home.footer.recipes" value={c.footer.recipes} /></Link>
           <Link href={href("/servicios")} className="hm-footer-blog"><CopyText copyKey="landing.home.footer.services" value={c.footer.services} /></Link>
-          <Link href={href("/blog")} className="hm-footer-blog">{t.sections.blog}</Link>
+          <Link href={href("/proyectos")} className="hm-footer-blog">{t.sections.projects}</Link>
+          <Link href={href("/blog")} className="hm-footer-blog"><CopyText copyKey="landing.home.footer.blog" value={c.footer.blog} /></Link>
+          <Link href={href("/referidos")} className="hm-footer-blog"><CopyText copyKey="landing.home.footer.referrals" value={c.footer.referrals} /></Link>
           {socials.map((s) => {
             const Icon = socialIcons[s.id];
             return (

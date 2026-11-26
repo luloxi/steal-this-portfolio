@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import path from "path";
 import { BLOG_IMAGE_REMOTE_PATTERNS } from "./src/lib/blog-image-hosts";
+import { SERVICE_REDIRECTS } from "./src/lib/service-redirects";
 
 // Cloudflare Workers (OpenNext) has no Vercel image optimizer, so images are
 // served as is there. `pnpm cf:build` sets NEXT_BUILD_TARGET=cloudflare.
@@ -23,6 +24,8 @@ const nextConfig: NextConfig = {
     return [
       r("/servicios/automatizar-finanzas", "/servicios"),
       r("/en/services/finance-automation", "/en/services"),
+      // The five service pages became sections of /servicios («Hecho para vos»).
+      ...SERVICE_REDIRECTS.map(([from, to]) => r(from, to)),
       r("/about", "/sobre-mi"),
       r("/tastes", "/sobre-mi"),
       r("/gustos", "/sobre-mi"),

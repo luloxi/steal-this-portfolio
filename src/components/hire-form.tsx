@@ -22,7 +22,7 @@ function readUtm(search: string): Record<string, string> {
  * (same rule as the server) with a live counter. Referral code and utm tags ride along
  * silently (cookie / URL); the server validates both.
  */
-export function HireForm({ c, callUrl, idPrefix = "hire", compact = false, onInternalNav }: { c: HireCopy; callUrl?: string; idPrefix?: string; compact?: boolean; onInternalNav?: () => void }) {
+export function HireForm({ c, callUrl, idPrefix = "hire", compact = false, onInternalNav, initialMessage = "" }: { c: HireCopy; callUrl?: string; idPrefix?: string; compact?: boolean; onInternalNav?: () => void; initialMessage?: string }) {
   const f = c.form;
   const { href } = useLocale();
   const nameId = `${idPrefix}-name`;
@@ -34,7 +34,7 @@ export function HireForm({ c, callUrl, idPrefix = "hire", compact = false, onInt
   const status = useRef<HTMLParagraphElement>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(() => clampMessage(initialMessage));
   const [website, setWebsite] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "ok" | "error">("idle");
   const [err, setErr] = useState("");

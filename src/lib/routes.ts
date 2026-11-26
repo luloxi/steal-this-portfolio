@@ -31,13 +31,6 @@ export const SEGMENTS_ES_TO_EN: Readonly<Record<string, string>> = {
  * (/servicios/agentes-de-ia <-> /en/services/ai-agents). Keyed by the Spanish first segment.
  */
 export const SUBSEGMENTS_ES_TO_EN: Readonly<Record<string, Readonly<Record<string, string>>>> = {
-  servicios: {
-    "agentes-de-ia": "ai-agents",
-    "automatizacion-de-procesos": "process-automation",
-    "crm-a-medida": "custom-crm",
-    "grok-bot": "grok-bot",
-    "automatizar-whatsapp-y-mail": "whatsapp-and-email-automation",
-  },
 };
 
 const SUBSEGMENTS_EN_TO_ES: Readonly<Record<string, Readonly<Record<string, string>>>> = Object.fromEntries(

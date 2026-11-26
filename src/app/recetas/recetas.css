@@ -27,3 +27,6 @@
 .rc-cta-title { margin: 0; font-family: inherit; font-size: 1.35rem; line-height: 1.25; font-weight: 600; letter-spacing: -.01em; text-transform: none; color: var(--ln-ink); text-wrap: balance; }
 .rc-cta-body { margin: 0; font-size: 1rem; color: color-mix(in oklab, var(--ln-ink) 80%, transparent); }
 @media (prefers-reduced-motion: reduce) { .rc-steps summary::before { transition: none; } }
+.rc-hire { margin: 0; padding-top: .7rem; border-top: 1px dashed var(--ln-line); font-size: .95rem; color: var(--ln-muted); }
+.rc-hire-link { font-weight: 600; color: var(--ln-human); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: color-mix(in oklab, var(--ln-human) 40%, transparent); cursor: pointer; }
+.rc-hire-link:hover { text-decoration-color: currentColor; }

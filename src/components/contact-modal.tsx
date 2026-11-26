@@ -22,7 +22,8 @@ import { useLocale } from "@/i18n/locale-provider";
 type Step = "choice" | "message";
 
 type ContactModalApi = {
-  open: () => void;
+  /** With a prefill, it opens straight on the message form with that text written. */
+  open: (prefill?: string) => void;
   close: () => void;
 };
 
@@ -52,11 +53,13 @@ export function ContactTrigger({
   className,
   children,
   onOpen,
+  prefill,
   ...rest
 }: {
   className?: string;
   children: ReactNode;
   onOpen?: () => void;
+  prefill?: string;
 } & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "onClick">) {
   const { href } = useLocale();
   const modal = useContactModalOptional();
@@ -69,7 +72,7 @@ export function ContactTrigger({
         if (!modal || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
         e.preventDefault();
         onOpen?.();
-        modal.open();
+        modal.open(prefill);
       }}
     >
       {children}
@@ -80,10 +83,12 @@ export function ContactTrigger({
 export function ContactModalProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>("choice");
+  const [prefill, setPrefill] = useState("");
   const pathname = usePathname();
   const pathRef = useRef(pathname);
-  const openModal = useCallback(() => {
-    setStep("choice");
+  const openModal = useCallback((text?: string) => {
+    setPrefill(text ?? "");
+    setStep(text ? "message" : "choice");
     setOpen(true);
   }, []);
   const close = useCallback(() => setOpen(false), []);
@@ -97,7 +102,7 @@ export function ContactModalProvider({ children }: { children: ReactNode }) {
   return (
     <ContactModalContext.Provider value={{ open: openModal, close }}>
       {children}
-      {open ? <ContactModal step={step} setStep={setStep} onClose={close} /> : null}
+      {open ? <ContactModal step={step} setStep={setStep} onClose={close} prefill={prefill} /> : null}
     </ContactModalContext.Provider>
   );
 }
@@ -114,7 +119,9 @@ export function ContactWays({
   step: stepProp,
   setStep: setStepProp,
   onCall,
+  prefill,
 }: {
+  prefill?: string;
   callHref: string;
   variant: "modal" | "page";
   step?: Step;
@@ -162,6 +169,7 @@ export function ContactWays({
       idPrefix={variant === "page" ? "hire" : "cm-hire"}
       compact
       onInternalNav={onCall}
+      initialMessage={prefill}
     />
   );
 
@@ -196,7 +204,7 @@ function focusables(root: HTMLElement): HTMLElement[] {
   )].filter((el) => el.getAttribute("aria-hidden") !== "true" && el.tabIndex !== -1 && el.offsetParent !== null);
 }
 
-function ContactModal({ step, setStep, onClose }: { step: Step; setStep: (s: Step) => void; onClose: () => void }) {
+function ContactModal({ step, setStep, onClose, prefill }: { step: Step; setStep: (s: Step) => void; onClose: () => void; prefill?: string }) {
   const { t } = useLocale();
   const settings = useSiteSettings();
   const callHref = bookingUrl(settings.callBookingUrl);
@@ -260,7 +268,7 @@ function ContactModal({ step, setStep, onClose }: { step: Step; setStep: (s: Ste
           <span aria-hidden="true">×</span>
         </button>
         <h2 id={titleId} className="cm-title">{step === "message" ? c.messageTitle : c.chooseTitle}</h2>
-        <ContactWays callHref={callHref} variant="modal" step={step} setStep={setStep} onCall={onClose} />
+        <ContactWays callHref={callHref} variant="modal" step={step} setStep={setStep} onCall={onClose} prefill={prefill} />
       </div>
     </div>
   );

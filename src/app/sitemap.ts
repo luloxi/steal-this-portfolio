@@ -7,10 +7,9 @@ import { blogPostPath, pathPair } from "@/lib/routes";
 import { isPathHidden, orderRecords } from "@/lib/site-sections";
 import { getSiteOrder } from "@/lib/site-order";
 import type { Locale } from "@/i18n/types";
-import { SERVICE_PAGES } from "@/content/service-pages";
 
 /** Last real content change of the code-driven pages (bump when their copy changes). */
-const PAGES_UPDATED = new Date("2026-11-25T00:00:00-03:00");
+const PAGES_UPDATED = new Date("2026-11-26T00:00:00-03:00");
 
 /** projects.updated_at by id (read only). Empty when D1 is unavailable. */
 async function projectUpdates(): Promise<Map<string, string>> {
@@ -43,7 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     both(settings.url, pathPair(path), {
       lastModified: PAGES_UPDATED,
       changeFrequency: path === "/blog" ? "weekly" : "monthly",
-      priority: path === "/" ? 1 : path === "/servicios" || path === "/contacto" ? 0.9 : 0.7,
+      priority: path === "/" ? 1 : path === "/servicios" || path === "/recetas" || path === "/contacto" ? 0.9 : 0.7,
     }),
   );
   const projects = orderRecords(stored, order.projects).filter((p) => p.visible && shown(`/proyectos/${p.id}`)).flatMap((p) =>
@@ -52,9 +51,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "yearly",
       priority: 0.5,
     }),
-  );
-  const services = SERVICE_PAGES.flatMap((p) =>
-    both(settings.url, pathPair(`/servicios/${p.slug}`), { lastModified: PAGES_UPDATED, changeFrequency: "monthly", priority: 0.9 }),
   );
   let posts: MetadataRoute.Sitemap = [];
   try {
@@ -67,5 +63,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   } catch (err) {
     console.error("[sitemap] posts", err);
   }
-  return [...pages, ...services, ...projects, ...posts];
+  return [...pages, ...projects, ...posts];
 }
