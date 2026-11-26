@@ -30,6 +30,7 @@ type HomeCopy = {
     title: string;
     note: string;
     problemLabel: string;
+    recipe: string;
     items: { problem: string; solves: string; flow: string[] }[];
   };
   trust: { title: string; items: string[] };
@@ -71,6 +72,7 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       title: "Qué hace solo",
       note: "En violeta, el paso donde decidís vos.",
       problemLabel: "El problema",
+      recipe: "Llevate la receta gratis",
       items: [
         {
           problem: "Salís de una reunión y lo que quedó pendiente se pierde.",
@@ -172,6 +174,7 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       title: "What it does on its own",
       note: "In violet, the step where you decide.",
       problemLabel: "The problem",
+      recipe: "Get the free recipe",
       items: [
         {
           problem: "You walk out of a meeting and the to-dos get lost.",

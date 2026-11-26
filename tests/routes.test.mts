@@ -176,3 +176,9 @@ test("retired /contratar and /en/hire redirect to contact", () => {
   assert.equal(retiredHireRedirect("/en/contact"), null);
   assert.equal(retiredHireRedirect("/"), null);
 });
+
+test("recipes page has an English URL", async () => {
+  const { localizePath, pathPair } = await import("../src/lib/routes.ts");
+  assert.equal(localizePath("en", "/recetas"), "/en/recipes");
+  assert.deepEqual(pathPair("/recetas"), { es: "/recetas", en: "/en/recipes" });
+});
