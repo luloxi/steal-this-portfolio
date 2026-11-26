@@ -31,3 +31,20 @@ test("landing copy: short hero, no freelancer pitch, no stack names, no em dashe
   }
   assert.doesNotMatch(Object.values(flattenCopy(homeCopy.en)).join(" "), /\bIA\b/);
 });
+
+test("recipes: one per home case, both languages, only Grok, Grok Bot and Hermes", async () => {
+  const { RECIPES, recipesCopy, recipesToText } = await import("../src/content/recipes.ts");
+  assert.equal(RECIPES.length, homeCopy.es.cases.items.length);
+  for (const r of RECIPES) {
+    for (const loc of ["es", "en"] as const) {
+      const x = r.copy[loc];
+      assert.ok(x.title && x.result && x.needs && x.prompt);
+      assert.ok(x.steps.length >= 1 && x.steps.length <= 3);
+      const text = [x.title, x.result, x.needs, x.prompt, ...x.steps].join(" ");
+      assert.doesNotMatch(text, /zapier|n8n|make\.com|fireflies|otter|feedly|chatgpt|\u2014/i);
+    }
+    assert.doesNotMatch(Object.values(r.copy.en).flat().join(" "), /\bIA\b/);
+  }
+  assert.doesNotMatch(Object.values(recipesCopy.en).join(" "), /\bIA\b/);
+  assert.match(recipesToText(), /https:\/\/lulox\.com\.ar\/en\/recipes/);
+});

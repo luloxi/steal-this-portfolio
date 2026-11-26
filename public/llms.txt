@@ -2,7 +2,7 @@
 
 > Luciano Oliva Bianco ("Lulox") helps small businesses (firms, agencies, consultancies and shops) get their repetitive work done on its own. He used to write code; now he works on understanding the problem, finding where the work gets stuck, deciding what is worth doing and automating it, with AI where it helps. He also builds custom CRMs and tools. Based in Buenos Aires, Argentina; works remotely with Latin America and worldwide, in Spanish or English. X: @LuloxDev. Site in Spanish at the root and in English under /en.
 
-Menos tareas, más trabajo de verdad. Entiendo qué te come el tiempo y lo saco de encima. (Fewer chores, more real work. I figure out what eats your time and take it off your plate.)
+Que el trabajo repetitivo de tu negocio se haga solo. (Let your business's repetitive work get done on its own.)
 
 ## Services (one page per need, each with use cases, how it works, FAQ and a hire link)
 
@@ -12,8 +12,12 @@ Menos tareas, más trabajo de verdad. Entiendo qué te come el tiempo y lo saco 
 - [Automatizar con Grok Bot](https://lulox.com.ar/servicios/grok-bot): bots with Grok Bot as the main engine. English: https://lulox.com.ar/en/services/grok-bot
 - [Automatizar WhatsApp y mail](https://lulox.com.ar/servicios/automatizar-whatsapp-y-mail): WhatsApp and email automation with approval before sending. English: https://lulox.com.ar/en/services/whatsapp-and-email-automation
 - [All services](https://lulox.com.ar/servicios) · [Contact / Contacto](https://lulox.com.ar/contacto): send a message (name, email, message up to 1000 characters) or book a video call.
-- Examples on the home page: every client up to date without writing anything down (meeting notes, the history of emails and chats from other platforms, money in and out, plus an AI chat to ask about it); no more entering data by hand (tickets, spreadsheets, emails or reports get entered on their own, you just check them); newsletters made for you, about work and your life (news from your field, plans to go out in your area, trips you might like, what's new from the artists you follow).
+- Examples on the home page: a meeting ends and the client file and the reminder are already done; a photo of a receipt or an Excel file becomes costs and payments per client with no typing; a Monday summary from email, spreadsheets and the calendar; a newsletter from sources you pick, filtered and summarized by AI.
 - How it works: 1) Analysis: you tell him which tasks eat your time, 2) Proposal: within a day he sends a plan with a quote, 3) Build: he sets the system up and running with the tools you already use. Nothing goes out without your OK. 50% to start and 50% on delivery. No public price list.
+
+## Free recipes
+
+- [Recetas gratis](https://lulox.com.ar/recetas) (English: https://lulox.com.ar/en/recipes): four free do-it-yourself recipes, one per home example. Each one says what you get, what you need (Grok, Grok Bot or Hermes), a short prompt to copy, and three setup steps: from the meeting to the client file, costs and payments per client with no typing, the Monday summary, and your own newsletter.
 
 ## Featured projects (each with a short demo video recorded with test data)
 

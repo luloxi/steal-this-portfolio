@@ -23,6 +23,7 @@ export const SEGMENTS_ES_TO_EN: Readonly<Record<string, string>> = {
   ingresar: "sign-in",
   referidos: "referrals",
   servicios: "services",
+  recetas: "recipes",
 };
 
 /**

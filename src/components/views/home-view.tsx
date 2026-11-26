@@ -11,6 +11,7 @@ import type { FaqItem } from "@/lib/faq";
 import { GitHubIcon, InstagramBrandIcon, LinkedInIcon, TelegramIcon, XIcon } from "@/components/icons/social";
 import { useSiteSettings } from "@/components/site-settings-context";
 import { BUILT_ART, CASE_HUMAN_STEP } from "@/content/home-copy";
+import { RECIPES } from "@/content/recipes";
 import { useLocale } from "@/i18n/locale-provider";
 
 const socialIcons: Record<string, ComponentType<{ className?: string }>> = {
@@ -115,6 +116,11 @@ export function HomeView({ faq }: { faq: FaqItem[] }) {
                 <CopyText as="p" className="ln-case-problem" copyKey={`landing.home.cases.items.${i}.problem`} value={it.problem} />
                 <CopyText as="p" className="ln-case-body" copyKey={`landing.home.cases.items.${i}.solves`} value={it.solves} />
                 <FlowChips steps={it.flow} human={CASE_HUMAN_STEP[i] ?? -1} />
+                {RECIPES[i] ? (
+                  <Link href={`${href("/recetas")}#${RECIPES[i].slug}`} className="ln-recipe-link">
+                    <CopyText copyKey="landing.home.cases.recipe" value={c.cases.recipe} /> ▸
+                  </Link>
+                ) : null}
               </li>
             ))}
           </ul>
