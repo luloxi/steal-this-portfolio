@@ -1,32 +1,57 @@
-/* /recetas: calm cards, the prompt and its Copiar button up front, steps folded. Mobile first. */
-.rc { display: flex; flex-direction: column; gap: 1.1rem; }
-.rc-intro { margin: 0; font-size: 1.1rem; line-height: 1.55; color: var(--ln-ink); }
-.rc-works { margin: -.4rem 0 .4rem; font-size: .92rem; color: var(--ln-muted); }
-.rc-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1.1rem; }
-.rc-card { scroll-margin-top: 5.5rem; display: flex; flex-direction: column; gap: .75rem; padding: 1.25rem 1.15rem 1.1rem; border: 1px solid var(--ln-line); border-radius: 18px; background: var(--ln-card); }
-.rc-card:target { border-color: var(--ln-human); box-shadow: 0 0 0 3px var(--ln-human-bg); }
-.rc-title { margin: 0; display: flex; align-items: baseline; gap: .6rem; font-family: inherit; font-size: 1.2rem; line-height: 1.3; font-weight: 600; letter-spacing: -.01em; text-transform: none; color: var(--ln-ink); }
-.rc-n { flex: none; display: inline-grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 999px; font-size: .85rem; font-weight: 700; color: var(--ln-human); background: var(--ln-human-bg); }
-.rc-result { margin: 0; font-size: 1rem; line-height: 1.55; color: color-mix(in oklab, var(--ln-ink) 85%, transparent); }
-.rc-needs { margin: 0; font-size: .92rem; line-height: 1.5; color: var(--ln-muted); }
+/* /recetas: a recipe book. Grid of cards (1 col phone, 2 tablet, 3 wide), picture first,
+   two clear buttons, the prompt hidden until «Usar la receta». Mobile first. */
+.rc {
+  --rc-1: var(--section-contact); --rc-2: var(--section-blog); --rc-3: var(--section-projects); --rc-4: var(--accent); --rc-5: var(--section-hire);
+  --rc-surface: var(--ln-card);
+  display: flex; flex-direction: column; gap: 1.5rem;
+}
+:root:not(.dark) .rc { --rc-1: #9fe3c8; --rc-2: #a8d4f5; --rc-3: #ffb4a6; --rc-4: #ffe08a; --rc-5: #cdb8ff; --rc-surface: #fffdfa; }
+.rc-head { display: flex; flex-direction: column; gap: .5rem; max-width: 62ch; margin: 0 auto; text-align: center; }
+.rc-intro { margin: 0; font-size: 1.1rem; line-height: 1.55; color: var(--ln-ink); text-wrap: pretty; }
+.rc-works { margin: 0; font-size: .92rem; color: var(--ln-muted); }
+
+.rc-grid { display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1fr); grid-auto-flow: row dense; align-items: stretch; }
+@media (min-width: 720px) { .rc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; } }
+@media (min-width: 1100px) { .rc-grid { gap: 1.75rem; } }
+
+.rc-card { scroll-margin-top: 5.5rem; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--ln-line); border-radius: 22px; background: var(--ln-card); transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+.rc-card:hover { border-color: color-mix(in oklab, var(--ln-ink) 28%, transparent); box-shadow: 0 14px 34px -22px color-mix(in oklab, var(--ln-ink) 50%, transparent); }
+.rc-card:target, .rc-card.is-open { border-color: var(--ln-human); box-shadow: 0 0 0 3px var(--ln-human-bg); }
+.rc-card.is-open { grid-column: 1 / -1; }
+@media (min-width: 1100px) { .rc-card { flex-direction: row; } .rc-art-wrap { flex: 0 0 42%; border-bottom: 0; border-right: 1px solid var(--ln-line); } .rc-card.is-open .rc-art-wrap { flex-basis: 30%; align-items: start; } }
+
+.rc-card[data-tone="0"] { --rc-a: var(--rc-5); --rc-b: var(--rc-4); --rc-c: var(--rc-1); --rc-bg: var(--rc-5); }
+.rc-card[data-tone="1"] { --rc-a: var(--rc-1); --rc-b: var(--rc-4); --rc-c: var(--rc-3); --rc-bg: var(--rc-1); }
+.rc-card[data-tone="2"] { --rc-a: var(--rc-2); --rc-b: var(--rc-5); --rc-c: var(--rc-3); --rc-bg: var(--rc-4); }
+.rc-card[data-tone="3"] { --rc-a: var(--rc-3); --rc-b: var(--rc-2); --rc-c: var(--rc-4); --rc-bg: var(--rc-2); }
+.rc-art-wrap { display: grid; place-items: center; padding: 1.1rem 1rem .6rem; background: color-mix(in oklab, var(--rc-bg) 30%, var(--ln-card)); border-bottom: 1px solid var(--ln-line); }
+:root.dark .rc-art-wrap { background: color-mix(in oklab, var(--rc-bg) 14%, var(--ln-card)); }
+:root.dark .rc-card { --rc-surface: var(--ln-card); }
+.rc-art { width: 100%; max-width: 340px; height: auto; aspect-ratio: 320 / 176; }
+
+.rc-card-body { display: flex; flex-direction: column; gap: .7rem; padding: 1.2rem 1.2rem 1.3rem; min-width: 0; flex: 1; }
+.rc-title { margin: 0; font-family: inherit; font-size: 1.25rem; line-height: 1.25; font-weight: 600; letter-spacing: -.01em; text-transform: none; color: var(--ln-ink); text-wrap: balance; }
+.rc-result { margin: 0; font-size: 1rem; line-height: 1.55; color: color-mix(in oklab, var(--ln-ink) 80%, transparent); }
+.rc-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: auto; padding-top: .3rem; }
+.rc-card.is-open .rc-actions { margin-top: .3rem; }
+.ln .rc-btn { width: auto; flex: 1 1 11rem; min-height: 2.9rem; padding: .6rem 1.1rem; font-size: .98rem; justify-content: center; text-align: center; cursor: pointer; }
+
+.rc-panel { display: flex; flex-direction: column; gap: .8rem; margin-top: .4rem; padding-top: 1rem; border-top: 1px dashed var(--ln-line); }
+.rc-panel[hidden] { display: none; }
+.rc-needs { margin: 0; font-size: .94rem; line-height: 1.5; color: var(--ln-muted); }
 .rc-needs strong { color: var(--ln-ink); font-weight: 600; }
 
 .rc-prompt { border: 1px solid var(--ln-line); border-radius: 14px; background: var(--background); overflow: hidden; }
 .rc-prompt-head { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .55rem .6rem .55rem .9rem; border-bottom: 1px solid var(--ln-line); }
 .rc-prompt-label { font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ln-muted); }
-.ln .rc-copy { width: auto; min-height: 2.5rem; padding: .45rem 1.1rem; font-size: .95rem; }
-.rc-prompt-text { margin: 0; padding: .85rem .95rem 1rem; white-space: pre-wrap; word-break: break-word; font-family: inherit; font-size: .95rem; line-height: 1.55; color: var(--ln-ink); }
+.ln .rc-copy { width: auto; min-height: 2.5rem; padding: .45rem 1.1rem; font-size: .95rem; cursor: pointer; }
+.rc-prompt-text { margin: 0; max-height: 22rem; overflow: auto; padding: .85rem .95rem 1rem; white-space: pre-wrap; word-break: break-word; font-family: inherit; font-size: .93rem; line-height: 1.55; color: var(--ln-ink); }
 
-.rc-steps summary { cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: .4rem; padding: .35rem 0; font-weight: 600; color: var(--ln-ink); }
-.rc-steps summary::-webkit-details-marker { display: none; }
-.rc-steps summary::before { content: "+"; display: inline-grid; place-items: center; width: 1.25rem; font-size: 1.15rem; color: var(--ln-muted); transition: transform .2s ease; }
-.rc-steps[open] summary::before { transform: rotate(45deg); }
-.rc-steps ol { margin: .35rem 0 .2rem; padding-left: 1.4rem; display: flex; flex-direction: column; gap: .45rem; font-size: .97rem; line-height: 1.55; color: color-mix(in oklab, var(--ln-ink) 85%, transparent); }
+.rc-steps-label { margin: .2rem 0 0; font-weight: 600; color: var(--ln-ink); }
+.rc-steps { margin: 0; padding-left: 1.3rem; display: flex; flex-direction: column; gap: .4rem; font-size: .97rem; line-height: 1.55; color: color-mix(in oklab, var(--ln-ink) 85%, transparent); }
 
-.rc-cta { margin-top: 1rem; display: flex; flex-direction: column; align-items: center; gap: .8rem; text-align: center; padding: 1.75rem 1.25rem; border-radius: 20px; background: var(--ln-human-bg); border: 1px solid color-mix(in oklab, var(--ln-human) 30%, transparent); }
+.rc-cta { margin: 1rem auto 0; width: 100%; max-width: 720px; display: flex; flex-direction: column; align-items: center; gap: .8rem; text-align: center; padding: 1.9rem 1.25rem; border-radius: 22px; background: var(--ln-human-bg); border: 1px solid color-mix(in oklab, var(--ln-human) 30%, transparent); }
 .rc-cta-title { margin: 0; font-family: inherit; font-size: 1.35rem; line-height: 1.25; font-weight: 600; letter-spacing: -.01em; text-transform: none; color: var(--ln-ink); text-wrap: balance; }
 .rc-cta-body { margin: 0; font-size: 1rem; color: color-mix(in oklab, var(--ln-ink) 80%, transparent); }
-@media (prefers-reduced-motion: reduce) { .rc-steps summary::before { transition: none; } }
-.rc-hire { margin: 0; padding-top: .7rem; border-top: 1px dashed var(--ln-line); font-size: .95rem; color: var(--ln-muted); }
-.rc-hire-link { font-weight: 600; color: var(--ln-human); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: color-mix(in oklab, var(--ln-human) 40%, transparent); cursor: pointer; }
-.rc-hire-link:hover { text-decoration-color: currentColor; }
+.ln .rc-cta .ln-btn { width: auto; }
+@media (prefers-reduced-motion: reduce) { .rc-card { transition: none; } }

@@ -18,6 +18,8 @@ type PageShellProps = {
   footerLabel?: string;
   /** Reading layout (article/project detail): wider, unframed text column. */
   reading?: boolean;
+  /** Wide grid layout (e.g. the recipe book): up to ~1240px. */
+  wide?: boolean;
 };
 
 export function PageShell({
@@ -29,6 +31,7 @@ export function PageShell({
   footerHref,
   footerLabel,
   reading = false,
+  wide = false,
 }: PageShellProps) {
   const { t, href } = useLocale();
   const settings = useSiteSettings();
@@ -37,7 +40,7 @@ export function PageShell({
   const bottomLabel = footerLabel ?? (footerHref || backHref !== "/" ? topLabel : t.ui.backHomeCta);
 
   return (
-    <div className={`cp-shell mx-auto min-h-dvh w-full pb-16 pt-16 sm:pt-20 ${reading ? "cp-shell-reading px-[18px] sm:px-8" : "max-w-xl px-6"}`}>
+    <div className={`cp-shell mx-auto min-h-dvh w-full pb-16 pt-16 sm:pt-20 ${reading ? "cp-shell-reading px-[18px] sm:px-8" : wide ? "max-w-[1240px] px-5 sm:px-8" : "max-w-xl px-6"}`}>
       {/* Top bar backdrop: page colour fading out, so scrolled content slides under the bar */}
       <div className="cp-topbar-fade" aria-hidden />
       {/* Back link lives in the fixed top bar, opposite the language/theme controls */}
