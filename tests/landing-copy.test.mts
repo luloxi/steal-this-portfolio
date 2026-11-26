@@ -52,5 +52,16 @@ test("recipes: one per home case, both languages, only Grok, Grok Bot and Hermes
     assert.doesNotMatch(Object.values(r.copy.en).flat().join(" "), /\bIA\b/);
   }
   assert.doesNotMatch(Object.values(recipesCopy.en).join(" "), /\bIA\b/);
+  // Prompts drive themselves: no blanks to fill by hand; they ask, check the tool and point to contact.
+  for (const r of RECIPES) {
+    for (const loc of ["es", "en"] as const) {
+      const pr = r.copy[loc].prompt;
+      assert.doesNotMatch(pr, /\[[^\]]*\]/, `${r.slug} ${loc} has a [blank]`);
+      assert.match(pr, /Grok, Grok Bot (o|or) Hermes/);
+      assert.match(pr, /MCP/);
+      assert.match(pr, loc === "es" ? /lulox\.com\.ar\/contacto/ : /lulox\.com\.ar\/en\/contact/);
+      assert.match(pr, loc === "es" ? /preguntas/ : /questions/);
+    }
+  }
   assert.match(recipesToText(), /https:\/\/lulox\.com\.ar\/en\/recipes/);
 });

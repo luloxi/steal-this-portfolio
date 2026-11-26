@@ -1,7 +1,7 @@
 import { ContactTrigger } from "@/components/contact-modal";
-import { CopyPrompt } from "@/components/copy-prompt";
 import { JsonLd } from "@/components/json-ld";
 import { PageShell } from "@/components/page-shell";
+import { RecipeCard } from "@/components/recipe-card";
 import { RECIPES, recipesCopy } from "@/content/recipes";
 import { getRequestLocale } from "@/lib/prefs";
 import { localizePath } from "@/lib/routes";
@@ -36,35 +36,31 @@ export default async function RecipesPage() {
   return (
     <>
       <JsonLd graph={graph} />
-      <PageShell title={c.title}>
+      <PageShell title={c.title} wide>
         <div className="ln rc">
-          <p className="rc-intro">{c.intro}</p>
-          <p className="rc-works">{c.works}</p>
-          <ol className="rc-list">
+          <div className="rc-head">
+            <p className="rc-intro">{c.intro}</p>
+            <p className="rc-works">{c.works}</p>
+          </div>
+          <div className="rc-grid">
             {RECIPES.map((r, i) => {
               const x = r.copy[locale];
               return (
-                <li key={r.slug} id={r.slug} className="rc-card">
-                  <h2 className="rc-title"><span className="rc-n" aria-hidden>{i + 1}</span>{x.title}</h2>
-                  <p className="rc-result">{x.result}</p>
-                  <p className="rc-needs"><strong>{c.needsLabel}:</strong> {x.needs}</p>
-                  <CopyPrompt text={x.prompt} label={c.promptLabel} copyLabel={c.copy} copiedLabel={c.copied} />
-                  <details className="rc-steps">
-                    <summary>{c.stepsLabel}</summary>
-                    <ol>
-                      {x.steps.map((s, k) => <li key={k}>{s}</li>)}
-                    </ol>
-                  </details>
-                  <p className="rc-hire">
-                    <span>{c.hire.lead}</span>{" "}
-                    <ContactTrigger className="rc-hire-link" prefill={c.hire.message.replace("{receta}", x.title)} data-testid={`recipe-hire-${r.slug}`}>
-                      {c.hire.button} ▸
-                    </ContactTrigger>
-                  </p>
-                </li>
+                <RecipeCard
+                  key={r.slug}
+                  slug={r.slug}
+                  index={i}
+                  title={x.title}
+                  result={x.result}
+                  needs={x.needs}
+                  prompt={x.prompt}
+                  steps={x.steps}
+                  hireMessage={c.hire.message.replace("{receta}", x.title)}
+                  labels={{ needs: c.needsLabel, prompt: c.promptLabel, copy: c.copy, copied: c.copied, steps: c.stepsLabel, use: c.use, hide: c.hide, hire: c.hire.button }}
+                />
               );
             })}
-          </ol>
+          </div>
           <section className="rc-cta" aria-labelledby="rc-cta">
             <h2 id="rc-cta" className="rc-cta-title">{c.cta.title}</h2>
             <p className="rc-cta-body">{c.cta.body}</p>
