@@ -25,6 +25,7 @@ import { DEFAULT_PUBLICATIONS, stripPublicationLinksInBody, type Publication } f
 import { saveCopy, useEditMode } from "@/components/admin-context";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useSectionShown } from "@/components/site-order-context";
 
 type OrgLogo =
   | { type: "icon"; Icon: ComponentType<{ className?: string }> }
@@ -74,9 +75,10 @@ const platforms = [
  * (D1 over the code defaults); hidden ones only reach the admin in edit mode.
  */
 export function AboutView({ publications }: { publications: readonly Publication[] }) {
-  const { t } = useLocale();
+  const { t, href } = useLocale();
   const settings = useSiteSettings();
   const editOn = useEditMode();
+  const blogShown = useSectionShown("blog");
   const linkedInHref = settings.socials.find((s) => s.id === "linkedin")?.href ?? "";
   const tasteHref = {
     letterboxd: settings.tasteLetterboxd,
@@ -97,6 +99,32 @@ export function AboutView({ publications }: { publications: readonly Publication
   return (
     <PageShell title={about.title}>
       <div className="space-y-8">
+        {/* Order (Luciano, 2026-11-28): LinkedIn, articles, experience newest first, tastes last. */}
+        <div className="cp-list">
+          {linkedInHref ? (
+            <CpRow
+              href={linkedInHref}
+              label={about.linkedInCta}
+              detail={about.linkedInDetail}
+              accent="#0A66C2"
+              Icon={LinkedInIcon}
+              iconClass="text-[#0A66C2]"
+              iconSize="lg"
+            />
+          ) : null}
+          {blogShown ? (
+            <CpRow
+              href={href("/blog")}
+              external={false}
+              label={about.articlesCta}
+              detail={about.articlesDetail}
+              accent="var(--section-blog)"
+              Icon={ArticlesIcon}
+              iconClass="text-[var(--section-blog)]"
+              iconSize="lg"
+            />
+          ) : null}
+        </div>
         <div
           className="cp-panel about-story"
           style={{ ["--cp-accent" as string]: "var(--section-about)" }}
@@ -112,6 +140,7 @@ export function AboutView({ publications }: { publications: readonly Publication
               copyKey="about.body"
               text={body}
               sections
+              newestFirst
               afterSection={(si) => (
                 <>
                   {(recordsBySection.get(si) ?? []).map((r, ri, recs) => {
@@ -151,19 +180,11 @@ export function AboutView({ publications }: { publications: readonly Publication
           </div>
         </div>
 
-        <section aria-label={t.tastes.title}>
+        <section aria-labelledby="about-tastes" className="space-y-3">
+          <h2 id="about-tastes" className="about-tastes-h">
+            <CopyText copyKey="tastes.heading" value={t.tastes.heading} />
+          </h2>
           <div className="cp-list">
-            {linkedInHref ? (
-              <CpRow
-                href={linkedInHref}
-                label={about.linkedInCta}
-                detail={about.linkedInDetail}
-                accent="#0A66C2"
-                Icon={LinkedInIcon}
-                iconClass="text-[#0A66C2]"
-                iconSize="lg"
-              />
-            ) : null}
             {platforms.map((p) =>
               tasteHref[p.id] ? (
                 <CpRow
@@ -182,6 +203,16 @@ export function AboutView({ publications }: { publications: readonly Publication
         </section>
       </div>
     </PageShell>
+  );
+}
+
+/** A page with lines: the link to the blog articles. */
+function ArticlesIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 2.75h8.5L19 7.25v14H6z" />
+      <path d="M14.5 2.75v4.5H19M9 11.5h7M9 15h7M9 18.5h4.5" />
+    </svg>
   );
 }
 
