@@ -85,6 +85,7 @@ export function CopyMarkdown({
   rich = false,
   sections = false,
   afterSection,
+  newestFirst = false,
 }: {
   text: string;
   /** site_copy key: when set, the admin can edit this block in place (edit mode). */
@@ -99,6 +100,8 @@ export function CopyMarkdown({
   sections?: boolean;
   /** Rendered right after section i (e.g. job cards woven into the story). */
   afterSection?: (i: number, sec: { title: string; body: string }) => ReactNode;
+  /** Sections render last to first (a chronological story shown newest first). Edit mode keeps the stored order. */
+  newestFirst?: boolean;
 }) {
   const editOn = useEditMode() && Boolean(copyKey) && !inline;
   const { locale } = useLocale();
@@ -117,7 +120,7 @@ export function CopyMarkdown({
           ) : parts.intro.trim() ? (
             <MdBlock text={parts.intro} pClass={pClass} />
           ) : null}
-          <Accordion sections={parts.sections} pClass={pClass} raw={raw} copyKey={editOn ? copyKey : undefined} afterSection={afterSection} />
+          <Accordion sections={parts.sections} pClass={pClass} raw={raw} copyKey={editOn ? copyKey : undefined} afterSection={afterSection} reverse={newestFirst && !editOn} />
         </div>
       );
     }
@@ -213,17 +216,21 @@ function toSections(md: string): { intro: string; sections: Section[] } {
   };
 }
 
-function Accordion({ sections, pClass, raw, copyKey, afterSection }: { sections: Section[]; pClass: string; raw: string; copyKey?: string; afterSection?: (i: number, sec: { title: string; body: string }) => ReactNode }) {
+function Accordion({ sections, pClass, raw, copyKey, afterSection, reverse = false }: { sections: Section[]; pClass: string; raw: string; copyKey?: string; afterSection?: (i: number, sec: { title: string; body: string }) => ReactNode; reverse?: boolean }) {
+  const order = sections.map((_, i) => i);
+  if (reverse) order.reverse();
+  const first = order[0] ?? 0;
   const base = useId();
   const [open, setOpen] = useState<boolean[]>(() => sections.map(() => false));
+  // Last open section in display order.
   let last = -1;
-  open.forEach((o, i) => {
-    if (o) last = i;
-  });
+  for (const i of order) if (open[i]) last = i;
+  // The hint goes to the next closed section in display order, after the last open one.
   let hint = -1;
-  for (let i = last + 1; i < sections.length; i++)
-    if (!open[i]) {
-      hint = i;
+  const lastPos = last < 0 ? -1 : order.indexOf(last);
+  for (let p = lastPos + 1; p < order.length; p++)
+    if (!open[order[p]]) {
+      hint = order[p];
       break;
     }
   const toggle = (i: number) => setOpen((prev) => sections.map((_, j) => (j === i ? !prev[j] : (prev[j] ?? false))));
@@ -252,7 +259,7 @@ function Accordion({ sections, pClass, raw, copyKey, afterSection }: { sections:
     root.querySelectorAll<HTMLElement>(":scope > .md-acc-item").forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, [sections.length]);
-  const peekVisible = !offscreen.has(0);
+  const peekVisible = !offscreen.has(first);
   // Remaining time to the next peek survives pauses, so it stays in sync with the (paused) CSS rev.
   const peekDue = useRef<number | null>(null);
   useEffect(() => {
@@ -284,13 +291,14 @@ function Accordion({ sections, pClass, raw, copyKey, afterSection }: { sections:
   }, [anyOpen, copyKey, sections.length, peekVisible]);
   return (
     <div className="md-acc-list" ref={listRef}>
-      {afterSection?.(-1, { title: "", body: "" })}
-      {sections.map((sec, i) => {
+      {reverse ? null : afterSection?.(-1, { title: "", body: "" })}
+      {order.map((i) => {
+        const sec = sections[i];
         const isOpen = open[i] ?? false;
         const id = `${base}-s${i}`;
         return (
           <Fragment key={id}>
-          <section data-acc-index={i} className={`md-acc-item${isOpen ? " is-open" : ""}${offscreen.has(i) ? " is-offscreen" : ""}${peek && i === 0 && !anyOpen ? " md-acc-peek" : ""}`}>
+          <section data-acc-index={i} className={`md-acc-item${isOpen ? " is-open" : ""}${offscreen.has(i) ? " is-offscreen" : ""}${peek && i === first && !anyOpen ? " md-acc-peek" : ""}`}>
             {copyKey ? (
               <EditableSection
                 index={i}
@@ -333,6 +341,7 @@ function Accordion({ sections, pClass, raw, copyKey, afterSection }: { sections:
           </Fragment>
         );
       })}
+      {reverse ? afterSection?.(-1, { title: "", body: "" }) : null}
     </div>
   );
 }

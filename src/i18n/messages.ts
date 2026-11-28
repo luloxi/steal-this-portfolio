@@ -66,6 +66,8 @@ export const messages = {
       layout: "story:0,story:1,job:2,story:2,job:1,story:3,job:0,story:4,pubs:0,story:5",
       linkedInCta: "LinkedIn",
       linkedInDetail: "Mi experiencia laboral y contactos profesionales",
+      articlesCta: "Artículos",
+      articlesDetail: "Lo que escribo en el blog",
     },
     projects: {
       title: "Proyectos",
@@ -195,6 +197,7 @@ export const messages = {
     },
     tastes: {
       title: "Gustos",
+      heading: "Para conocernos del todo",
       platforms: {
         letterboxd: "Películas que vi con ratings y reviews",
         lastfm: "Música que escuché desde hace años",
@@ -292,6 +295,8 @@ export const messages = {
       layout: "story:0,story:1,job:2,story:2,story:3,job:1,talk:0,story:4,job:0,pubs:0,story:5",
       linkedInCta: "LinkedIn",
       linkedInDetail: "My work history and professional network",
+      articlesCta: "Articles",
+      articlesDetail: "What I write on the blog",
     },
     projects: {
       title: "Projects",
@@ -421,6 +426,7 @@ export const messages = {
     },
     tastes: {
       title: "Tastes",
+      heading: "So we can really get to know each other",
       platforms: {
         letterboxd: "Movies I've watched, with ratings and reviews",
         lastfm: "Music I've been listening to for years",

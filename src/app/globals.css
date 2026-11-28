@@ -4043,6 +4043,15 @@ body.ie-off .ie-row-pencil { display: none; }
 }
 .cp-panel.about-story::before, .cp-panel.about-story::after { display: none !important; }
 .cp-panel.about-story > .cp-nav-frame { display: none !important; }
+.about-tastes-h {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  color: var(--foreground);
+}
+
 
 /* r16: reading pages (article, project detail): wider column, no framing.
    Mobile: full width with ~18px gutters. Desktop: ~78ch (max 820px) line length. */
